@@ -1,0 +1,16 @@
+#ignore all files in the Efficient-RANSAC-for-Point-Cloud-Shape-Detection/ directory
+Efficient-RANSAC-for-Point-Cloud-Shape-Detection/
+
+#ignore all files in the outputPlanesx/ directory
+outputPlanes1/
+outputPlanes2/
+
+planesViewer/
+
+shapesDetector
+
+#ignore all .pdf files
+*.pdf
+
+#ignore all .pptx files
+*.pptx

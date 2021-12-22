@@ -1,0 +1,31 @@
+reference version
+do not declare raw_pc as a pointer (line 174)
+pcl::PointCloud<pcl::PointXYZ>::Ptr extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>& rawPC, float DistanceTreshold, Eigen::VectorXf modelCoeffs);
+boxes_pc = extractGroundPlane(*raw_pc, 0.01, modelCoeffs);
+
+
+----------------------------------
+pointer version
+declare raw_pc as a pointer (line 174)
+pcl::PointCloud<pcl::PointXYZ>::Ptr extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, float DistanceTreshold, Eigen::VectorXf modelCoeffs);
+boxes_pc = extractGroundPlane(raw_pc, 0.01, modelCoeffs);
+>>compila
+>>se ejecuta hasta la instrucción previa al retorno de la salida. Luego produce una excepeción en Memory.h línea 181:
+loadPLYandFindPlanes.exe ha desencadenado un punto de interrupción.
+Se descarta que la fuente del problema esté en los coeficinetes del modelo plano
+Se concluye que el problema se localiza en la salida PointXYZ final
+
+-----------------------------
+paso por puntero para la salida PointXYZ final; parámetro de entrada a la función
+extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, pcl::PointCloud<pcl::PointXYZ>::Ptr final, float DistanceTreshold, Eigen::VectorXf modelCoeffs);
+mismo error que la version pointer version
+
+
+
+const PointCloudConstPtr & 	cloud
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr
+-*-------------------
+Considerando que el error puede estar relacionado con lo explcado en el sgte enlace https://www.cplusplus.com/articles/z6vU7k9E/
+Sección: "But, if you are expecting with the following code that i will be set to 10 and j to 42, then this doesn't do what you want:"
+Se concluye
