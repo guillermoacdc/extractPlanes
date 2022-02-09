@@ -5,8 +5,6 @@ Efficient-RANSAC-for-Point-Cloud-Shape-Detection/
 outputPlanes1/
 outputPlanes2/
 
-planesViewer/
-
 shapesDetector
 
 #ignore all .pdf files
@@ -14,3 +12,6 @@ shapesDetector
 
 #ignore all .pptx files
 *.pptx
+
+#ignore all .avi files
+*.avi

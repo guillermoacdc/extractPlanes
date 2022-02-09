@@ -59,11 +59,11 @@ void eRANSAC(RansacShapeDetector::Options ransacOptions, PointCloud& pc,
 int main()
 {
 	/*-----declaring parameters and paths to load point cloud-------*/
-	int frame = 2;
+	int frame = 9;
 	std::stringstream frame_str;
 	frame_str << frame;
 	std::string rootPath = "C:\\lib\\";
-	std::string writePath = rootPath + "outputPlanes_t7\\";
+	std::string writePath = rootPath + "outputPlanes_t8\\";
 	writePath = writePath + "frame (" + frame_str.str() + ")" + "\\";
 	std::string planeParametersFileName = writePath + "planeParameters.txt";
 	std::string algorithmParametersFileName = writePath + "algorithmParameters.txt";
@@ -173,12 +173,12 @@ int main()
 	Vec3f Normal;
 	float Distance;
 	pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;//create filtering object
-	sor.setMeanK(50);
-	sor.setStddevMulThresh(1.0);
-	
+
+	int cloudSize(0), nmbrNeiborhoods(0);
 	//--save each detected plane in a ply file
 	for (int i = 0; i < shapes.size(); i++)
 	{
+		
 		pcl::PointCloud<pcl::PointXYZ>::Ptr template_cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>);
 		pcl::PointCloud<pcl::PointXYZ>::Ptr template_cloud_ptr_filtered(new pcl::PointCloud < pcl::PointXYZ>);
 		//template_cloud_ptr_filtered->clear();
@@ -204,6 +204,14 @@ int main()
 		}
 		/*--- apply statistical filter to remove outliers on each plane */
 		// config the filtering object
+		cloudSize = template_cloud_ptr->width;
+		if (cloudSize > 50)
+			nmbrNeiborhoods = 50;
+		else
+			nmbrNeiborhoods = cloudSize-1;
+		std::cout << "number of neigborhoods is: " << nmbrNeiborhoods << std::endl;
+		sor.setMeanK(nmbrNeiborhoods);
+		sor.setStddevMulThresh(1.0);
 		sor.setInputCloud(template_cloud_ptr);
 		sor.filter(*template_cloud_ptr_filtered);
 

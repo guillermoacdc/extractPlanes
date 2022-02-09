@@ -29,3 +29,88 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr
 Considerando que el error puede estar relacionado con lo explcado en el sgte enlace https://www.cplusplus.com/articles/z6vU7k9E/
 Sección: "But, if you are expecting with the following code that i will be set to 10 and j to 42, then this doesn't do what you want:"
 Se concluye
+
+--------------------
+se traslada el cuerpo de la función extractGroundPlane al cuerpo de la función myLoadPC. Esto se hace para descartar que la fuente del error se localice en el mecanismo de transferencia de argumentos del tipo (pcl::PointCloud<pcl::PointXYZ>::Ptr). Se presenta el mismo error de desbordamiento de memoria
+
+Se realiza una copia del objeto raw_pc hacia el objeto boxes_pc; inhibiendo el cálculo deseado de boxes_pc. El código opera exitosamente
+
+Se actualiza la función myLoadPC para que la nube de puntos utilice el mecanismo de paso por referencia. Esto se hace para tener un código más eficiente. Se rehabilita el cáclulo deseado de boxes_pc. El error continua: Debug assertion failed
+
+Se deshabilita el cálclulo deseado de boxes_pc; el código opera exitosamente
+Se habilita lìnea por lìnea para identificar el origen del error. Se concluye
+1. el error se presenta en la sección final del cuerpo de la función myLoadPC
+2. el error está relacionado con una alineación de bytes requerida al final del cuerpo de la función myLoadPC. Se identifica un issue relacionado, reportado para PCL 1.11 y resuelto en PCL1.12 (la versión que usamos actualmente): https://github.com/PointCloudLibrary/pcl/issues/4734
+Se implementa la solución temporal en https://github.com/PointCloudLibrary/pcl/issues/4734, junto con la eliminaciòn del namespace std
+el error persiste: 
+
+---------------------------
+Microsoft Visual C++ Runtime Library
+---------------------------
+Debug Assertion Failed!
+
+Program: ...oint-Cloud-Shape-Detection\x64\Debug\loadPLYandFindPlanes.exe
+File: minkernel\crts\ucrt\src\appcrt\heap\debug_heap.cpp
+Line: 904
+
+Expression: _CrtIsValidHeapPointer(block)
+
+For information on how your program can cause an assertion
+failure, see the Visual C++ documentation on asserts.
+
+(Press Retry to debug the application)
+
+---------------------------
+Anular   Reintentar   Omitir   
+---------------------------
+Reintentar: se cerró con el código -2147483645
+
+
+
+
+El error aparece cuando se habilita el comando 
+ransac.computeModel();
+
+Al parecer, este comando demanda recursos adicionales al interior de la función. Consecuentemente, al finalizar la ejecución de la función se debe realizar una liberación de recursos. Es justo en esa liberación en donde se genera el error. Este error tienen dos mensajes, segun tipo de depuración:
+(iniciar sin depurar)
+	---------------------------
+	Microsoft Visual C++ Runtime Library
+	---------------------------
+	Debug Assertion Failed!
+
+	Program: ...oint-Cloud-Shape-Detection\x64\Debug\loadPLYandFindPlanes.exe
+	File: minkernel\crts\ucrt\src\appcrt\heap\debug_heap.cpp
+	Line: 904
+
+	Expression: _CrtIsValidHeapPointer(block)
+
+	For information on how your program can cause an assertion
+	failure, see the Visual C++ documentation on asserts.
+
+	(Press Retry to debug the application)
+
+	---------------------------
+	Anular   Reintentar   Omitir   
+	---------------------------
+	Reintentar: se cerró con el código -2147483645
+	Anular: se cerró con el código 3
+
+(iniciar depuración)
+Permite llegar hasta la última instrucción en la función myLoadPC. Luego genera el sgte mensaje
+
+Excepción producida: loadPLYandFindPlanes.exe ha desencadenado un punto de interrupción.
+
+Este mensaje está en las líneas 174-181 de la función Memory.h/EIGEN_DEVICE_FUNC inline void aligned_free(void *ptr). Esta función tiene como comentario /** \internal Frees memory allocated with aligned_malloc. */
+
+
+
+Conclusión:
+1. reestablecer Memory.h a su versión previa---ok
+2. integrar el cuerpo de myLoadPC en el programa main de mi proyecto. Espero que esto resuelva
+3. realizar un código de ejemplo con una función myLoad que reciba una nube de puntos con tierra y retorne otra nube de puntos sin tierra. El programa main grafica. En caso de que el error persista, usar este ejemplo para reportar el error. 
+
+Esperar respuesta de 3 para actualizar mi proyecto. 
+
+
+La solución alcanzada el 30/12/2021: enabling vcpkg in project/properties
+mi interpretación: la librería boost de vcpkg es diferente a la librería boost en pcl/thirdparty... ; además de ser diferente, no genera el error 

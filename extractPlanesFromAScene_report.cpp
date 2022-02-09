@@ -93,7 +93,7 @@ int main()
 	modelCoeffs = extractGround(raw_pc, boxes_pc, DistanceTreshold);//source of the assertion error; this error was resolved by enabling vcpkg in project/properties
 	
 	out_txtFile2 << "Stage: Extract Ground with Random Sample Consensus Algorithm \n"
-		<< "\t Distance Treshold: "<< DistanceTreshold << std::endl
+		<< "\t Distance Threshold: "<< DistanceTreshold << std::endl
 		<< "\t max_iterations_ : 10000;//by default" << std::endl
 		<< "\t Plane parameters [A, B, C, D]: [" << modelCoeffs[0]
 		<< ", " << modelCoeffs[1] << ", " << modelCoeffs[2] << ", "
@@ -154,6 +154,7 @@ int main()
 		<< "\t m_normalThresh= " << ransacOptions.m_normalThresh << "\n"
 		<< "\t m_minSupport= " << ransacOptions.m_minSupport << "\n"
 		<< "\t m_probability= " << ransacOptions.m_probability << "\n"
+		<< "\t m_tao = 50 //taked from orignal paper - default value in the constructor" << "\n"//was set by updating the constructor in RansacShapeDetector.cpp lines 25, 32
 		<<  "\t processed in " << time.toc() << " ms\n"
 		<< "\t remaining unassigned points " << remaining << std::endl
 		<< std::endl;
