@@ -3,16 +3,16 @@ close all
 clear 
 
 %% prepara caja con médida estándar; se asume caja en origen de sis ref
-Z=1.2;%height
-X=1.9;%width
-Y=1.6;%depth
+Z=2.5;%height
+X=4;%width
+Y=3;%depth
 
 
 [f1 f2 f3] = createBoxPCv4(X,Y,Z);
 
 %% prepara vectores con ángulo predefinido theta
 % top vector
-v1=[0 0 -1];
+v1=[0 0 1];
 
 % side vector
 % rotación de theta grados alrededor del eje x

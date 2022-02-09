@@ -16,8 +16,8 @@ clear all
 % 	**segmento tipo ...
 % 	**segmento tipo n
 
-frame=3;
-in_planesFolderPath=['C:/lib/outputPlanes_t9/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
+frame=5;
+in_planesFolderPath=['C:/lib/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
 in_SceneFolderPath=['C:/lib/inputScenes/'];
 
 
@@ -55,7 +55,9 @@ NbPlanes=NbFrames;%two additional files for rawpc
 
 % in_path1=['G:/Mi unidad/semestre 6/1-3 AlgoritmosSeguimientoPose/PCL/sp132697151403874938.ply'];%raw model - corrida 5
 % in_folderPath=[in_SceneFolderPath 'frame (' num2str(frame) ')/' ];
-groundParameters=loadAlgorithmParameters(in_planesFolderPath, frame);
+
+[groundParameters]=loadPlaneParameters(in_planesFolderPath, frame, 1);% to load ground parameters
+
 planesCounter=0;
 k=1;%index for video
 figure,
@@ -74,7 +76,8 @@ for i=1:1:NbPlanes
         [x y z planeType] = computeBoundingPlane(xp, yp, zp, modelParameters(1), ...
             modelParameters(2), modelParameters(3), modelParameters(4), 10);
                 
-        if (planeType==2)
+%         if (planeType==2)
+            if (1)
             planesCounter=planesCounter+1;
             pcshow(pc_j,'MarkerSize', 40)
             if (x~=0)

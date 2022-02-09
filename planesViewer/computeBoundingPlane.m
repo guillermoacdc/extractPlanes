@@ -6,7 +6,8 @@ function [x, y, z, planeType] = computeBoundingPlane(xp, yp, zp, A, B, C, D, myT
 
 myTol=myTolerance*pi/180;
 % compute angle between normal of plane and normal of ground
-alpha=computeAngleBtwnVectors([A B C],[0 1 0])
+alpha=computeAngleBtwnVectors([A B C],[0 1 0]);
+% alpha=computeAngleBtwnVectors([A B C],[0 0 1]);
 
 if( abs(cos(alpha*pi/180)) > cos (myTol))
     planeType=0;

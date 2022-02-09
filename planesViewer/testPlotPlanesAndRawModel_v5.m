@@ -4,7 +4,8 @@ clear all
 
 % script to plot extracted planes from efficient RANSAC. Video version for
 % meeting with advisors
-frame=20;
+% Version: single planes at a unique frame
+frame=2;
 in_planesFolderPath=['C:/lib/outputPlanes_t9/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
 in_SceneFolderPath=['C:/lib/inputScenes/'];
 
@@ -61,8 +62,8 @@ for i=1:1:NbPlanes
             modelParameters(2), modelParameters(3), modelParameters(4), 10);
                 
         
-%         if (planeType==0)
-        if (1)    
+        if (planeType==2)
+%         if (1)    
             planesCounter=planesCounter+1;
             pcshow(pc_j,'MarkerSize', 40)
             if (x~=0)
@@ -85,7 +86,7 @@ for i=1:1:NbPlanes
 end    
 return
 % create the video writer with 1 fps
-  writerObj = VideoWriter('nonExpectedPlanes_v3.avi');
+  writerObj = VideoWriter('nonExpectedPlanes_v4.avi');
   writerObj.FrameRate = 2;
   % set the seconds per image
 % open the video writer

@@ -1,5 +1,9 @@
 function a=computeAngleBtwnVectors(P1,P2)
 
+% returns values in the closed interval [-180,180]
+
+% https://www.youtube.com/watch?v=QWIZXRjMspI
+
 % P1=[8 0 0];
 % P2=[4 4 0];
 

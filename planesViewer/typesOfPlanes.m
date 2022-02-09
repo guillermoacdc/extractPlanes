@@ -17,7 +17,7 @@ clear all
 % 	**segmento tipo n
 
 frame=3;
-in_planesFolderPath=['C:/lib/outputPlanes_t9/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
+in_planesFolderPath=['C:/lib/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
 in_SceneFolderPath=['C:/lib/inputScenes/'];
 
 
@@ -73,8 +73,8 @@ for i=1:1:NbPlanes
             modelParameters(2), modelParameters(3), modelParameters(4), 10);
                 
         
-        if (planeType==0)
-%         if (1)    
+%         if (planeType==0)
+        if (1)    
             planesCounter=planesCounter+1;
             pcshow(pc_j,'MarkerSize', 40)
             if (x~=0)
