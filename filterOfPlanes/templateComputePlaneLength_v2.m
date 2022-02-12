@@ -1,7 +1,7 @@
 clc
 close all
 clear 
-% read the pc
+%% read the pc
 % planeID=7; %for perpendicular plane that is attracted to x axis, 6
 planeID=14; %for perpendicular plane that is attracted to z axis
 frame=5;
@@ -15,6 +15,8 @@ pcshow(pc,'MarkerSize',20)
 xlabel 'x'
 ylabel 'y'
 zlabel 'z'
+
+
 
 %% computing 2D convex hull
 x=pc.Location(:,1);

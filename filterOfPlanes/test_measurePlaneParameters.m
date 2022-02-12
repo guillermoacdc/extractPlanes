@@ -1,0 +1,54 @@
+clc
+close all
+clear all
+% this script test the measurement of three properties of each plane
+% 1. L1. minor length of the vertices
+% 2. L2. max length of the vertices
+% 3. tform: orientation of the plane
+%% load pc
+% planeID=7; %for perpendicular plane that is attracted to x axis, 6
+% planeID=14; %for perpendicular plane that is attracted to z axis
+planeID=2; %for parallel planes
+% planeID=3;
+frame=5;
+in_planesFolderPath=['C:/lib/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
+% pc = pcread('onePlane2.ply');%plane in axis x,y
+
+[modelParameters pc ]=loadPlaneParameters(in_planesFolderPath, frame, planeID);
+
+
+
+%% measure parameters
+groundNormal=[0 1 0];% the height is in axis y
+myTolerance=10;%degrees
+[L1 L2 tform normalType]=measurePlaneParameters(pc, modelParameters, groundNormal, myTolerance)
+
+% title of plots
+if normalType==0
+    plotTitle='parallel plane';
+else
+    plotTitle='perpendicular plane';
+end
+D=repmat(modelParameters(5:7),size(pc.Location,1),1);
+pc_rotated1 = pctransform(pc,-D);%ptcloud centered in origin
+pc_rotated2 = pctransform(pc_rotated1,tform);%ptcloud alligned to axis
+
+
+T=tform.T;
+T(1:3,4)=modelParameters(5:7)';
+figure,
+pcshow(pc,'MarkerSize',20)
+hold on
+dibujarsistemaref(T, 'c', 0.5, 1,10,'white')
+xlabel 'x'
+ylabel 'y'
+zlabel 'z'
+title (plotTitle)
+
+
+return
+figure,
+pcshow(pc_rotated2,'MarkerSize',20)
+xlabel 'x'
+ylabel 'y'
+zlabel 'z'
