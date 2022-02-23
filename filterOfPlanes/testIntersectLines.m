@@ -2,21 +2,32 @@ clc
 close all
 clear
 
-p1=[1 3];
-p2=[1 0];
-p3=[1 -1];
-p4=[1 -2];
-% p3=[0 2.5];
-% p4=[2 0];
-% p3=p1;
-% p4=p2;
+Px=[-2 -2];
+u=[0.7071 0.7071];
+Pa=[-1.8 -2.1];
+Pb=[-1.9 -2.3];
 
-[out pc]=intersect_lines(p1, p2, p3, p4);
+
+
+
+
+
+% Pa=[0 2.5];
+% Pb=[2 0];
+% Pa=Px;
+% Pb=u;
+% Px: geometric center of the 2D pointcloud
+% u: 2d vector with angle alpha; alpha goes from 0 to pi
+% Pa: point a of the convex hull
+% Pb: point b of the convex hull
+
+[out pc]=intersect_lines(Px, u, Pa, Pb);
 
 figure,
-    plot([p1(1) p2(1)],[p1(2) p2(2)],'Color','k','LineStyle','--')
+    plot([Px(1) u(1)],[Px(2) u(2)],'Color','k','LineStyle','--')
     hold on
-    plot([p3(1) p4(1)],[p3(2) p4(2)],'Color','b','LineStyle','--')
+    plot([Pa(1) Pb(1)],[Pa(2) Pb(2)],'Color','b','LineStyle','--')
     plot(pc,'yo')
     xlabel 'x'
     ylabel 'y'
+    grid

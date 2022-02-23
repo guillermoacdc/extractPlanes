@@ -20,7 +20,7 @@ clear
 parameters=load('scene5.txt');%boxId, typeID H(3) W(4) D(5)
 NoBoxes=size(parameters,1);
 
-planeID=1;
+planeID=1;  
 fid = fopen( 'scene5Planes.txt', 'wt' );%planeID boxID L1 L2 normal
 for i=1:NoBoxes
     % read box parameters

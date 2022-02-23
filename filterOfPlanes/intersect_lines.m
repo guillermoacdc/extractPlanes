@@ -22,7 +22,7 @@ b1=Px(1,2)-m1*Px(1,1);%vertical intersection of line Px in the case Px's slope w
 b2=Pa(1,2)-m2*Pa(1,1);%vertical intersection of line Pa in the case Pa's slope would be m2
 if m1<1.6331e+16 && m2<1.6331e+16
     if m1==0 && m2==0
-        alfa=Inf;        
+        alfa=Inf;    %case when the top plane is aligned with axis x-z;this case requires a value for Pc    
     else
         Pc(1,1)=(b2-b1)/(m1-m2);%??
         Pc(1,2)=m1*Pc(1,1)+b1;

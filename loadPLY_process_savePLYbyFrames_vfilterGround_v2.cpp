@@ -57,11 +57,11 @@ void eRANSAC(RansacShapeDetector::Options ransacOptions, PointCloud& pc,
 int main()
 {
 	/*-----declaring parameters and paths to load point cloud-------*/
-	int frame = 2;
+	int frame = 4;
 	std::stringstream frame_str;
 	frame_str << frame;
 	std::string rootPath = "C:\\lib\\";
-	std::string writePath = rootPath + "outputPlanes_t4\\";
+	std::string writePath = rootPath + "outputPlanes_t6\\";
 	writePath = writePath + "frame (" + frame_str.str() + ")" + "\\";
 	std::string planeParametersFileName = writePath + "planeParameters.txt";
 	std::string algorithmParametersFileName = writePath + "algorithmParameters.txt";
@@ -136,7 +136,7 @@ int main()
 	ransacOptions.m_bitmapEpsilon = .0132f;//sampling resolution of Hololens 2 for the distance used in lab
 		// NOTE: This threshold is NOT multiplied internally!
 	ransacOptions.m_normalThresh = .8f; // this is the cos of the maximal normal deviation
-	ransacOptions.m_minSupport = 10; // this is the minimal numer of points required for a primitive
+	ransacOptions.m_minSupport = 54; // this is the minimal number of points required for a primitive
 	ransacOptions.m_probability = .01f; // this is the "probability" with which a primitive is overlooked
 
 	size_t remaining(0);
@@ -184,7 +184,7 @@ int main()
 		initIndex = pc.size() - accNbPointsByPrimitive - 1;
 		endIndex = pc.size() - accNbPointsByPrimitive_pst - 1;
 		/*---assembly PC for each set of inliers*/
-		for (int k = initIndex; k < endIndex; k++)
+		for (int k = initIndex; k <= endIndex; k++)
 		{
 			pcl::PointXYZ basic_point;
 			basic_point.x = *pc.at(k).pos;

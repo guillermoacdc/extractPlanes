@@ -7,10 +7,10 @@ clear all
 % 3. tform: orientation of the plane
 %% load pc
 % planeID=7; %for perpendicular plane that is attracted to x axis, 6
-planeID=14; %for perpendicular plane that is attracted to z axis
-% planeID=2; %for parallel planes [1:5]
+% planeID=14; %for perpendicular plane that is attracted to z axis
+planeID=1; %for parallel planes [1:5]
 % planeID=3;
-frame=5;
+frame=9;
 in_planesFolderPath=['C:/lib/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
 % pc = pcread('onePlane2.ply');%plane in axis x,y
 
@@ -23,7 +23,7 @@ groundNormal=[0 1 0];% the height is in axis y
 myTolerance=10;%degrees
 [L1 L2 tform normalType]=measurePlaneParameters(pc, modelParameters, groundNormal, myTolerance)
 
-return
+
 
 % title of plots
 if normalType==0

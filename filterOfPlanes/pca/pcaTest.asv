@@ -1,0 +1,38 @@
+clc
+close all
+clear
+
+%% carga de datos
+N=1000;
+u=[0 0]';
+sigmax=2;
+sigmay=1;
+% sigma = [1 0.5; 0.5 2];
+sigma = [sigmax^2 0.5; 0.5 sigmay^2];
+x = mvnrnd(u,sigma,N)'; %data set Clase 1
+
+%% cálculo componentes ppales
+
+[eigenval,eigenvec]=pca_fun(x,2);
+
+
+
+return
+% calculo matriz de covarianza c
+c=cov(x);
+% cálculo de autovalores (landa) y autovectores unitarios (e) de c
+[landa 	e]=eig(c);
+
+
+
+
+
+figure,
+plot(x(:,1),x(:,2),'bo')
+hold
+quiver(X,Y,U,V)
+quiver(X,Y,U,V)
+xlabel 'x'
+ylabel 'y'
+
+

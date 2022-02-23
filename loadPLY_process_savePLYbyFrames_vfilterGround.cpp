@@ -3,12 +3,15 @@
 #include <algorithm> // for max_element
 #include <pcl/io/ply_io.h> // to load ply file and save ply files
 #include <pcl/point_types.h> //use of pcl::PointXYZ Struct Reference
-#include <pcl/registration/icp.h>
+#include <pcl/point_cloud.h> // for PointCloud
 #include <pcl/console/time.h>   // TicToc
 #include <pcl/common/common.h> //to compute minmax
+#include <pcl/common/io.h> // for copyPointCloud
 #include <pcl/sample_consensus/ransac.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
-using namespace std;
+//using namespace std;
+//using namespace pcl;
+
 typedef pcl::PointXYZ PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
 
@@ -25,13 +28,16 @@ typedef pcl::PointCloud<PointT> PointCloudT;
 #include <fstream> 
 #include<cmath>
 
-//pcl::PointCloud<pcl::PointXYZ>::Ptr
-PointCloud myLoadPC(string readPath);
-//pcl::PointCloud<pcl::PointXYZ>::Ptr extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, float DistanceTreshold, Eigen::VectorXf modelCoeffs);
-void extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, pcl::PointCloud<pcl::PointXYZ>::Ptr final, float DistanceTreshold, Eigen::VectorXf modelCoeffs);
-//this function receives a rawPC whose gravity vector is alligned with -z axis. Then applies a plane fitting process using an MSAC implementation. Afther this, computes a new pointcloud with the outliers of the plane fitting process. At the output you will find
-//1. the pointCloud without ground; with pass by value
-//2. the parameters of the plane model modelCoeffs; with pass by argument
+/*This function receives an aligned point cloud with ground (raw_pc), extracts the points
+that conforms the ground and returns in the filtered_pc a point cloud without ground. Finally
+returns the ground plane model in a VectorXf*/
+Eigen::VectorXf extractGround(const pcl::PointCloud<pcl::PointXYZ>::Ptr raw_pc, 
+	pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_pc, 
+	float DistanceTreshold);
+/*This function loads the raw point cloud from a PLY file, filter the points associated with 
+ground, and stores the result in a PointType defined by the efficientRansac Library developers*/
+void myLoadPC(std::string readPath, PointCloud& pc);
+
 
 int main()
 {
@@ -39,18 +45,22 @@ int main()
 	int frame = 2;
 	std::stringstream frame_str;
 	frame_str << frame;
-	string rootPath = "C:\\lib\\";
-	string writePath = rootPath + "outputPlanes_t3\\";
-			writePath = writePath  + "frame (" + frame_str.str() + ")" + "\\";
+	std::string rootPath = "C:\\lib\\";
+	std::string writePath = rootPath + "outputPlanes_t3\\";
+	writePath = writePath + "frame (" + frame_str.str() + ")" + "\\";
 	std::string planeParametersFileName = writePath + "planeParameters.txt";
 	std::string algorithmParametersFileName = writePath + "algorithmParameters.txt";
-	string readPath = rootPath + "inputScenes\\" + "frame" + frame_str.str() + ".ply";
+	std::string readPath = rootPath + "inputScenes\\" + "frame" + frame_str.str() + ".ply";
 	/*-------declaring txt writing objects------*/
-	ofstream out_txtFile(planeParametersFileName);
-	ofstream out_txtFile2(algorithmParametersFileName);
+	std::ofstream out_txtFile(planeParametersFileName);
+	std::ofstream out_txtFile2(algorithmParametersFileName);
 	/*---------- loading PC from PLY  ------------*/
 	PointCloud pc;
-	pc=myLoadPC(readPath);
+	
+	//pc = myLoadPC(readPath);
+	myLoadPC(readPath, pc);
+	std::cout << "\n succesfull execution of myLoadPC \n";
+	//return 0;
 	/*----------parameterize the EfficientRANSAC algorithm-------------*/
 	RansacShapeDetector::Options ransacOptions;
 	ransacOptions.m_epsilon = .0132f; // set distance threshold to .01f of bounding box width
@@ -60,8 +70,8 @@ int main()
 	ransacOptions.m_normalThresh = .8f; // this is the cos of the maximal normal deviation
 	ransacOptions.m_minSupport = 10; // this is the minimal numer of points required for a primitive
 	ransacOptions.m_probability = .01f; // this is the "probability" with which a primitive is overlooked
-	
-	
+
+
 	out_txtFile2 << "m_epsilon= " << ransacOptions.m_epsilon << "\n"
 		<< "m_bitmapEpsilon= " << ransacOptions.m_bitmapEpsilon << "\n"
 		<< "m_normalThresh= " << ransacOptions.m_normalThresh << "\n"
@@ -69,10 +79,10 @@ int main()
 		<< "m_probability= " << ransacOptions.m_probability << "\n\n";
 
 	out_txtFile2 << "Loaded PC from a PCL to EfficientRANSAC lib, with descriptors:" << "\n"
-		<< "\t Size: " << pc.size() << endl
-		<< "\t Scale is: " << pc.getScale() << endl
+		<< "\t Size: " << pc.size() << std::endl
+		<< "\t Scale is: " << pc.getScale() << std::endl
 		<< "\t first point [x,y,z]: [" << *pc.at(0).pos << ", " << *(pc.at(0).pos + 1) << ", " << *(pc.at(0).pos + 2) << "]"
-		<< endl;
+		<< std::endl;
 
 	/*----create objects for detector and for shapes------*/
 	RansacShapeDetector detector(ransacOptions); // the detector object
@@ -90,16 +100,16 @@ int main()
 		// i.e. into the range [ pc.size() - shapes[0].second, pc.size() )
 		// the points of shape i are found in the range
 		// [ pc.size() - \sum_{j=0..i} shapes[j].second, pc.size() - \sum_{j=0..i-1} shapes[j].second )
-	
+
 	std::cout << "processed in " << time.toc() << " ms\n"
-			  << "remaining unassigned points " << remaining << std::endl;
+		<< "remaining unassigned points " << remaining << std::endl;
 	out_txtFile2 << "processed in " << time.toc() << " ms\n"
-				<< "remaining unassigned points " << remaining << std::endl;
+		<< "remaining unassigned points " << remaining << std::endl;
 
 	/*--declare variables to track the findings during the detection---*/
 	// Vector where each element represents the number of points by primitive; variable size
 	Eigen::VectorXi NbPointsByPrimitive;
-		
+
 	//accumulators
 	int accNbPointsByPrimitive, accNbPointsByPrimitive_pst;
 	accNbPointsByPrimitive_pst = 0;
@@ -134,7 +144,7 @@ int main()
 			template_cloud_ptr->push_back(basic_point);
 		}
 		/*----save assembled PC using PLY format*/
-		iterations=std::to_string(i);
+		iterations = std::to_string(i);
 		//iterations << i;
 		std::string fileName = writePath + "Plane" + iterations + "A.ply";
 		pcl::io::savePLYFileASCII(fileName, *template_cloud_ptr);
@@ -144,19 +154,19 @@ int main()
 		plane = static_cast<PlanePrimitiveShape*>(shape);
 		Normal = plane->Internal().getNormal();//normal vector (A, B, C)
 		Distance = plane->Internal().SignedDistToOrigin();//signed distance to orign (D)
-		out_txtFile << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", " << Distance  << std::endl;
+		out_txtFile << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", " << Distance << std::endl;
 
 
-/*---output descriptors*/
-		//write parameters and run-time in descriptors.txt
+		/*---output descriptors*/
+				//write parameters and run-time in descriptors.txt
 		shapes[i].first->Description(&desc);
-		cout << "\t consists of " << shapes[i].second
+		std::cout << "\t consists of " << shapes[i].second
 			<< " points, it is a " << desc << " (from index " << initIndex << " to " << endIndex << ")" << std::endl
-			<< "\t parameters [A, B, C, D]: ["<< Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", " << Distance << "]" << std::endl
+			<< "\t parameters [A, B, C, D]: [" << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", " << Distance << "]" << std::endl
 			<< "\t first point [x,y,z]: [" << *pc.at(initIndex).pos << ", " << *(pc.at(initIndex).pos + 1) << ", " << *(pc.at(initIndex).pos + 2) << "]"
 			<< "\t end point [x,y,z]: [" << *pc.at(endIndex).pos << ", " << *(pc.at(endIndex).pos + 1) << ", " << *(pc.at(endIndex).pos + 2) << "]"
 			<< std::endl;
-			
+
 		//update accumulated number of points by primitive
 		accNbPointsByPrimitive_pst = accNbPointsByPrimitive;
 	}
@@ -167,9 +177,10 @@ int main()
 
 //-----my functions definitions
 
-PointCloud myLoadPC(string readPath)
+void myLoadPC(std::string readPath, PointCloud& pc)
 {
-	Eigen::VectorXf modelCoeffs;
+	//Eigen::VectorXf modelCoeffs;
+	//modelCoeffs.resize(4);
 	/*---------- loading PC from PLY  ------------*/
 	//load with PCL
 	pcl::PointCloud<pcl::PointXYZ>::Ptr raw_pc(new pcl::PointCloud<pcl::PointXYZ>); // 
@@ -180,68 +191,77 @@ PointCloud myLoadPC(string readPath)
 		std::cout << readPath;
 		//return (-1);
 	}
-	//boxes_pc = extractGroundPlane(raw_pc, 0.01, modelCoeffs);
-	extractGroundPlane(raw_pc, boxes_pc, 0.01, modelCoeffs);
+
+	std::cout << "Printing from myLoadPC function. Loaded raw PC from a PLY file, with descriptors:" << "\n"
+		<< "\t Width: " << raw_pc->width
+		<< "\t Height: " << raw_pc->height
+		<< "\t first point [x,y,z]: [" << raw_pc->points[0].x
+		<< ", " << raw_pc->points[0].y << ", " << raw_pc->points[0].z << "]"
+		<< std::endl;
+
+	//pcl::copyPointCloud(*raw_pc,*boxes_pc);
+	Eigen::VectorXf modelCoeffs;
+	modelCoeffs = extractGround(raw_pc, boxes_pc, 0.1);//source of the assertion error
+
 	//compute descriptors with PCL
 	pcl::PointXYZ minPoint, maxPoint;
 	pcl::getMinMax3D(*boxes_pc, minPoint, maxPoint);
 
-	cout << "Loaded PC from a PLY file, with descriptors:" << "\n"
-		<< "\t Width: " << boxes_pc->width
-		<< "\t Height: " << boxes_pc->height
-		<< "\t Minimun Limits are [Xmin Ymin Zmin]: [ " << minPoint.x << ", " << minPoint.y << ", " << minPoint.z << "]" << endl
-		<< "\t Maximum Limits are [Xmax Ymax Zmax]: [ " << maxPoint.x << ", " << maxPoint.y << ", " << maxPoint.z << "]" << endl
-		<< "\t first point [x,y,z]: [" << boxes_pc->points[0].x
-		<< ", " << boxes_pc->points[0].y << ", " << boxes_pc->points[0].z << "]"
-		<< endl;
 	// load data to PointCloud object; the object from EfficientRansac Libraries 
-	PointCloud pc;
+	//PointCloud pc;
 	for (int i = 0; i < boxes_pc->width; i++) {
 		pc.push_back(Point(Vec3f(boxes_pc->points[i].x, boxes_pc->points[i].y, boxes_pc->points[i].z)));
 	}
-
-	/*----compute/set additional descriptors on the raw point cloud-----*/
+		/*----compute/set additional descriptors on the raw point cloud-----*/
 	pc.setBBox(Vec3f(minPoint.x, minPoint.y, minPoint.z), Vec3f(maxPoint.x, maxPoint.y, maxPoint.z));
 	pc.calcNormals(3);
 
-	cout << "PointCloud without ground have as descriptors:" << "\n"
-		<< "\t Size: " << pc.size() << endl
-		<< "\t Scale is: " << pc.getScale() << endl
+	std::cout << "Finishing myLoadPC function. PointCloud without ground has as descriptors:" << "\n"
+		<< "\t Size: " << pc.size() << std::endl
+		<< "\t Scale is: " << pc.getScale() << std::endl
 		<< "\t first point [x,y,z]: [" << *pc.at(0).pos << ", " << *(pc.at(0).pos + 1) << ", " << *(pc.at(0).pos + 2) << "]"
 		<< "\t Plane parameters [A, B, C, D]: [" << modelCoeffs[0]
 		<< ", " << modelCoeffs[1] << ", " << modelCoeffs[2] << ", "
-		<< modelCoeffs[3] << "]" 
-		<< endl;
-			
-	return pc;
+		<< modelCoeffs[3] << "]"
+		<< std::endl;
 }
 
-//pcl::PointCloud<pcl::PointXYZ>::Ptr extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, float DistanceTreshold, Eigen::VectorXf modelCoeffs)
-void extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, pcl::PointCloud<pcl::PointXYZ>::Ptr final, float DistanceTreshold, Eigen::VectorXf modelCoeffs)
+
+
+/*This function receives an aligned point cloud with ground (raw_pc), extracts the points
+that conforms the ground and returns in the filtered_pc a point cloud without ground. Finally
+returns the ground plane model in a VectorXf*/
+Eigen::VectorXf extractGround(const pcl::PointCloud<pcl::PointXYZ>::Ptr raw_pc, 
+	pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_pc, 
+	float DistanceTreshold)
 {
-	//pcl::PointCloud<pcl::PointXYZ>::Ptr final(new pcl::PointCloud<pcl::PointXYZ>);
+	/*---------EXTRACT GROUND PLANE (init)---------*/
+	Eigen::VectorXf modelCoeffs;
 	/*---2. Compute parameteres of the plane coplanar with ground----*/
 	std::vector<int> inliersInt;
 	//2.1 created RandomSampleConsensus object and compute the appropriated model
 	pcl::SampleConsensusModelPlane<pcl::PointXYZ>::Ptr
-		model_p(new pcl::SampleConsensusModelPlane<pcl::PointXYZ>(rawPC));
+		model_p(new pcl::SampleConsensusModelPlane<pcl::PointXYZ>(raw_pc));
 	//2.2 generate model
 	pcl::RandomSampleConsensus<pcl::PointXYZ> ransac(model_p);
 	ransac.setDistanceThreshold(DistanceTreshold);
 	ransac.computeModel();
 	ransac.getInliers(inliersInt);
-	int outliersSize = rawPC->width - inliersInt.size();
+	int outliersSize = raw_pc->width - inliersInt.size();
 	std::vector<int> outliers(outliersSize);
+
 	//2.3 save obtained parameters in modelCoeffs
-	
+
 	ransac.getModelCoefficients(modelCoeffs);
 	//2.4 compute outliers indexes from inlier indexes
 	int m(0), k(0), currentInlier(0);
-	currentInlier = inliersInt.at(k);
-	for (int i = 0; i < rawPC->width - 1; i++)//fue necesario hacer una iteración menos para que el código no presentara error por sobrecarga: acceso a memoria que no le pertenece al vector
+	currentInlier = inliersInt.at(k);//first target inlier
+	//std::cout << "\t rawpc index \t\t outlierIndex \t\t inlierIndex \n";
+	for (int i = 0; i < raw_pc->width - 1; i++)//fue necesario hacer una iteración menos para que el código no presentara error por sobrecarga: acceso a memoria que no le pertenece al vector
 	{
-		if (i == currentInlier)
-		{
+		//std::cout << "\t "<< i << "\t\t" << m <<  "\t\t" << k << "\n";
+		if (i == currentInlier && k < inliersInt.size() - 1)
+		{//update the target inlier
 			k++;
 			currentInlier = inliersInt.at(k);
 		}
@@ -252,9 +272,9 @@ void extractGroundPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr rawPC, pcl::PointClo
 		}
 	}
 	// 2.5 copies all outliers of the model computed to another PointCloud
-	//pcl::copyPointCloud(*rawPC, outliers, *final);
-	pcl::copyPointCloud(*rawPC, inliersInt, *final);
-	return;
-	//2.6 return the output
-	//return final;
+	pcl::copyPointCloud(*raw_pc, outliers, *filtered_pc);
+	//pcl::copyPointCloud(*raw_pc, inliersInt, *filtered_pc);
+	//pcl::copyPointCloud(*raw_pc, *filtered_pc);
+	/*---------EXTRACT GROUND PLANE (end)---------------------------*/
+	return modelCoeffs;
 }

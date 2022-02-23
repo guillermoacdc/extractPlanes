@@ -50,7 +50,9 @@ pcuts=[];
         pcuts=[pcuts;cuts];
         dists=[dists,norm(cuts(1,:)-cuts(2,:))];
     end
- 
+    
+    
+    
 % computing L1
     [dist_min,ind_min]=min(dists);
     [dist_max,ind_max]=max(dists);
@@ -92,15 +94,25 @@ if(figureFlag==1)
     
     figure,
     pcaData=[x'; y'];
+%     pcaData=aumentationrm(pcaData,k);%regional maximum aumentation
+%     pcaDataMean=
     [eigenval,eigenvec]=pca_fun(pcaData,2);
 	comp1=[eigenvec(1,1),eigenvec(2,1)];
     comp2=[eigenvec(1,2),eigenvec(2,2)];
     
     plot(x,y,'*','color', [.5 .5 .5])%gray color in vector
     hold
+    samplingIndex=round(length(x)/2);
+    samplingRate=norm([x(sampIndex) y(sampIndex)]-[x(sampIndex-1) y(sampIndex-1)])
+%     plot([x(sampIndex-1) x(sampIndex)],[y(sampIndex-1) y(sampIndex)],'k-')
+%     plot([x(sampIndex) x(sampIndex+1)],[y(sampIndex) y(sampIndex+1)],'k-')
+% %     plot([x(sampIndex-1) x(sampIndex)],[y(sampIndex-1) y(sampIndex)],'k-')
+%     plot([x(sampIndex-1) x(sampIndex)],[y(sampIndex-1) y(sampIndex)],'k-')
+%     
     quiver(planeDescriptor.geometricCenter(1),planeDescriptor.geometricCenter(3),comp1(1),comp1(2))
     quiver(planeDescriptor.geometricCenter(1),planeDescriptor.geometricCenter(3),comp2(1),comp2(2))
 
+    
     
 %     figure,
 % %   plot the point cloud in gray color

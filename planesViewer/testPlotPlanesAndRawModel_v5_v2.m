@@ -63,6 +63,8 @@ k=1;%index for video
 figure,
 for i=1:1:NbPlanes
 % for i=5:4:9
+    normalFlag=0;
+    normalColor='r';
 	pcshow(pc_raw)
     hold on
     [modelParameters pc_j ]=loadPlaneParameters(in_planesFolderPath, frame, i);
@@ -76,29 +78,38 @@ for i=1:1:NbPlanes
         [x y z planeType] = computeBoundingPlane(xp, yp, zp, modelParameters(1), ...
             modelParameters(2), modelParameters(3), modelParameters(4), 10);
                 
-%         if (planeType==2)
-            if (1)
+        if (planeType==0 | planeType==1)
+            if(modelParameters(4)<0 & pc_j.Count>pc_raw.Count*0.005)
+                normalFlag=1;
+                % orientation of normal correction
+                modelParameters(1:4)=-modelParameters(1:4);%Invert orientation and distance's sign
+                normalColor='w';
+            end
             planesCounter=planesCounter+1;
             pcshow(pc_j,'MarkerSize', 40)
             if (x~=0)
                 surf(x,y,z,'FaceAlpha',0.5) %Plot the surface
             end
+            %plot plane normal
             quiver3(modelParameters(5), ...
             modelParameters(6), modelParameters(7),modelParameters(1), ...
-            modelParameters(2), modelParameters(3),'b');
-        
+            modelParameters(2), modelParameters(3),normalColor);
+            %plot ground normal
             quiver3(modelParameters(5), ...
             modelParameters(6), modelParameters(7), groundParameters(1),groundParameters(2),...
-                groundParameters(3),'r');
+                groundParameters(3),'b');
+        
         
             xlabel 'x (m)'
+            
             ylabel 'y (m)'
             zlabel 'z (m)'
             view(2)
 %             view(0,0) %for top view
 %             view(0,90) % for (x,y) view
 %             view(108,35)
-            title (['Plane Number: ' num2str(i) ' with ' num2str(pc_j.Count) ' Points from ' num2str(pc_raw.Count) ])
+%             title (['Plane Number: ' num2str(i) ' with ' num2str(pc_j.Count) ' Points from ' num2str(pc_raw.Count) ])
+            title (['Plane Number: ' num2str(i) '. D= ' num2str(modelParameters(4)) '. Population:' num2str(pc_j.Count) '. normal Flag:' num2str(normalFlag)])
             pause()
             F(k) = getframe(gcf) ;
             k=k+1;

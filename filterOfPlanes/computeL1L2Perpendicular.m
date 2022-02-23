@@ -1,4 +1,4 @@
-function [L1,L2, tform] = computeL1L2Perpendicular(pc,typeOfPlane,modelParameters, figureFlag)
+function [L1,L2, Tout] = computeL1L2Perpendicular(pc,planeDescriptor, figureFlag)
 %COMPUTEL1L2PERPENDICULAR Computes the parameters L1, L2 of a point cloud
 %that represents a plane
 % Assumptions: the points in pc have been projected to a plane model
@@ -9,23 +9,41 @@ x=pc.Location(:,1);
 y=pc.Location(:,2);%represents height in pc
 z=pc.Location(:,3);
 
-if(typeOfPlane==1)%compute angle with normal [1 0 0]
-    alpha=computeAngleBtwnVectors([1 0 0], modelParameters(1:3));
-else%compute deviation with normal [0 0 1]
-    alpha=computeAngleBtwnVectors([0 0 1], modelParameters(1:3));
+
+
+% devx=std(x);
+% devz=std(z);
+
+% if(devx>=devz)%inclined to x-y axis, %compute angle with normal [1 0 0]
+%     xyFlag=1;
+%     alpha=computeAngleBtwnVectors([1 0 0], modelParameters(1:3));
+% else%inclined to z-y axis, %compute deviation with normal [0 0 1]
+%     xyFlag=0;
+%     alpha=computeAngleBtwnVectors([0 0 1], modelParameters(1:3));
+% end
+
+if (planeDescriptor.planeTilt==1)%xyTilt
+    alpha=computeAngleBtwnVectors([1 0 0], [planeDescriptor.A planeDescriptor.B planeDescriptor.C]);
+else%zyTilt
+    alpha=computeAngleBtwnVectors([0 0 1], [planeDescriptor.A planeDescriptor.B planeDescriptor.C]);   
 end
-% compute rotatio matrix
+
+% compute rotation matrix
 t=eye(4);
 t(1:3,1:3)=roty(-alpha);%angle in degrees
 tform = affine3d(t);
 % compute translation vector
-
-D=repmat(modelParameters(5:7),size(pc.Location,1),1);
+% D=repmat(modelParameters(5:7),size(pc.Location,1),1);
+D=repmat([mean(x) mean(y) mean(z)],size(pc.Location,1),1);
 pc_rotated1 = pctransform(pc,-D);%ptcloud centered in origin
 pc_rotated2 = pctransform(pc_rotated1,tform);%ptcloud alligned to axis
 
+Tout=tform.T;
+% Tout(1:3,4)=modelParameters(5:7)';
+Tout(1:3,4)=planeDescriptor.geometricCenter';
+
 %compute convexhull in 2D
-if(typeOfPlane==1)%ignore x values
+if(planeDescriptor.planeTilt==1)%ignore x values
     x1=pc_rotated2.Location(:,2);
     y1=pc_rotated2.Location(:,3);    
 else%ignore z values
