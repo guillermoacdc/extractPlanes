@@ -1,0 +1,72 @@
+Writing log....
+Start Build Libraries....
+Path To install Library is:  /usr/local/
+Number cores PC:  8
+Ubuntu Version:  18.04
+Aquitechture:  x86_64
+» Creating Directory Tree Operations...
+/home/guillermo//magic/src/
+/home/guillermo//magic/build/
+/home/guillermo//magic/resources/
+/home/guillermo/Downloads/dotor_scripts-master
+» Directory Install Exist
+» Directory src Exist
+» Directory build Exist
+» Directory build Exist
+ ✅ Tree directories is fine
+ ✅ Success Upgrade and Update system
+» Installing ubuntu Things Development...
+ ✅ Install package's development sucess
+» Start Install Eclipse IDE
+» /opt/eclipse/eclipse exists.
+ ✅ Install Eclipse success
+» Start Install CMake
+» Directory cmake Exist
+» /usr/local/bin/cmake exists.
+ ✅ Install CMake sucess
+» Start Install Cmake GUI
+» /opt/cmake-gui/bin/cmake exists.
+ ✅ Install Cmake GUI success
+» Start Clonning Git's Libraries
+» Start Clonning PROJ
+» End Clonning PROJ
+» Start Clonning PCL
+» End Clonning PCL
+» Start Clonning VTK
+» End Clonning VTK
+» Start Clonning BOOST
+» End Clonning BOOST
+» Start Clonning PDAL
+» End Clonning PDAL
+» Start Clonning GDAL
+» End Clonning GDAL
+» Start Clonning GEOS
+» End Clonning GEOS
+» Start Clonning libspatialite
+» End Clonning libspatialite
+» Start Clonning librttopo
+» End Clonning librttopo
+» Start Clonning RANSAC Eficcient PCSD
+» End Clonning RANSAC Eficcient PCSD
+ ✅ Cloning Libraries Finish
+ ✅ Building PROJ Start
+ ✅ Building PROJ End
+ ✅ Building Boos Start
+ ✅ Building Boost End
+ ✅ Building VTK Start
+ ✅ Building VTK End
+ ✅ Building PCL Start
+ ✅ Building PCL End
+ ✅ Building geos start
+ ✅ Building geos End
+ ✅ Building rttopo Start
+ ✅ Building rttopo End
+ ✅ Building libspatialite start
+ ✅ Building libspatialite End
+ ✅ Building GDAL start
+ ✅ Building GDAL End
+ ✅ Building PDAL start
+ ✅ Building PDAL End
+ ✅ Building RANSAC Eficcient start
+ ✅ Building RANSAC Efficient End
+ ✅ End Build Libraries

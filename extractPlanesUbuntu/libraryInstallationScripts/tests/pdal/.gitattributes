@@ -1,0 +1,18 @@
+# Esteblece el comportamiento predeterminado, en caso de que las personas no tengan configurado core.autocrlf.
+* text=auto
+
+# Declara explícitamente los archivos de texto que siempre quieres que estén normalizados y convertidos a finales de línea nativos en el control.
+*.c text
+*.h text
+*.cpp text
+*.txt text
+*.pcd text
+*.ply text
+
+# Declara los archivos que siempre tendrán los finales de línea LF en el control.
+*.sh text eol=lf
+*.desktop eol=lf
+
+# Denota todos los archivos que son absolutamente binarios y no deberían modificarse.
+*.png binary
+*.jpg binary

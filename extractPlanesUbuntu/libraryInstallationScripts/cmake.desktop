@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Cmake
+Type=Application
+Exec=/opt/cmake-gui/bin/cmake-gui
+Terminal=false
+Icon=/opt/cmake-gui/cmake-icon.png
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=CMake
+Name[en_US]=CMake

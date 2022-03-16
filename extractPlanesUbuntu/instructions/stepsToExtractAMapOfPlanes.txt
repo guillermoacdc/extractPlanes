@@ -1,0 +1,94 @@
+Assumptions: the extractPlanes Model have been built
+
+1. create input/output folders in a predefined path 
+inputFrames
+outputPlanes/frame1.ply, ... , framen.ply; use shell application createOutputFolders.sh to create folders
+
+2. convert frames from double to single precision and populate the inputFrames folder
+	Use matlab application convertFromDoubleToSinglePLY.m to execute the conversion
+	Find interest frames in the path ..boxesDatabaseSample\corridaX\pinhole_projection\boxByFrame.txt
+
+3. execute the code from terminal
+inputs:
+	dataPath
+	frame
+	distanceTreshold
+
+example 1. creating map of planes from scene5, frame 9
+./extractPlanes /home/guillermo/Documents/ptCloudsData/scene5/ 9 0.01
+
+Expect output in terminal,
+
+guillermo@guillermo-VirtualBox:~/test/extractPlanes/build$ ./extractPlanes /home/guillermo/Documents/ptCloudsData/scene5/ 9 0.01
+Loaded raw PC from a PLY file, with descriptors:
+	 Width: 69594	 Height: 1	 first point [x,y,z]: [2.40835, -0.56403, -4.47098]
+PointCloud without ground has as descriptors:
+	 Width: 40075	 Height: 1	 first point [x,y,z]: [2.40835, -0.56403, -4.47098]
+	 Plane parameters [A, B, C, D]: [-0.00456402, 0.99999, -0.000274223, 1.46149]
+PointCloud type object has as descriptors:
+	 Size: 40075
+	 Scale is: 5.38606
+	 first point [x,y,z]: [2.40835, -0.56403, -4.47098]
+shape 0 saved on disk as PLY file 
+	 consists of 19407 points, it is a Plane (from index 20667 to 40074)
+	 parameters [A, B, C, D]: [0.00913054, 0.999958, 3.05484e-05, -0.845447]
+	 first point [x,y,z]: [1.55867, -1.441, -3.3773]	 end point [x,y,z]: [0.874191, -0.883925, -3.58482]
+shape 1 saved on disk as PLY file 
+	 consists of 193 points, it is a Plane (from index 20474 to 20667)
+	 parameters [A, B, C, D]: [0.456947, 0.88949, -0.00251021, -0.561536]
+	 first point [x,y,z]: [2.97759, -0.904491, -3.0746]	 end point [x,y,z]: [1.55867, -1.441, -3.3773]
+shape 2 saved on disk as PLY file 
+	 consists of 13270 points, it is a Plane (from index 7204 to 20474)
+	 parameters [A, B, C, D]: [0.935271, 0.066047, -0.347714, 3.75898]
+	 first point [x,y,z]: [2.9947, -0.84121, -3.07547]	 end point [x,y,z]: [2.97759, -0.904491, -3.0746]
+shape 3 saved on disk as PLY file 
+	 consists of 600 points, it is a Plane (from index 6604 to 7204)
+	 parameters [A, B, C, D]: [0.922092, 0.0626977, -0.381858, 3.88213]
+	 first point [x,y,z]: [0.535907, -0.858361, -3.65452]	 end point [x,y,z]: [2.9947, -0.84121, -3.07547]
+shape 4 saved on disk as PLY file 
+	 consists of 3544 points, it is a Plane (from index 3060 to 6604)
+	 parameters [A, B, C, D]: [0.99996, -0.00889007, 0.00062123, 0.539019]
+	 first point [x,y,z]: [0.536901, -0.855853, -3.65903]	 end point [x,y,z]: [0.535907, -0.858361, -3.65452]
+shape 5 saved on disk as PLY file 
+	 consists of 194 points, it is a Plane (from index 2866 to 3060)
+	 parameters [A, B, C, D]: [-0.694663, 0.719324, 0.00401788, -1.00188]
+	 first point [x,y,z]: [2.63774, -1.46056, -2.73507]	 end point [x,y,z]: [0.536901, -0.855853, -3.65903]
+shape 6 saved on disk as PLY file 
+	 consists of 644 points, it is a Plane (from index 2222 to 2866)
+	 parameters [A, B, C, D]: [0.000661091, 0.999998, -0.00185385, -1.45581]
+	 first point [x,y,z]: [3.04807, -1.41308, -3.03644]	 end point [x,y,z]: [2.63774, -1.46056, -2.73507]
+shape 7 saved on disk as PLY file 
+	 consists of 749 points, it is a Plane (from index 1473 to 2222)
+	 parameters [A, B, C, D]: [0.536614, 0.819871, -0.199642, 1.09031]
+	 first point [x,y,z]: [3.0351, -1.32297, -2.73429]	 end point [x,y,z]: [3.04807, -1.41308, -3.03644]
+shape 8 saved on disk as PLY file 
+	 consists of 72 points, it is a Plane (from index 1401 to 1473)
+	 parameters [A, B, C, D]: [0.95797, 0.173196, -0.228686, 3.30244]
+	 first point [x,y,z]: [2.93958, -1.29168, -3.18918]	 end point [x,y,z]: [3.0351, -1.32297, -2.73429]
+shape 9 saved on disk as PLY file 
+	 consists of 175 points, it is a Plane (from index 1226 to 1401)
+	 parameters [A, B, C, D]: [-0.597144, 0.765722, 0.238931, -3.51752]
+	 first point [x,y,z]: [0.528982, -0.856963, -3.98999]	 end point [x,y,z]: [2.93958, -1.29168, -3.18918]
+shape 10 saved on disk as PLY file 
+	 consists of 169 points, it is a Plane (from index 1057 to 1226)
+	 parameters [A, B, C, D]: [-0.456903, -0.0652696, 0.887119, -3.72896]
+	 first point [x,y,z]: [1.49105, -1.44469, -4.31372]	 end point [x,y,z]: [0.528982, -0.856963, -3.98999]
+shape 11 saved on disk as PLY file 
+	 consists of 94 points, it is a Plane (from index 963 to 1057)
+	 parameters [A, B, C, D]: [0.0196538, -0.641004, 0.767286, -2.35772]
+	 first point [x,y,z]: [1.54337, -1.43733, -3.96134]	 end point [x,y,z]: [1.49105, -1.44469, -4.31372]
+shape 12 saved on disk as PLY file 
+	 consists of 86 points, it is a Plane (from index 877 to 963)
+	 parameters [A, B, C, D]: [0.221127, 0.975239, 0.00341688, -1.07747]
+	 first point [x,y,z]: [2.77736, -0.815921, -3.511]	 end point [x,y,z]: [1.54337, -1.43733, -3.96134]
+shape 13 saved on disk as PLY file 
+	 consists of 77 points, it is a Plane (from index 800 to 877)
+	 parameters [A, B, C, D]: [0.861422, 0.261749, -0.435247, 3.70834]
+	 first point [x,y,z]: [2.56298, -1.46818, -2.54674]	 end point [x,y,z]: [2.77736, -0.815921, -3.511]
+shape 14 saved on disk as PLY file 
+	 consists of 57 points, it is a Plane (from index 743 to 800)
+	 parameters [A, B, C, D]: [-0.0189977, 0.998398, 0.0532916, -1.64929]
+	 first point [x,y,z]: [2.36793, -1.31072, -4.6434]	 end point [x,y,z]: [2.56298, -1.46818, -2.54674]
+
+
+
