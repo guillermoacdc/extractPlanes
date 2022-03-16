@@ -1,8 +1,8 @@
 clc
 close all
 clear
-% This script converts a file (scene5.txt) to a set of parameters of planes
-% (in the file scene5Parameters.txt). 
+% This script converts a file (sceneX.txt) to a set of parameters of planes
+% (in the file sceneXParameters.txt). 
 % The input file is composed by descriptors of the boxes in a single scene
 % with the format boxId, typeID Height(3) Width(4) Depth(5)
 % The output file is composed by descriptors of the planes f1 to f3
@@ -16,12 +16,12 @@ clear
 
 % Author: Guillermo Camacho
 
-
-parameters=load('scene5.txt');%boxId, typeID H(3) W(4) D(5)
+scene=15;
+parameters=load(['scene' num2str(scene) '.txt']);%boxId, typeID H(3) W(4) D(5)
 NoBoxes=size(parameters,1);
 
 planeID=1;  
-fid = fopen( 'scene5Planes.txt', 'wt' );%planeID boxID L1 L2 normal
+fid = fopen( ['scene' num2str(scene) 'Planes.txt'], 'wt' );%planeID boxID L1 L2 normal
 for i=1:NoBoxes
     % read box parameters
     W=parameters(1,4);
