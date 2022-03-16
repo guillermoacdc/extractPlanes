@@ -1,7 +1,7 @@
 function  myPlotPlanes(myPlaneDescriptor, in_planesFolderPath, frame, index)
 %MYPLOTPLANES Summary of this function goes here
 %   Detailed explanation goes here
-in_SceneFolderPath=['C:/lib/inputScenes/'];
+in_SceneFolderPath=['C:/lib/scene5/inputScenes/'];
 pc_raw=pcread([in_SceneFolderPath + "frame" + num2str(frame) + ".ply"]);
 
 

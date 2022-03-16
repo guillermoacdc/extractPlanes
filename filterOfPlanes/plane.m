@@ -3,10 +3,14 @@ classdef plane < handle
     %   Detailed explanation goes here
     
     properties
+        idScene;%scene where the data were acquired
+        idFrame;%frame were the data were acquired in the scene
+        idPlane;%plane id in the frame 
         A;%x component of the normal
         B;%y component of the normal
         C;%z component of the normal
         D;%distance
+        pathPoints;%path to 3D points that conform the plane segment (PLY file)
         type;%type of plane {0, parallel; 1, perpendicular; 2 non-expected}
         numberInliers;
         L1;%minimum length of the segment plane (mt)
@@ -16,23 +20,32 @@ classdef plane < handle
         antiparallelFlag;% (0,1) for (paralle normal, antiparallel normal)
         planeTilt;% (0, 1) for (z-y tilt, x-y tilt); non defined for parallel planes
         geometricCenter;
-        limits%[xmin xmax ymin ymax zmin zmax]
+        limits;%[xmin xmax ymin ymax zmin zmax]
+        secondPlaneID;%perpendicular plane that belongs to the same box that idPlane; empty for non defined
+        thirdPlaneID;%
+        unitNormal;%normal with length 1
     end
     
     methods
-        function obj = plane(in1,in2,in3,in4,in5)
+%         constructor
+        function obj = plane(scene,frame,pID,pnormal,pathInliers,Nmbinliers)
             %PLANE Construct an instance of this class
             %   Detailed explanation goes here
-            obj.A = in1;
-            obj.B = in2;
-            obj.C = in3;
-            obj.D = in4;
-            obj.numberInliers=in5;
+            obj.A = pnormal(1);
+            obj.B = pnormal(2);
+            obj.C = pnormal(3);
+            obj.D = pnormal(4);
+            obj.numberInliers=Nmbinliers;
+            obj.idScene=scene;%scene where the data were acquired
+            obj.idFrame=frame;%frame were the data were acquired in the scene
+            obj.idPlane=pID;%plane id in the frame 
+            obj.pathPoints=pathInliers;
         end
         
         function ne_flag=classify(obj,pc,th_angle, groundNormal)
-            %METHOD1 compute the type of normal  by comparing with the normal
-%of the ground
+            %METHOD1 classify the plane based on two criterion
+%               (1) anglebtwn(groundNormal,planeNormal)->{0,1,2}, {parallel to ground, perpendicular to ground, non-expected Plane}
+%               (2) inclination of perpendicular planes ->{0,1}, {inclined to x-y axis, inclined to z-y axis} 
             ne_flag=0;
             th_angle=th_angle*pi/180;
             % compute angle between normal of plane and normal of ground
@@ -107,6 +120,7 @@ classdef plane < handle
 %                 obj.planeTilt=xyFlag;
             end
         end
+
         %note that the geometric center is in tform, column 4
         end
         
@@ -114,6 +128,11 @@ classdef plane < handle
             obj.lengthFlag=flag;
         end
         
+        function setUnitNormal(obj)
+            %computes normal with unit magnitude 
+            normalVector=[obj.A obj.B obj.C];
+            obj.unitNormal=normalVector/norm(normalVector);
+        end
     end
 end
 

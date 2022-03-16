@@ -1,11 +1,9 @@
 clc
 close all
 clear 
-% script para analizar la variación de porcentajes en planos detectados, en
-% cuanto el operario se acerca a las cajas
 
 scene=5;
-frame=4;
+frame=5;
 %% load expected values
 parameters=load('scene5Planes.txt');%IDplane, IdBox, L1(cm), L2(cm), normalType
 features=parameters(:,[3:5]);
@@ -29,18 +27,18 @@ th_angle=10;
 th_size=150;
 groundNormal=[0 1 0];
 plotFlag=0;
-%% iterative process
+%% iterative process to load plane descriptors (raw and derived)
 antiparallelNormalIndex=[];
 for i=1:numberPlanes
-% for i=1:8
+% for i=6:6
     planeID=i;
     inliersPath=[in_planesFolderPath + "Plane" + num2str(i-1) + "A.ply"];
     [modelParameters pc ]=loadPlaneParameters(in_planesFolderPath, frame,...
         planeID);
-%     create the object
+%     create the plane object
     myPlanes{i}=plane(scene, frame, planeID, modelParameters(1:4),...
         inliersPath, pc.Count);%scene,frame,pID,pnormal,Nmbinliers
-%     classify the object
+%     classify the plane object
     myPlanes{i}.classify(pc, th_angle, groundNormal);%
 %     compute geometric center and bounds of the projected point cloud
     myPlanes{i}.setGeometricCenter(pc);%all planes have a g.c.
@@ -59,10 +57,7 @@ for i=1:numberPlanes
 end
 
 
-
-%% plot results
-
-
+%% descriptive statistics
 k1=1;
 k2=1;
 k3=1;
@@ -88,14 +83,61 @@ for i=1:numberPlanes
         k4=k4+1;
     end
 end
-
-%% descriptive statistics
 % percentage of accepted planes
-pap=length(acceptedPlanes)*100/numberPlanes
+pap=length(acceptedPlanes)*100/numberPlanes;
 % percentage of planes filtered by normal vector
-ppfbn=length(discardedByNormal)*100/numberPlanes
+ppfbn=length(discardedByNormal)*100/numberPlanes;
 % percentage of planes filtered by length
-ppfbl=length(discardedByLength)*100/numberPlanes
+ppfbl=length(discardedByLength)*100/numberPlanes;
+
+%--------- normalize the length of normal vector for each accepted plane
+for i=1:length(acceptedPlanes)
+    myPlanes{acceptedPlanes(i)}.setUnitNormal();
+end
+%some normals were already with unit length
+%% second plane detection
+for i=1:length(acceptedPlanes)
+    targetPlane=acceptedPlanes(i);
+    secondPlaneIndex=secondPlaneDetection(targetPlane,acceptedPlanes,myPlanes);
+    if(secondPlaneIndex~=-1)
+        myPlanes{acceptedPlanes(i)}.secondPlaneID=secondPlaneIndex;
+    end
+end
+
+
+%% third plane detection - uses pass by reference
+thirdPlaneDetection(myPlanes, acceptedPlanes, th_angle)
+
+%% cuboid parameter estimation
+% resolve just for parallel planes with second and third planes defined
+k=1;
+for i=1:length(acceptedPlanes)
+    if myPlanes{acceptedPlanes(i)}.type==0 & ...
+            ~isempty(myPlanes{acceptedPlanes(i)}.secondPlaneID) & ...
+            ~isempty(myPlanes{acceptedPlanes(i)}.thirdPlaneID)
+        box.topPlaneID=myPlanes{acceptedPlanes(i)}.idPlane;
+        box.side1PlaneID=myPlanes{acceptedPlanes(i)}.secondPlaneID;
+        box.side2PlaneID=myPlanes{acceptedPlanes(i)}.thirdPlaneID;
+
+        boxes{k}=box;
+        k=k+1;
+    end
+end
+
+
+[depth height width]=projectInEdge(box,myPlanes);
+box.depth=depth;
+box.height=height;
+box.width=width;
+
+% figure,
+% myPlotBox(box,myPlanes)... in construction
+
+
+
+return
+%% plotPlanes
+
 
 % planes filtered by length ()
 figure,
