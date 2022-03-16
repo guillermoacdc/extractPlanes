@@ -86,9 +86,6 @@ classdef plane < handle
         
         if(obj.antiparallelFlag)
             %Invert orientation and distance's sign
-%                 obj.A=-obj.A;
-%                 obj.B=-obj.B;
-%                 obj.C=-obj.C;
                 obj.unitNormal=-obj.unitNormal;
                 obj.D=-obj.D;
         end

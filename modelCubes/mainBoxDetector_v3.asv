@@ -2,16 +2,14 @@ clc
 close all
 clear 
 
-% scene=15;
-% frame=28;
 scene=5;
-frame=5;
+frame=7;
 
 %% define paths to load data and tresholds
-inputFramesPath=['C:/lib/sharedData/sc' num2str(scene) '/inputFrames/'];
+
 % in_planesFolderPath=['C:/lib/scene5/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
 % in_planesFolderPath=['C:/lib/sharedData/sc5/outputPlanes/m_minSupport(50)/DT0_1/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
-in_planesFolderPath=['C:/lib/sharedData/sc' num2str(scene) '/outputPlanes/m_minSupport(50)/DT0_01/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
+in_planesFolderPath=['C:/lib/sharedData/sc5/outputPlanes/m_minSupport(50)/DT0_01/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
 cd1=cd;
 cd(in_planesFolderPath);
 Files1=dir('*.ply');
@@ -64,17 +62,17 @@ ppfbl=length(discardedByLength)*100/numberPlanes;
 
 % planes filtered by length ()
 figure,
-myPlotPlanes(myPlanes, discardedByLength, inputFramesPath);
+myPlotPlanes(myPlanes, discardedByLength);
 title (['planes filtered by length (' num2str(ppfbl) '%)'])
 
 % planes filtered by normal vector
 figure,
-myPlotPlanes(myPlanes, discardedByNormal, inputFramesPath);
+myPlotPlanes(myPlanes, discardedByNormal);
 title (['planes filtered normal vector (' num2str(ppfbn) '%)'])
 
 % accepted planes
 figure,
-myPlotPlanes(myPlanes, acceptedPlanes, inputFramesPath);
+myPlotPlanes(myPlanes, acceptedPlanes);
 hold on
 title (['accepted planes (' num2str(pap) '%)'])
 
@@ -110,24 +108,24 @@ for i=1:length(acceptedPlanes)
 end
 
 if (~isempty(boxes))
-    figure,
-    for(i=1:size(boxes,2))
-    [depth height width]=projectInEdge(boxes{i},myPlanes, plotFlag);
-    boxes{i}.depth=depth;
-    boxes{i}.height=height;
-    boxes{i}.width=width;
-
-        myPlotSinglePlane(myPlanes{boxes{i}.side1PlaneID})
-        hold on
-        myPlotSinglePlane(myPlanes{boxes{i}.side2PlaneID})
-        myPlotSinglePlane(myPlanes{boxes{i}.topPlaneID})
-    end
-    myPlotSinglePlane(myPlanes{1})%plot ground
+    [depth height width]=projectInEdge(box,myPlanes);
+    box.depth=depth;
+    box.height=height;
+    box.width=width;
+%plot box
+figure,
+    myPlotSinglePlane(myPlanes{box.side1PlaneID})
+    hold on
+    myPlotSinglePlane(myPlanes{box.side2PlaneID})
+    myPlotSinglePlane(myPlanes{box.topPlaneID})
+    myPlotSinglePlane(myPlanes{1})
     view(2)
     xlabel 'x (m)'
     ylabel 'y (m)'
     zlabel 'z (m)'
 end
+
+
 
 
 

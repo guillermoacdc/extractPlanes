@@ -1,6 +1,9 @@
 function [acceptedPlanes, discardedByNormal, discardedByLength]= computeDescriptiveStatisticsOnPlanes(myPlanes)
 %COMPUTEDESCRIPTIVESTATISTICSONPLANES Summary of this function goes here
 %   Detailed explanation goes here
+acceptedPlanes=[];
+discardedByNormal=[];
+discardedByLength=[];
 k1=1;
 k2=1;
 k3=1;

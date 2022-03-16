@@ -1,4 +1,4 @@
-function [depth height width]=projectInEdge(box,myPlanes)
+function [depth height width]=projectInEdge(box,myPlanes, plotFlag)
 %PROJECTINEDGE determine a size of a cuboid by projecting points on a plane
 %into the edge, as described in section 4.3 from [1]
 %   [1] file:///G:/Mi%20unidad/semestre%206/1-3%20AlgoritmosSeguimientoPose/detectorCajas/Incremental-3D-cuboid-modeling-with-drift-compensationSensors-Switzerland.pdf
@@ -53,22 +53,23 @@ end
 
 
 %% plot the box
-[x1 y1 z1 ] = computeBoundingPlanev2(myPlanes{box.side1PlaneID});
-[x2 y2 z2 ] = computeBoundingPlanev2(myPlanes{box.side2PlaneID});
-figure,
-    pcshow(pc1)
-    hold on
-    pcshow(pc2)
-    pcshow(pc3)
-    plot3(p0(1),p0(2),p0(3),'*b','LineWidth',3)
-    myPlotPlaneContour(myPlanes{box.topPlaneID})
-    surf(x1,y1,z1,'FaceAlpha',0.5)
-    surf(x2,y2,z2,'FaceAlpha',0.5)
-    xlabel 'x'
-    ylabel 'y'
-    zlabel 'z'
-    title (['box with parameters (depth height width) = (' num2str(depth) ', ' ...
-        num2str(height) ', ' num2str(width) ')'])
-
+if(plotFlag)
+    [x1 y1 z1 ] = computeBoundingPlanev2(myPlanes{box.side1PlaneID});
+    [x2 y2 z2 ] = computeBoundingPlanev2(myPlanes{box.side2PlaneID});
+    figure,
+        pcshow(pc1)
+        hold on
+        pcshow(pc2)
+        pcshow(pc3)
+        plot3(p0(1),p0(2),p0(3),'*b','LineWidth',3)
+        myPlotPlaneContour(myPlanes{box.topPlaneID})
+        surf(x1,y1,z1,'FaceAlpha',0.5)
+        surf(x2,y2,z2,'FaceAlpha',0.5)
+        xlabel 'x'
+        ylabel 'y'
+        zlabel 'z'
+        title (['box with parameters (depth height width) = (' num2str(depth) ', ' ...
+            num2str(height) ', ' num2str(width) ')'])
+end
 end
 

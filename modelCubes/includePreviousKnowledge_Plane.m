@@ -20,7 +20,6 @@ if (planeDescriptor.type==2)%avoid computation on non-expected planes
         return
 else
         planeDescriptor.measurePoseAndLength(pc, plotFlag)
-%         myPlotSinglePlane(planeDescriptor{i})
 end
 %     filter planes by Length
     lengthFlag=lengthFilter(planeDescriptor,lengthBounds,th_lenght);
