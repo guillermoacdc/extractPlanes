@@ -15,3 +15,6 @@ shapesDetector
 
 #ignore all .avi files
 *.avi
+
+#ignore all .asv files
+*.asv
