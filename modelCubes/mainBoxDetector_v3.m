@@ -2,15 +2,16 @@ clc
 close all
 clear 
 
-% scene=15;
-% frame=28;
 scene=5;
-frame=5;
+frame=6;
+% scene=15;
+% frame=22;%
 
 %% define paths to load data and tresholds
 inputFramesPath=['C:/lib/sharedData/sc' num2str(scene) '/inputFrames/'];
+
 % in_planesFolderPath=['C:/lib/scene5/outputPlanes_t10/frame ('  num2str(frame)  ')/'];%extracted planes with efficientRANSAC
-% in_planesFolderPath=['C:/lib/sharedData/sc5/outputPlanes/m_minSupport(50)/DT0_1/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
+% in_planesFolderPath=['C:/lib/sharedData/sc' num2str(scene) '/outputPlanes/m_minSupport(50)/DT0_1/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
 in_planesFolderPath=['C:/lib/sharedData/sc' num2str(scene) '/outputPlanes/m_minSupport(50)/DT0_01/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
 cd1=cd;
 cd(in_planesFolderPath);
@@ -18,12 +19,15 @@ Files1=dir('*.ply');
 cd(cd1)
 numberPlanes=length(Files1);
 
-th_angle=10;%degrees
+th_angle=15*pi/180;%radians
 th_size=150;%number of points
-th_lenght=10;%cm
+th_lenght=30;%cm - Update with tolerance_length; is in a high value to pass most of the planes
+th_occlusion=1.4;%
+D_Tolerance=0.1;%mt
 plotFlag=0;
 %% iterative process to load plane descriptors from eRANSAC
 for i=1:numberPlanes
+% for i=[1 6 7]
     planeID=i;
     inliersPath=[in_planesFolderPath + "Plane" + num2str(i-1) + "A.ply"];
     [modelParameters pc]=loadPlaneParameters(in_planesFolderPath, frame,...
@@ -31,8 +35,9 @@ for i=1:numberPlanes
 %     create the plane object
     myPlanes{i}=plane(scene, frame, planeID, modelParameters,...
         inliersPath, pc.Count);%scene,frame,pID,pnormal,Nmbinliers
-    if(planeID==1)
+    if(planeID==1)%ground plane
         groundNormal=myPlanes{i}.unitNormal;%warning: could be set as antiparallel
+        groundD=abs(myPlanes{i}.D);
     end
 end
 
@@ -48,11 +53,11 @@ lengthBounds=[L1min L1max L2min L2max];
 
 for i=1:numberPlanes
     includePreviousKnowledge_Plane(myPlanes{i}, th_lenght, th_size, ...
-        th_angle, groundNormal, lengthBounds, plotFlag);
+        th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBounds, plotFlag);
 end
 
 %% descriptive statistics
-[acceptedPlanes, discardedByNormal, discardedByLength]=computeDescriptiveStatisticsOnPlanes(myPlanes);
+[acceptedPlanes, discardedByNormal, discardedByLength topOccludePlanes]=computeDescriptiveStatisticsOnPlanes(myPlanes);
 % percentage of accepted planes
 pap=length(acceptedPlanes)*100/numberPlanes;
 % percentage of planes filtered by normal vector
@@ -62,30 +67,44 @@ ppfbl=length(discardedByLength)*100/numberPlanes;
 
 %% plotPlanes
 
+% planes filtered by normal vector
+figure,
+myPlotPlanes(myPlanes, discardedByNormal, inputFramesPath);
+title (['planes filtered by its normal vector or D distance value (' num2str(ppfbn) '%)'])
+
+
+
+% top occluded planes
+figure,
+myPlotPlanes(myPlanes, topOccludePlanes, inputFramesPath);
+hold on
+title (['top Occluded planes '])
+
 % planes filtered by length ()
 figure,
 myPlotPlanes(myPlanes, discardedByLength, inputFramesPath);
 title (['planes filtered by length (' num2str(ppfbl) '%)'])
 
-% planes filtered by normal vector
-figure,
-myPlotPlanes(myPlanes, discardedByNormal, inputFramesPath);
-title (['planes filtered normal vector (' num2str(ppfbn) '%)'])
-
 % accepted planes
 figure,
-myPlotPlanes(myPlanes, acceptedPlanes, inputFramesPath);
+myPlotPlanes(myPlanes, [1 acceptedPlanes], inputFramesPath);
 hold on
 title (['accepted planes (' num2str(pap) '%)'])
+
+% % % interest planes in debugging ()
+% figure,
+% myPlotPlanes(myPlanes, [7], inputFramesPath);
+% title (['interest planes in debugging '])
 
 %% second plane detection
 for i=1:length(acceptedPlanes)
     targetPlane=acceptedPlanes(i);
-    secondPlaneIndex=secondPlaneDetection(targetPlane,acceptedPlanes,myPlanes);
+    secondPlaneIndex=secondPlaneDetection(targetPlane,acceptedPlanes,myPlanes, th_angle);
     if(secondPlaneIndex~=-1)
         myPlanes{acceptedPlanes(i)}.secondPlaneID=secondPlaneIndex;
     end
 end
+
 
 
 
@@ -116,11 +135,8 @@ if (~isempty(boxes))
     boxes{i}.depth=depth;
     boxes{i}.height=height;
     boxes{i}.width=width;
+    myPlotSingleBox(myPlanes,boxes{i},i)
 
-        myPlotSinglePlane(myPlanes{boxes{i}.side1PlaneID})
-        hold on
-        myPlotSinglePlane(myPlanes{boxes{i}.side2PlaneID})
-        myPlotSinglePlane(myPlanes{boxes{i}.topPlaneID})
     end
     myPlotSinglePlane(myPlanes{1})%plot ground
     view(2)

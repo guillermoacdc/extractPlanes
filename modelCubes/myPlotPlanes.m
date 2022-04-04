@@ -6,9 +6,11 @@ pc_raw=pcread([in_SceneFolderPath + "frame" + num2str(myPlaneDescriptor{1}.idFra
 
 
 for i=1:1:length(index)
-    pcshow(pc_raw)
-    hold on
+%     pcshow(pc_raw)
+%     hold on
     myPlotSinglePlane(myPlaneDescriptor{index(i)})
+    hold on
+
 
 end    
 view(2)

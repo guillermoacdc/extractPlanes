@@ -17,8 +17,13 @@ classdef plane < handle
         L1;%minimum length of the segment plane (mt)
         L2;%maximum length of the segment plane (mt)
         tform;%pose of the plane. Includes geometric center in column 4
-        lengthFlag;%(0,1) for (non expected length, expected length)
+%         Flags
+        DFlag;%(0,1) for (distance D out of tolerance region, distance D inside tolerance regin); defined just for parallel planes
+        lengthFlag;%(0,1) for (expected length, non expected length)
         antiparallelFlag;% (0,1) for (paralle normal, antiparallel normal)
+        topOccludedPlaneFlag;%(0,1) for (non occluded, occluded)
+        
+        rotatePlot;%(0, 1) for (L2 is along y axis, L1 is along y axis); just for perpedicular planes
         planeTilt;% (0, 1) for (z-y tilt, x-y tilt); non defined for parallel planes
         secondPlaneID;%perpendicular plane that belongs to the same box that idPlane; empty for non defined
         thirdPlaneID;%
@@ -47,7 +52,7 @@ classdef plane < handle
 %               (1) anglebtwn(groundNormal,planeNormal)->{0,1,2}, {parallel to ground, perpendicular to ground, non-expected Plane}
 %               (2) inclination of perpendicular planes ->{0,1}, {inclined to x-y axis, inclined to z-y axis} 
             ne_flag=0;
-            th_angle=th_angle*pi/180;
+%             th_angle=th_angle*pi/180;
             % compute angle between normal of plane and normal of ground
             alpha=computeAngleBtwnVectors([obj.unitNormal],groundNormal);
             if( abs(cos(alpha*pi/180)) > cos (th_angle))%con abs también va a aceptar antiparalelos
@@ -104,27 +109,34 @@ classdef plane < handle
             mean(pc_projected.Location(:,2),1) mean(pc_projected.Location(:,3),1)];
         end
         
-        function measurePoseAndLength(obj, pc, plotFlag)
+        function measurePoseAndLength(obj, pc, occlussionTreshold, plotFlag)
+%This method is not defined for obj.type==2
 %         Project points into model plane
         pc_projected=projectInPlane(pc,[obj.unitNormal obj.D]);
         
 %         compute pose, length and plane tilt; last one just for
 %         perpendicular planes
         if (obj.type==0)%parallel planes
-            [obj.L1 obj.L2 obj.tform]=computeL1L2Parallel(pc_projected,obj,plotFlag);
+           [obj.L1 obj.L2 obj.tform myOccludedIndex]=computeL1L2Parallel(pc_projected,obj,plotFlag);
+           if (myOccludedIndex>occlussionTreshold)
+               obj.topOccludedPlaneFlag=1;
+           end
         else
             if (obj.type==1)%perpendicular planes
-                [obj.L1 obj.L2 obj.tform ]=computeL1L2Perpendicular(pc_projected,obj, plotFlag);
+                [obj.L1 obj.L2 obj.tform rotatePlot]=computeL1L2Perpendicular(pc_projected,obj, plotFlag);
+                obj.rotatePlot=rotatePlot;
             end
         end
-        %note that the geometric center is in tform, column 4
+        
         end
         
         function setLengthFlag(obj,flag)
             obj.lengthFlag=flag;
         end
         
-
+        function setDFlag(obj,flag)
+            obj.DFlag=flag;
+        end
     end
 end
 

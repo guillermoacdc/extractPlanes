@@ -3,7 +3,7 @@ function [index] = myRangeSearch(exemplarSet,refSearch,th_angle)
 %   Detailed explanation goes here
 index=[];
 % compute angle alpha btwn refSearch and each one of the exemplar Sets
-for i=1:length(exemplarSet)
+for i=1:size(exemplarSet,1)
     alpha(i)=abs(computeAngleBtwnVectors(exemplarSet(i,:),refSearch));
 end
 % select index where alpha is btwn the range set by th_angle

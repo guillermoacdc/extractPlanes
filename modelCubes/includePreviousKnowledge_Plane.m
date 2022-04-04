@@ -1,5 +1,5 @@
 function includePreviousKnowledge_Plane(planeDescriptor, th_lenght, th_size, ...
-        th_angle, groundNormal, lengthBounds, plotFlag)
+        th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBounds, plotFlag)
 %INLCUDEPREVIOUSKNOWLEDGE_PLANE implements the strategy to include previous
 %knowledge in the plane extraction stage
 %   Detailed explanation goes here
@@ -15,14 +15,25 @@ planeDescriptor.setLimits(pc);%set limits in each axis.
 
 %     detect antiparallel normals and correct
 planeDescriptor.correctAntiparallel(th_size);%
+
+
+%     filter parallel planes by parameter D; 
+if (planeDescriptor.type==0)
+    D_ToleranceFlag=heightFilterPrllel(groundD,planeDescriptor.D,D_Tolerance);
+    planeDescriptor.setDFlag(D_ToleranceFlag);
+end
+
 %     compute L1, L2 and tform
 if (planeDescriptor.type==2)%avoid computation on non-expected planes
-        return
+%    Non-expected planes can not be filtered by length
+    return
 else
-        planeDescriptor.measurePoseAndLength(pc, plotFlag)
+        planeDescriptor.measurePoseAndLength(pc, th_occlusion, plotFlag)
 end
-%     filter planes by Length
+%     filter planes by Length.
     lengthFlag=lengthFilter(planeDescriptor,lengthBounds,th_lenght);
     planeDescriptor.setLengthFlag(lengthFlag);
+
+
 end
 

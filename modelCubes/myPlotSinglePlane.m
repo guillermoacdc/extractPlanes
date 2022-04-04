@@ -1,4 +1,11 @@
-function myPlotSinglePlane(planeDescriptor)
+function myPlotSinglePlane(planeDescriptor, id)
+
+if nargin==1
+    boxID=0;
+else
+    boxID=id;
+end
+
 %MYPLOTSINGLEPLANE Summary of this function goes here
 %   Detailed explanation goes here
 p=[planeDescriptor.geometricCenter]';
@@ -9,6 +16,13 @@ if(planeDescriptor.antiparallelFlag)
 end
 [x1 y1 z1 ] = computeBoundingPlanev2(planeDescriptor);
 pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
+% set color of pc
+% pointscolor=uint8(zeros(pc.Count,3));
+% pointscolor(:,1)=255;
+% pointscolor(:,2)=255;
+% pointscolor(:,3)=255;
+% pc.Color=pointscolor;
+
 % plot points
 pcshow(pc)
 hold on
@@ -18,12 +32,25 @@ quiver3(p(1),p(2), p(3),n(1), n(2), n(3),normalColor);
 if (planeDescriptor.type==0)
     myPlotPlaneContour(planeDescriptor)
 else
-    surf(x1,y1,z1,'FaceAlpha',0.5)
+
+    if(~isempty(planeDescriptor.planeTilt))
+        myPlotPlaneContourPerpend(planeDescriptor)
+    else
+        surf(x1,y1,z1,'FaceAlpha',0.5)
+    end
 end
-H=text(planeDescriptor.geometricCenter(1),...
+if (boxID~=0)
+     H=text(planeDescriptor.geometricCenter(1),...
+        planeDescriptor.geometricCenter(2),...
+        planeDescriptor.geometricCenter(3),...
+        [num2str(boxID) '-' num2str(planeDescriptor.idPlane)],'Color','red');
+else
+    H=text(planeDescriptor.geometricCenter(1),...
         planeDescriptor.geometricCenter(2),...
         planeDescriptor.geometricCenter(3),...
         num2str(planeDescriptor.idPlane),'Color','red');
+end
+
 set(H,'FontSize',15)
  
 end

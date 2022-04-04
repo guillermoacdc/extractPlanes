@@ -1,4 +1,4 @@
-function [L1,L2, Tout] = computeL1L2Perpendicular(pc,planeDescriptor, figureFlag)
+function [L1,L2, Tout, rotatePlot] = computeL1L2Perpendicular(pc,planeDescriptor, figureFlag)
 %COMPUTEL1L2PERPENDICULAR Computes the parameters L1, L2 of a point cloud
 %that represents a plane
 % Assumptions: the points in pc have been projected to a plane model
@@ -56,9 +56,13 @@ X=max(x1)-min(x1);
 Y=max(y1)-min(y1);
 
 if (X<Y)
+%     planeDescriptor.rotatePlot=0;%L2 is along y axis
+    rotatePlot=0;%L2 is along y axis
     L1=X;
     L2=Y;
 else
+%     planeDescriptor.rotatePlot=1;%L1 is along y axis
+    rotatePlot=1;%L1 is along y axis
 	L1=Y;
     L2=X;
 end

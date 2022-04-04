@@ -42,7 +42,7 @@ for i=1:size(secondPlaneT_unique,1)
     %     use cross product vector as a query for the kd tree
 %     candidates1(i)=rangesearch(modelTree,tPExemplar{i}.crossPd,th_angle/100);
 %     candidates1(i)=rangesearch(exemplarSet,tPExemplar{i}.crossPd,th_angle/100);    
-    candidates1{i}=myRangeSearch(exemplarSet,tPExemplar{i}.crossPd,th_angle);
+    candidates1{i}=myRangeSearch(exemplarSet,tPExemplar{i}.crossPd,th_angle*180/pi);
     if (isempty(candidates1{i}))
         continue
     end

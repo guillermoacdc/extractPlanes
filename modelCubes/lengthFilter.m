@@ -7,10 +7,23 @@ L1max=lengthBounds(2);
 L2min=lengthBounds(3);
 L2max=lengthBounds(4);
 
-lengthFlag=1;
-if(myPlane.L1*100>L1max+th_lenght | myPlane.L1*100<L1min-th_lenght ...
-        | myPlane.L2*100>L2max+th_lenght | myPlane.L2*100<L2min-th_lenght)
-        lengthFlag=0;
+lengthFlag=0;
+L1_upper=L1max+th_lenght;
+L1_lower=L1min-th_lenght;
+L2_upper=L2max+th_lenght;
+L2_lower=L2min-th_lenght;
+
+if(L1_lower<0)
+    L1_lower=0;
+end
+
+if(L2_lower<0)
+    L2_lower=0;
+end
+
+if(myPlane.L1*100>L1_upper | myPlane.L1*100<L1_lower ...
+        | myPlane.L2*100>L2_upper | myPlane.L2*100<L2_lower)
+        lengthFlag=1;
 end
 
 end
