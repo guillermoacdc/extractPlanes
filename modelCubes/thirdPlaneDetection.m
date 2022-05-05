@@ -17,7 +17,9 @@ modelTree=KDTreeSearcher(exemplarSet);
 secondPlaneT=[];
 for i=1:length(acceptedPlanes)
     if(~isempty(myPlanes{acceptedPlanes(i)}.secondPlaneID))
-        secondPlaneT=[secondPlaneT; myPlanes{acceptedPlanes(i)}.idPlane,...
+%         secondPlaneT=[secondPlaneT; myPlanes{acceptedPlanes(i)}.idPlane,...
+%             myPlanes{acceptedPlanes(i)}.secondPlaneID];
+        secondPlaneT=[secondPlaneT; acceptedPlanes(i),...
             myPlanes{acceptedPlanes(i)}.secondPlaneID];
     end
 end
@@ -75,12 +77,15 @@ for i=1:size(secondPlaneT_unique,1)
         % select candidates by distance criterion (with a single target)
         targetPlane=secondPlaneT_unique(i,1);
         v1=myPlanes{targetPlane}.geometricCenter;
+        dist_v=[];%clear the distance vector
         for (ii=1:1:length(candidates2))
-            v2=myPlanes{acceptedPlanes( candidates1{i}(ii) ) }.geometricCenter;
+%             v2=myPlanes{acceptedPlanes( candidates1{i}(ii) ) }.geometricCenter;
+            v2=myPlanes{acceptedPlanes( candidates1{i}(candidates2(ii)) ) }.geometricCenter;
             dist_v(ii)=norm(v1-v2);
         end
         [~,selectedIndex]=min(dist_v);
-        thirdPlaneIndex=acceptedPlanes(candidates1{i}(selectedIndex));
+%         thirdPlaneIndex=acceptedPlanes(candidates1{i}(selectedIndex));
+        thirdPlaneIndex=acceptedPlanes(candidates1{i}(candidates2(selectedIndex)));
         
         % retrieve duplicates from unique filter
         dup=find(ic==i);

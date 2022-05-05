@@ -1,4 +1,4 @@
-function [secondPlaneIndex] = secondPlaneDetection(targetPlane,acceptedPlanes,planesDescriptor, th_angle)
+function [secondPlaneIndex] = secondPlaneDetection(targetPlane,searchSpace,planesDescriptor, th_angle )
 %SECONPLANEDETECTION Summary of this function goes here
 %   computes second plane based on section 4.1 in [1]
 % [1] file:///G:/Mi%20unidad/semestre%206/1-3%20AlgoritmosSeguimientoPose/detectorCajas/Incremental-3D-cuboid-modeling-with-drift-compensationSensors-Switzerland.pdf
@@ -7,7 +7,7 @@ function [secondPlaneIndex] = secondPlaneDetection(targetPlane,acceptedPlanes,pl
 candidates1=[];
 candidates2=[];
 k=1;
-searchSpace=setdiff(acceptedPlanes,targetPlane);
+% searchSpace=setdiff(acceptedPlanes,targetPlane);
 %% select candidates by perpendicularity criterion
 normTarget=planesDescriptor{targetPlane}.unitNormal;
 for(i=1:1:length(searchSpace))

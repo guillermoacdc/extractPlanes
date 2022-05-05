@@ -4,7 +4,12 @@ function [L1 L2 Tout myOccludedIndex]=computeL1L2Parallel(pc, planeDescriptor, f
 % Assumptions: the points in pc have been projected to a plane model
 % described by modelParameters
 
+% revisions
+% 04/05/2022. the computation of ang in L2 is modified. Instead adding 
+% pi/2, the computation substracts pi/2. This resolves the problem of L2=0
+% in plane 4-17. ang=(ind_min*pi/n)-pi/2; see around line58
 
+figureFlag=0;
 % esta técnica no va a funcionar en los casos
 % 1. planos ocluidos: el borde visible del plano superior va a definir el
 % valor de L1 o L2
@@ -17,7 +22,7 @@ Px=[planeDescriptor.geometricCenter(1) planeDescriptor.geometricCenter(3)];
 
 % compute indexes that belong to the perimeter of the shape
 k = convhull(double(x),double(y));
-n=360;
+n=359;
 dists=[];
 pcuts=[];
 % search for the intersection between a virtual line (Px,u) and segments of the
@@ -36,34 +41,27 @@ pcuts=[];
             p4=[x(k(j+1)),y(k(j+1))];%adjacent point
             [out,Pc]=intersect_lines(p1,p2, p3, p4 );
             if out
-               cuts=[cuts;Pc];
+               cuts=[cuts;Pc];%coordenadas de puntos de intersección entre línea [0 u] y la línea [p3 p4], para un vector u fijo; 
             end
         end
-        pcuts=[pcuts;cuts];
-        dists=[dists,norm(cuts(1,:)-cuts(2,:))];
+        pcuts=[pcuts;cuts];%coordenadas de puntos de intersección entre línea [0 u] y la línea [p3 p4], para un vector u con múltiples orientaciones 
+        dists=[dists,norm(cuts(1,:)-cuts(2,:))];%distancia entre los puntos de intersección
     end
  
 % computing L1
     [dist_min,ind_min]=min(dists);
-    [dist_max,ind_max]=max(dists);
+%     [dist_max,ind_max]=max(dists);%innecesario
     L1=dist_min;
 % computing alpha*    
     cuts=[];
-    ang=(ind_min*pi/n)+pi/2;%alpha*; orientation of L2
+%     ang=(ind_min*pi/n)+pi/2;%alpha*; orientation of L2. Note that you can add or substract pi/2
+    ang=(ind_min*pi/n)-pi/2;%alpha*; orientation of L2. Note that you can add or substract pi/2
 % computing L2    
     u=[cos(ang),sin(ang)];    
     for j=1:size(k,1)-1
         [out,Pc]=intersect_lines(Px,u,[x(k(j,1),1),y(k(j,1),1)],[x(k(j+1,1),1),y(k(j+1,1),1)]);
         if out%detects intersection between line (Px,u), and line (p3,p4)
            cuts=[cuts;Pc];%Pc contains the intersection coordinate
-%            figure,
-%                 plot([Px(1) u(1)],[Px(2) u(2)],'Color','k','LineStyle','--')
-%                 hold on
-%                 plot([p3(1) p4(1)],[p3(2) p4(2)],'Color','b','LineStyle','--')
-%                 plot(Pc,'yo')
-%                 xlabel 'x'
-%                 ylabel 'y'
-%                 grid
         end
     end    
     Plb=cuts(1,:);

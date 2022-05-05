@@ -6,6 +6,7 @@ classdef plane < handle
         idScene;%scene where the data were acquired
         idFrame;%frame were the data were acquired in the scene
         idPlane;%plane id in the frame 
+        idBox;%id of detected box associated with the current plane
         unitNormal;%normal with length 1
         D;%distance
         geometricCenter;
@@ -23,9 +24,9 @@ classdef plane < handle
         antiparallelFlag;% (0,1) for (paralle normal, antiparallel normal)
         topOccludedPlaneFlag;%(0,1) for (non occluded, occluded)
         
-        rotatePlot;%(0, 1) for (L2 is along y axis, L1 is along y axis); just for perpedicular planes
+        L2toY;%(0, 1) for (L2 is along y axis, L1 is along y axis); just for perpedicular planes
         planeTilt;% (0, 1) for (z-y tilt, x-y tilt); non defined for parallel planes
-        secondPlaneID;%perpendicular plane that belongs to the same box that idPlane; empty for non defined
+        secondPlaneID;%perpendicular plane that belongs to the same box that idPlane; empty for non defined. two dimensional [v1, v2]; v1 is the frame index, v2 is the plane index
         thirdPlaneID;%
         
     end
@@ -64,12 +65,13 @@ classdef plane < handle
                 % compute std deviation on x, z
                 devx=std(pc_projected.Location(:,1));
                 devz=std(pc_projected.Location(:,3));
-                % classify as tilt to xy (1) or tilt to zy (0)
-                if(devx>=devz)%inclined to x-y axis, %compute angle with normal [1 0 0]
+                % classify as tilted to xy (1) or tilted to zy (0)
+                if(devx>=devz)%inclined to x-y axis, %compute angle with normal [0 0 1]
                     obj.planeTilt=1;
-                else%inclined to z-y axis, %compute deviation with normal [0 0 1]
+                else%inclined to z-y axis, %compute deviation with normal [1 0 0]
                     obj.planeTilt=0;
                 end
+
             else%non expected plane
                 obj.type=2;
                 ne_flag=1;
@@ -123,8 +125,8 @@ classdef plane < handle
            end
         else
             if (obj.type==1)%perpendicular planes
-                [obj.L1 obj.L2 obj.tform rotatePlot]=computeL1L2Perpendicular(pc_projected,obj, plotFlag);
-                obj.rotatePlot=rotatePlot;
+                [obj.L1 obj.L2 obj.tform L2toY]=computeL1L2Perpendicular_v2(pc_projected,obj, plotFlag);
+                obj.L2toY=L2toY;
             end
         end
         
@@ -136,6 +138,10 @@ classdef plane < handle
         
         function setDFlag(obj,flag)
             obj.DFlag=flag;
+        end
+
+        function id=getID(obj)
+            id=[obj.idFrame obj.idPlane];
         end
     end
 end

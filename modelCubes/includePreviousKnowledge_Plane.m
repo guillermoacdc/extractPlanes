@@ -8,6 +8,7 @@ function includePreviousKnowledge_Plane(planeDescriptor, th_lenght, th_size, ...
 pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
 %     classify the plane object
 planeDescriptor.classify(pc, th_angle, groundNormal);%
+
 %     update geometric center and compute bounds of the projected point
 %     cloud. The update is necessary to include the projection of points to
 %     the plane model before compute g.c. 

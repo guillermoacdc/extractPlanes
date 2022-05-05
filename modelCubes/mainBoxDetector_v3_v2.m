@@ -75,7 +75,7 @@ title (['accepted planes (' num2str(pap) '%)'])
 
 
 % figure,
-% myPlotPlanesv2(myPlanes, [2], inputFramesPath);
+% myPlotPlanesv2(myPlanes, [6 9 11 20 21 25], inputFramesPath);
 % hold on
 
 % % planes filtered by normal vector
@@ -97,8 +97,8 @@ title (['accepted planes (' num2str(pap) '%)'])
 
 
 
-% figure,
-% myPlotPlanes(myPlanes, [1 14 ], inputFramesPath);
+figure,
+myPlotPlanes(myPlanes, [unique(localBoxes(1:end))], inputFramesPath);
 
 
 % % % interest planes in debugging ()
@@ -108,9 +108,9 @@ title (['accepted planes (' num2str(pap) '%)'])
 
 %% second plane detection
 for i=1:length(acceptedPlanes)
-    if(i==3)
-        disp("stop the world")
-    end
+%     if(i==3)
+%         disp("stop the world")
+%     end
     targetPlane=acceptedPlanes(i);
     searchSpace=setdiff(acceptedPlanes,targetPlane);
     secondPlaneIndex=secondPlaneDetection(targetPlane,searchSpace,myPlanes, th_angle);
@@ -130,8 +130,7 @@ thirdPlaneDetection(myPlanes, acceptedPlanes, th_angle)
 boxes={};
 k=1;
 for i=1:length(acceptedPlanes)
-    if myPlanes{acceptedPlanes(i)}.type==0 & ...
-            ~isempty(myPlanes{acceptedPlanes(i)}.secondPlaneID) & ...
+    if ~isempty(myPlanes{acceptedPlanes(i)}.secondPlaneID) & ...
             ~isempty(myPlanes{acceptedPlanes(i)}.thirdPlaneID)
         
         box.topPlaneID=myPlanes{acceptedPlanes(i)}.idPlane;

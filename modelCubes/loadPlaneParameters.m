@@ -8,10 +8,8 @@ function [modelParameters, pc] = loadPlaneParameters(planesPath,frame,i)
 
 % planesPath=[planesPath + "frame (" + num2str(frame) + ")/" ];
 A=load([planesPath + "planeParameters.txt"]);
-modelParameters=A(i,:);
+modelParameters=A(i,:);% A B C D geometricCenter_x geometricCenter_y geometricCenter_z
 modelParameters(4)=-modelParameters(4);%?
-
-
 
 pc = pcread([planesPath + "Plane" + num2str(i-1) + "A.ply"]);%in [mt]; indices begin at 0
 
