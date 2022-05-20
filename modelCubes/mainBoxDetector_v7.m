@@ -41,8 +41,8 @@ globalBoxes=[];
 globalAcceptedPlanes=[];
 
 % iterative tasks
-% for i=1:length(frames)
-for i=1:8
+for i=1:length(frames)
+% for i=1:5
 %%     load planes of frame i and save acceptedPlanes
     frame=frames(i);
     in_planesFolderPath=['C:/lib/sharedData/sc' num2str(scene) '/outputPlanes/m_minSupport(50)/DT0_01/frame'  num2str(frame)  '/'];%extracted planes with efficientRANSAC
@@ -52,26 +52,24 @@ for i=1:8
     cd(cd1)
     numberPlanes=length(Files1);
     
-    [myPlanes acceptedPlanesByFrame rejectedPlanesByFrame groundNormal groundD ] =loadPlanes_v2(myPlanes, in_planesFolderPath, numberPlanes, scene, frame, parameters_PK, lengthBounds, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
+    [myPlanes, acceptedPlanesByFrame, rejectedPlanesByFrame, groundNormal, groundD ] =loadPlanes_v2(myPlanes, in_planesFolderPath, numberPlanes, scene, frame, parameters_PK, lengthBounds, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
 %     globalRejectedPlanes=[globalRejectedPlanes;rejectedPlanesByFrame];
     globalAcceptedPlanes=[globalAcceptedPlanes;acceptedPlanesByFrame];
-    
 
-    acceptedPlanesByFrame
-%% cuboid detection on acceptedPlanes
-    [assignedPlanes unassignedPlanes]=cuboidDetectionv2_v2(myPlanes, th_angle, acceptedPlanesByFrame, frame);
-    
-%         requires computation of _diff to avoid duplicates
-    assignedPlanes_diff=setdiff_v2(assignedPlanes, localAssignedP);
-%         unassignedPlanes_diff=setdiff(unassignedPlanes, localUnassignedP);
-    localAssignedP=[localAssignedP; assignedPlanes_diff];
-        
-%     localAssignedP=[localAssignedP; assignedPlanes];
-%     localUnassignedP=[localUnassignedP; unassignedPlanes];
-%     allPlanesIds=computeAllPlanesIds(myPlanes,globalRejectedPlanes);
-    localUnassignedP=setdiff_v2(globalAcceptedPlanes, localAssignedP);
-    assignedPlanes=[];
-    unassignedPlanes=[];
+%% 3. naivy cuboid detection for local unassigned planes    
+% add acceptedPlanesByFrame to the list localUnassignedP
+localUnassignedP=[localUnassignedP; acceptedPlanesByFrame]
+% apply a naivy cuboid detection for localUnassignedP
+        [assignedPlanes unassignedPlanes]=cuboidDetectionv2_v2(myPlanes, th_angle, localUnassignedP, frame);
+        [assignedPlanes unassignedPlanes] = updateAssignedPlanes_v3(myPlanes);
+        %         requires computation of _diff to avoid duplicates
+        assignedPlanes_diff=setdiff_v2(assignedPlanes, localAssignedP);
+        localAssignedP=[localAssignedP; assignedPlanes_diff];
+        localUnassignedP=setdiff_v2(globalAcceptedPlanes, localAssignedP);
+        assignedPlanes=[];
+        unassignedPlanes=[];    
+
+
     
     if(flagFirstBox)
         globalAssignedP=localAssignedP;
@@ -108,17 +106,12 @@ for i=1:8
         localUnassignedP=setdiff_v2(globalAcceptedPlanes, localAssignedP);
         assignedPlanes=[];
         unassignedPlanes=[];
-%% 3. naivy cuboid detection for local unassigned planes
-        [assignedPlanes unassignedPlanes]=cuboidDetectionv2_v2(myPlanes, th_angle, localUnassignedP, frame);
-%         requires computation of _diff to avoid duplicates
-        assignedPlanes_diff=setdiff_v2(assignedPlanes, localAssignedP);
-        localAssignedP=[localAssignedP; assignedPlanes_diff];
-        localUnassignedP=setdiff_v2(globalAcceptedPlanes, localAssignedP);
-        assignedPlanes=[];
-        unassignedPlanes=[];
+
+         
+
 %%  4. create boxes
 
-        [localBoxes flagFirstBox]=createBoxes_v2(myPlanes, localAssignedP, localBoxes);
+        [localBoxes flagFirstBox]=createBoxes_v3(myPlanes, localAssignedP, localBoxes);
     end
 
 % figures,

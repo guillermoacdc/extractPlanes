@@ -10,11 +10,26 @@
 for i=1:size(acceptedPlanes,1)
     targetPlane=acceptedPlanes(i,:);
     searchSpace=setdiff_v2(acceptedPlanes,targetPlane);
+    [secondPlaneIndex detectionFlag]=secondPlaneDetection_v3(targetPlane,searchSpace,myPlanes, th_angle);
 
-    secondPlaneIndex=secondPlaneDetection_v2(targetPlane,searchSpace,myPlanes, th_angle);
-    if(secondPlaneIndex~=-1)
-        myPlanes.(['fr' num2str(targetPlane(1,1))])(targetPlane(1,2)).secondPlaneID=secondPlaneIndex;
+    if(detectionFlag)
+        previous_secondPlaneIndex=myPlanes.(['fr' num2str(targetPlane(1,1))])(targetPlane(1,2)).secondPlaneID;
+        if ~isempty(previous_secondPlaneIndex)
+            myCriterion=secondPlaneIndex~=previous_secondPlaneIndex;
+            if myCriterion(1) | myCriterion(2)
+                disp(["case of v_7 error in plane " num2str(targetPlane(1,1)) "-" num2str(targetPlane(1,2))])
+            end
+        else
+            myPlanes.(['fr' num2str(targetPlane(1,1))])(targetPlane(1,2)).secondPlaneID=secondPlaneIndex; 
+        end
     end
+%         
+%     
+%     
+%     if ~isempty(previous_secondPlaneIndex) & (myCriterion(1)|myCriterion(2))
+%         disp(["case of v_7 error in plane " num2str(targetPlane(1,1)) "-" num2str(targetPlane(1,2))])
+%         myPlanes.(['fr' num2str(targetPlane(1,1))])(targetPlane(1,2)).secondPlaneID=secondPlaneIndex;
+%     end
 end
 
 

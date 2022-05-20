@@ -66,6 +66,10 @@ myPlanes.(['fr' num2str(frame)])=[];
 for i=1:numberPlanes
     myPlanes.(['fr' num2str(frame)])=[myPlanes.(['fr' num2str(frame)]) planesByFrame{i}];
 end
+% myPlanes.(['fr' num2str(frame)]).values=[];
+% for i=1:numberPlanes
+%     myPlanes.(['fr' num2str(frame)]).values=[myPlanes.(['fr' num2str(frame)]).values planesByFrame{i}];
+% end
 
 end
 

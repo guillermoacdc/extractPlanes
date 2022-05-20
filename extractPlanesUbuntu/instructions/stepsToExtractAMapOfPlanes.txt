@@ -8,13 +8,24 @@ outputPlanes/frame1.ply, ... , framen.ply; use shell application createOutputFol
 	Use matlab application convertFromDoubleToSinglePLY.m to execute the conversion
 	Find interest frames in the path ..boxesDatabaseSample\corridaX\pinhole_projection\boxByFrame.txt
 
+
+
 3. execute the code from terminal
 inputs:
 	dataPath
 	frame
 	distanceTreshold
 
-example 1. creating map of planes from scene5, frame 9
+------------------------------------
+
+example 1. creating map of planes from scene 5, frame 54; using shared folder btween ubuntu and windows
+./extractPlanes /media/sf_sharedData/sc5/inputFrames/ 54 0.01
+
+the output is created in folder: 
+~/Documents/ptCloudsData/scene5/OutputPlanes/frame54/
+
+---------------------------------------------------
+example 2. creating map of planes from scene5, frame 9
 ./extractPlanes /home/guillermo/Documents/ptCloudsData/scene5/ 9 0.01
 
 Expect output in terminal,

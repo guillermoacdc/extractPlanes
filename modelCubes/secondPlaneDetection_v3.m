@@ -1,4 +1,4 @@
-function [secondPlaneIndex ] = secondPlaneDetection_v2(targetPlane,searchSpace,planesDescriptor, th_angle )
+function [secondPlaneIndex detectionFlag] = secondPlaneDetection_v3(targetPlane,searchSpace,planesDescriptor, th_angle )
 %SECONPLANEDETECTION Summary of this function goes here
 %   computes second plane based on section 4.1 in [1]
 % [1] file:///G:/Mi%20unidad/semestre%206/1-3%20AlgoritmosSeguimientoPose/detectorCajas/Incremental-3D-cuboid-modeling-with-drift-compensationSensors-Switzerland.pdf
@@ -6,6 +6,7 @@ function [secondPlaneIndex ] = secondPlaneDetection_v2(targetPlane,searchSpace,p
 % _v2 is the identifier for the two dimensional version in the index of the
 % planes. each index has the form [v1 v2], where v1 is the frame id and v2
 % is the plane id
+
 
 candidates1=[];
 candidates2=[];
@@ -53,8 +54,8 @@ end
 
 
 if (isempty(candidates1))
-    secondPlaneIndex=-1;
-
+    secondPlaneIndex=[0 0];
+    detectionFlag=0;
     return
 end
 %% select candidates by convexity criterion
@@ -76,7 +77,8 @@ for(i=1:1:size(candidates1,1))
 end
 
 if (isempty(candidates2))
-     secondPlaneIndex=-1;
+     secondPlaneIndex=[0 0];
+     detectionFlag=0;
 return
 end
 
@@ -91,7 +93,7 @@ end
 [~,selectedIndex]=min(dist_v);
 secondPlaneIndex(1,1)=candidates2(selectedIndex,1);
 secondPlaneIndex(1,2)=candidates2(selectedIndex,2);
-
+detectionFlag=1;
 end
 
 

@@ -7,7 +7,7 @@ function thirdPlaneDetection_v2(myPlanes, acceptedPlanes, th_angle)
 % planes. each index has the form [v1 v2], where v1 is the frame id and v2
 % is the plane id
 
-candidates1={};
+candidates1=[];
 candidates2=[];
 %% create 3-d tree
 exemplarSet=zeros(size(acceptedPlanes,1),3);
@@ -51,23 +51,24 @@ end
 
 %% perform the search and save the result in myPlanes structure
 for i=1:size(secondPlaneT_unique,1)
-    
-    %     use cross product vector as a query for the kd tree
-    candidates1=myRangeSearch_v2(acceptedPlanes, exemplarSet,tPExemplar{i}.crossPd,th_angle*180/pi);
-    if (isempty(candidates1))
-        continue
-    end
-    % select candidates by convexity criterion
-    candidates2=[];
+    candidates1=[];
     k=1;
     targetFrame=secondPlaneT_unique(i,1);
     targetElement=secondPlaneT_unique(i,2);
     secondFrame=secondPlaneT_unique(i,3);
     secondElement=secondPlaneT_unique(i,4);
-%     add previous selected third plane
+    %     use cross product vector as a query for the kd tree
+    candidates1=myRangeSearch_v2(acceptedPlanes, exemplarSet,tPExemplar{i}.crossPd,th_angle*180/pi);
+    if (isempty(candidates1))
+        continue
+    end
+    %     add previous selected third plane
     if ~isempty(myPlanes.(['fr' num2str(targetFrame)])(targetElement).thirdPlaneID)
         candidates1=[candidates1; myPlanes.(['fr' num2str(targetFrame)])(targetElement).thirdPlaneID];
     end
+
+    % select candidates by convexity criterion
+    candidates2=[];
 
     for(ii=1:1:size(candidates1,1))
         candidateFrame=candidates1(ii,1);
