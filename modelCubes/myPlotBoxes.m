@@ -4,7 +4,9 @@ function  myPlotBoxes(myPlanes, localBoxes)
 NmbBoxes=size(localBoxes,2);
 
 for i=1:NmbBoxes
-    myPlotSingleBox(myPlanes,localBoxes{i})
+    myPlotSingleBox_v2(myPlanes,localBoxes{i})%
+%     uncomment the next line for structure without field cameraPose
+%     myPlotSingleBox(myPlanes,localBoxes{i})%
 end
 
 view(2)

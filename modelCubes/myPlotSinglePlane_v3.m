@@ -1,13 +1,12 @@
-function myPlotSinglePlane(planeDescriptor, id)
+function myPlotSinglePlane_v3(planeDescriptor, boxID, frameFlag)
 %MYPLOTSINGLEPLANE Plots three data associated with a plane:
 % (1) raw points (or inliers to the model)
 % (2) normal of plain
 % (3) the contour of the plane with four lines.
 % (4) identifier of the plane
-if nargin==1
-    boxID=0;
-else
-    boxID=id;
+% (5) framework of the plane; just if input frameFlag is true
+if nargin==2
+    frameFlag=false;
 end
 
 p=[planeDescriptor.geometricCenter]';
@@ -49,6 +48,14 @@ else
 end
 
 set(H,'FontSize',15)
+
+% (5) plot the frame of the plane
+if frameFlag
+    scale=1;
+    width=1;
+    T=planeDescriptor.tform;
+    dibujarsistemaref (T,' ',scale,width,10,'white');
+end
  
 end
 

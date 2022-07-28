@@ -1,6 +1,6 @@
 function [myPlanes acceptedPlanesByFrame rejectedPlanesByFrame,...
-    groundNormal groundD ]=loadPlanes_v2(myPlanes, in_planesFolderPath,...
-    numberPlanes, scene, frame, parameters_PK, lengthBounds, groundNormal,...
+    groundNormal groundD ]=loadPlanes_v3(myPlanes, in_planesFolderPath,...
+    numberPlanes, scene, frame, parameters_PK, cameraPose, lengthBounds, groundNormal,...
     groundD, mode)
 % Load planes from data in disk. This function accumulates the planes
 % descriptors at each call. Each call deals with a different frame
@@ -65,14 +65,12 @@ else
 
 end
 %% accumulate objects of class plane in the struct myPlanes. One frame by field
-myPlanes.(['fr' num2str(frame)])=[];
+
+myPlanes.(['fr' num2str(frame)]).cameraPose=cameraPose;
+myPlanes.(['fr' num2str(frame)]).values=[];
 for i=1:numberPlanes
-    myPlanes.(['fr' num2str(frame)])=[myPlanes.(['fr' num2str(frame)]) planesByFrame{i}];
+    myPlanes.(['fr' num2str(frame)]).values=[myPlanes.(['fr' num2str(frame)]).values planesByFrame{i}];
 end
-% myPlanes.(['fr' num2str(frame)]).values=[];
-% for i=1:numberPlanes
-%     myPlanes.(['fr' num2str(frame)]).values=[myPlanes.(['fr' num2str(frame)]).values planesByFrame{i}];
-% end
 
 end
 

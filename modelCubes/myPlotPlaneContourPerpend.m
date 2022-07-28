@@ -35,9 +35,6 @@ else %(planeTilt->1) for (x-y tilt);
     end
 end
 
-
-
-
 % apply a transformation on the rectangule; rotation and translation
 p1t=planeDescriptor.tform*p1;
 p1t=p1t(1:3);

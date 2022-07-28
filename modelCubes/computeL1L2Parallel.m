@@ -17,7 +17,6 @@ figureFlag=0;
 %omit height information
 x=pc.Location(:,1);
 y=pc.Location(:,3);
-% Px=[modelParameters(5) modelParameters(7)];%geometric center
 Px=[planeDescriptor.geometricCenter(1) planeDescriptor.geometricCenter(3)];
 
 % compute indexes that belong to the perimeter of the shape

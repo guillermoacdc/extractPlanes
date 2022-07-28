@@ -1,5 +1,7 @@
 function a=computeAngleBtwnVectors(P1,P2)
 
+% computes the angle btwen two vectors in 3D. 
+
 % reference
 % https://www.youtube.com/watch?v=QWIZXRjMspI
 
