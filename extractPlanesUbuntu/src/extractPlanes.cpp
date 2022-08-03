@@ -1,4 +1,18 @@
-// extractPlanes for doctoral research. Author: Guillermo Camacho 2022
+
+//============================================================================
+// Name        : extractPlanes.cpp
+// Author      : Guillermo Camacho
+// Version     : 2.0 / agost 2022
+// Copyright   : Your copyright notice
+// Description : Extract planes from a single point cloud without previous
+// knowledge of the scene
+// Assumptions:
+// 1. There exists a folder with single precision point clouds in
+// the path: dataPath/scenex/inputFrames; where x is the number of the scene
+// 2. There exists an empty folder with name detectedPlanes in the dataPath/. The output
+// will be recorded in this folder.
+//============================================================================
+
 #define   _CRT_SECURE_NO_WARNINGS
 #include <algorithm> // for max_element
 #include <pcl/io/ply_io.h> // to load ply file and save ply files
@@ -12,12 +26,6 @@
 #include <pcl/sample_consensus/sac_model_plane.h>
 
 #include <pcl/filters/statistical_outlier_removal.h>
-//using namespace std;
-//using namespace pcl;
-
-//typedef pcl::PointXYZ PointT;
-//typedef pcl::PointCloud<PointT> PointCloudT;
-
 #include <PointCloud.h>
 #include <RansacShapeDetector.h>
 #include <PlanePrimitiveShapeConstructor.h>
@@ -62,28 +70,43 @@ void eRANSAC(RansacShapeDetector::Options ransacOptions, PointCloud& pc,
 	
 /*
 inputs:
-	dataPath
-	frame
-	distanceTreshold
-*/	
+	dataPath> example /home/gacamacho/Documents/PDALProjects/singlePCs/scene5/
+	frame> example 3
+	distanceTreshold> example 0.01
+*/
 int main(int argc, char** argv)
 {
 	/*-----declaring parameters and paths to load point cloud-------*/
 	std::string rootPath =argv[1];
 	int frame = std::stoi(argv[2]);
 	double DistanceTreshold=std::stof(argv[3]);//0.1, 0.01
-
+	bool status;
 	std::stringstream frame_str;
 	frame_str << frame;
 
-	std::string writePath = rootPath + "outputPlanes/";
-	writePath = writePath + "frame" + frame_str.str() + "/";
+	std::string writePath = rootPath + "detectedPlanes/" + "frame" + frame_str.str() + "/";
+	//creating the output folder for the frame
+	std::string myOutputFolder = "mkdir "+writePath;
+	const char* ccx = myOutputFolder.c_str();
+	status=system(ccx);//This function returns zero if the command is executed without any errors.
+	if (status==0)
+		std::cout << "frame folder was created with success/n";
+	else
+	{
+		std::cout << "frame folder was not created/n";
+		return (-1);
+	}
+
+
 	std::string planeParametersFileName = writePath + "planeParameters.txt";
 	std::string algorithmParametersFileName = writePath + "algorithmParameters.txt";
+
+
 	std::string readPath = rootPath + "inputFrames/" + "frame" + frame_str.str() + ".ply";
 	/*-------declaring txt writing objects------*/
 	std::ofstream out_txtFile(planeParametersFileName);
 	std::ofstream out_txtFile2(algorithmParametersFileName);
+
 	/*---------- loading raw_PC from PLY  ------------*/
 	pcl::PointCloud<pcl::PointXYZ>::Ptr raw_pc(new pcl::PointCloud<pcl::PointXYZ>); // 
 	if (pcl::io::loadPLYFile<pcl::PointXYZ>(readPath, *raw_pc) == -1) //* load the file from PLY
@@ -92,6 +115,7 @@ int main(int argc, char** argv)
 		std::cout << readPath;
 		return (-1);
 	}
+
 	std::cout << "Loaded raw PC from a PLY file, with descriptors:" << "\n"
 		<< "\t Width: " << raw_pc->width
 		<< "\t Height: " << raw_pc->height
@@ -172,7 +196,7 @@ int main(int argc, char** argv)
 	time.tic();
 	eRANSAC(ransacOptions, pc, shapes, remaining);
 	
-	out_txtFile2 <<"Stage: Extract planes with efficient RANSAC\n" 
+	out_txtFile2 <<"Stage: Extract planes with efficient RANSAC\n"
 		<< " \t m_epsilon= " << ransacOptions.m_epsilon << "\n"
 		<< "\t m_bitmapEpsilon= " << ransacOptions.m_bitmapEpsilon << "\n"
 		<< "\t m_normalThresh= " << ransacOptions.m_normalThresh << "\n"
@@ -196,7 +220,7 @@ int main(int argc, char** argv)
 	pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;//create filtering object
 	sor.setStddevMulThresh(nmbStd);
 	sor.setMeanK(nmbrNeigborhoods);
-	
+
 	//--save each detected plane in a ply file
 	for (int i = 0; i < shapes.size(); i++)
 	{
@@ -250,7 +274,7 @@ int main(int argc, char** argv)
 		Distance = plane->Internal().SignedDistToOrigin();//signed distance to orign (D)
 		myPosition=plane->Internal().getPosition();
 
-		out_txtFile << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", " 
+		out_txtFile << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ", "
 			<< Distance << ", " << myPosition[0] << ", " << myPosition[1] << ", " << myPosition[2]
 			<< std::endl;
 
