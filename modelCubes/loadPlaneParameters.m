@@ -1,4 +1,4 @@
-function [modelParameters, pc] = loadPlaneParameters(planesPath,frame,i)
+function [modelParameters, pcCount] = loadPlaneParameters(planesPath,frame,i)
 %LOADPLANEMODEL Summary of this function goes here
 %   Detailed explanation goes here
 % OUTPUTS
@@ -12,7 +12,7 @@ modelParameters=A(i,:);% A B C D geometricCenter_x geometricCenter_y geometricCe
 modelParameters(4)=-modelParameters(4);%?
 
 pc = pcread([planesPath + "Plane" + num2str(i-1) + "A.ply"]);%in [mt]; indices begin at 0
-
+pcCount=pc.Count;
 %% paint the point cloud
 % pointscolor=uint8(zeros(pc.Count,3));
 % pointscolor(:,1)=255;
