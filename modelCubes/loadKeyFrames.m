@@ -14,7 +14,7 @@ rig2M=cac{1}(2:end);
 N=length(rig2M);
 rig2M2=reshape(rig2M,3,N/3)';
 
-for i=1:size(rig2M2,2)
+for i=1:size(rig2M2,1)
     initIdx=rig2M2(i,2);
     endIdx=rig2M2(i,3);
     for j=initIdx:endIdx

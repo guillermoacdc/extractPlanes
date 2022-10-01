@@ -28,6 +28,8 @@ classdef plane < handle
         planeTilt;% (0, 1) for (z-y tilt, x-y tilt); non defined for parallel planes
         secondPlaneID;%perpendicular plane that belongs to the same box that idPlane; empty for non defined. two dimensional [v1, v2]; v1 is the frame index, v2 is the plane index
         thirdPlaneID;%
+        nearestPlaneID;
+        secondNearestPlaneID;
 %         corner parameters
         x1;
         x2;

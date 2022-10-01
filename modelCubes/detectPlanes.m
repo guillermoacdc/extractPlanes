@@ -14,8 +14,8 @@ conditionalAssignationFlag=false;
 % load length bounds
 previousKnowledgeFileName=rootPath+['scene' num2str(scene)]+"\previousKnowledgeFile.txt";
 % loading bound parameters for the scene
-[lengthBoundsTop, lengthBoundsP] =computeLengthBounds(previousKnowledgeFileName);%in cm
-
+% [lengthBoundsTop, lengthBoundsP] =computeLengthBounds(previousKnowledgeFileName);%in cm
+[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in cm
 
 % initiallizing variables
 assignedPlanes=[];

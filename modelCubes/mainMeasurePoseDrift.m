@@ -7,15 +7,16 @@ clc
 close all
 clear all
 
-keybox=19;%box selected to measure de pose error
+keybox=15;%box selected to measure de pose error
 scene=5;%
-keyplaneID=[20 4];
+keyplaneID=[5 3];
 rootPath="C:\lib\boxTrackinPCs\";
 %% load ground truth of pose
-[tform_gt L1_gt L2_gt]=loadGTData(rootPath, scene, keybox);
-T=loadInitialPoseHL2(rootPath,scene);
+[tform_gt L1_gt L2_gt]=loadGTData(rootPath, scene, keybox);%length is loaded in mm
+T=loadInitialPoseHL2(rootPath,scene);%length is loaded in mm
+
 % keyframes=loadKeyFrames(rootPath,scene);
-keyframes=[20:29 40 41 43:44 53:62];
+keyframes=[2:9 20:29 40 41 43:44 53:62];
 localPlanes=detectPlanes(rootPath,scene,keyframes);
 
 keyPlaneTwins=trackKeyPlane(keyplaneID,localPlanes,keyframes);
@@ -38,6 +39,12 @@ subplot(414),...
     stem(eL2)
     ylabel 'e_{L2}'    
 
+
+return
+    keyframe=20;
+    figure,
+    myPlotPlanes_v2(localPlanes, localPlanes.(['fr' num2str(keyframe)]).acceptedPlanes)
+    title (['accepted planes at frame ' num2str(keyframe)])
 
 
 
