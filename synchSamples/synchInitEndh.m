@@ -4,7 +4,8 @@ function [HololensTicks discardedInit discardedEnd]=synchInitEndh(rootPath, scen
 %   returns a matrix  with N rows and two columns: [timestamp_h, frame_h]
 
 % load frames, raw time stamps for a scene
-relevant_ts=readtable(rootPath + 'scene' + num2str(scene) + '\depth.txt');
+% relevant_ts=readtable(rootPath + 'scene' + num2str(scene) + '\depth.txt');
+relevant_ts=readtable(rootPath + 'corrida' + num2str(scene) + '\pinhole_projection\depth.txt');
 available_ts_hl = table2array(relevant_ts(:,1));
 available_ts_hl = uint64(available_ts_hl);%relevant timestamps in ntfs
 frames=1:size(available_ts_hl ,1);

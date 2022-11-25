@@ -3,7 +3,8 @@ function keyframes=loadKeyFrames(rootPath,scene)
 %   Detailed explanation goes here
 keyframes=[];
 % keframes is available in the file rootPath/scenex/boxByFrame.txt 
-fileName=rootPath  + 'scene' + num2str(scene) + '\boxByFrame.txt';
+% fileName=rootPath  + 'scene' + num2str(scene) + '\boxByFrame.txt';
+fileName=rootPath  + 'corrida' + num2str(scene) + '\pinhole_projection\boxByFrame.txt';
 % rig2M=load(fileName);
 
 fid = fopen( fileName );

@@ -44,7 +44,7 @@ T=[emptyinit_T ; T];
 emptyinit_time=zeros(discardedHL2_init,2);
 mocapTimeResample=[emptyinit_time ; mocapTimeResample];
 
-
+return
 fid = fopen( fullFilePath, 'wt' );%object to write a txt file
 for i=1:size(T,1)
     fid= myWriteToFile_v2( T(i,:), mocapTimeResample(i,1), fid);

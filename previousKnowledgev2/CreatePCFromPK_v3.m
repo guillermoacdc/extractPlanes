@@ -4,7 +4,7 @@ close all
 clear
 
 
-scene=6;
+scene=5;
 
 rootPath="C:\lib\boxTrackinPCs\";
 

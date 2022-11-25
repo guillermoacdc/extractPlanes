@@ -54,6 +54,7 @@ for i=1:N
 %         command3= ['pdal translate ' + pathToDoublePointClouds + fileName_ply + ' ' + 'frame' + num2str(j) + '.ply --writers.ply.dims="X=float32,Y=float32,Z=float32"'];
         command3= ['pdal translate ' pathToDoublePointClouds fileName_ply ' '  'frame' num2str(j) '.ply --writers.ply.dims="X=float32,Y=float32,Z=float32"'];
 %         disp(['conversion of frame ' num2str(j) ' which has as name: ' fileName_ply ' with command/n'])
+        disp([num2str(j) ' ---> ' fileName_ply '/n'])
         disp(command3);
         fprintf( fid, '%s\n', command3);
 %         [status,cmdout] = system(command3)

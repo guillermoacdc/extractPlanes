@@ -1,0 +1,43 @@
+Assumptions: 
+	efficient RANSAC and PCL have been installed in the path /usr/local/include/
+	source files are available
+		* requires a path to boxByFrame files: home/gacamacho/Documents/corrida5/pinhole_projection/boxByFrame.txt
+		* requires a path to pointclouds with single precision: home/gacamacho/Documents/lowOcclusionScenes/
+		* creates a path to processed pointclouds: home/gacamacho/Documents/lowOcclusionScenes_processed/scene5
+
+1. Get the source files from github
+
+2. Create a folder for the project with name extractPlanesFromScene. Add two sub folders: (1) src, (2) build
+
+3. Copy two files to src folder: CMakeLists.txt, extractPlanesFromScene.cpp
+
+4. Modify the parameter tao in efficient RANSAC implementation with value 50
+//was set by updating the constructor in RansacShapeDetector.cpp lines 25, 32
+//remember to ask edit permission:   sudo -H gedit /usr/local/include/ransac/RansacShapeDetector.cpp
+
+5. Build the project from build folder and using cmake
+cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
+
+6. Compile the project: create the binares from build folder using
+make
+
+7. Run the code from terminal
+
+inputs:
+	scene
+	rootPath
+
+example creating map of planes for scene 5; command executed from build folder
+./extractPlanesFromScene 5 home/gacamacho/Documents/lowOcclusionScenes/
+
+Assumptions: all the data sources are populated
+
+---------------compiling from Eclipse
+
+6. Open the project in eclipse
+
+7. Compile the project in eclipse
+
+8. Create a new run configuration: Eclipse/Run/Run Configurations/C C++ Application/New; adjust the input values
+
+9. Run the project

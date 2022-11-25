@@ -11,7 +11,9 @@ fileName=['corrida' num2str(scene) '-00' num2str(append)];
 %% Load OpenSim libs
 import org.opensim.modeling.*
 %% Get the path to a C3D file
-mocap_path = rootPath + 'scene' + num2str(scene) + '\mocap\';
+% mocap_path = rootPath + 'scene' + num2str(scene) + '\mocap\';
+mocap_path = rootPath + 'corrida' + num2str(scene) + '\mocap\';
+
 c3dpath = fullfile(mocap_path,[fileName '.c3d']);
 %% Construct an opensimC3D object with input c3d path
 % Constructor takes full path to c3d file and an integer for forceplate
@@ -20,7 +22,7 @@ c3d = osimC3D(c3dpath,1);
 %% Get the c3d in structure form
 markerStruct = c3d.getAsStructs();
 %% extract data from markerIDs as a new structure
-for j=1:size(markerIDs,2)
+for j=1:length(markerIDs)
     if(markerIDs(j)<10)
         eval(['position.M00' num2str(markerIDs(j)) '=markerStruct.M00' num2str(markerIDs(j)) '(sample,:);' ]);
     else

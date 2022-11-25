@@ -1,12 +1,13 @@
-function planeDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,planeType)
+function [planeDescriptor, pps] = convertPK2PlaneObjects_v2(rootPath,scene,planeType, adjustPoseFlag)
 %CONVERTPK2PLANEOBJECTS load previous knowledge of an specific scene, then
 %converts this knowledge into plane objects and save the result in
 %planeDescriptor vector
 % _v2: add the input planeType with domain {(0) superior, (1) lateral xz, (2) lateral yz}
 %   Detailed explanation goes here
 
-initialPoses=loadInitialPose_v2(rootPath,scene);
-boxLengths = loadLengths_v2(rootPath,scene);%IdBox,Heigth(mm),Width(mm),Depth(mm)
+initialPoses=loadInitialPose_v2(rootPath,scene,adjustPoseFlag);
+pps=initialPoses(:,1);%physical packing sequence
+boxLengths = loadLengths_v2(rootPath,scene,pps);%IdBox,Heigth(mm),Width(mm),Depth(mm)
 N=size(boxLengths,1);
 
 for i=1:N

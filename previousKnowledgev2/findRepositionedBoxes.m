@@ -2,11 +2,13 @@ clc
 close all
 clear all
 
-rootPath="C:\lib\boxTrackinPCs\";
-scene=5;
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
+scene=3;
 % boxID=13;
 planeType=0;
-topPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,planeType);
+adjustPoseFlag=false;
+[topPlaneDescriptor, pps]= convertPK2PlaneObjects_v2(rootPath,scene,planeType, adjustPoseFlag);
 
 
 %% create point clouds from loaded previous knowledge
@@ -20,8 +22,8 @@ for i=1:Nboxes
         angle=-angle;
     end
     % load height
-    H=loadLengths(rootPath,scene);
-    H=H(i,4);
+    H=loadLengths_v2(rootPath,scene,pps);
+    H=H(i,2);
     % load depth, width and height in scene
     L1=topPlaneDescriptor.fr0.values(i).L1;
     L2=topPlaneDescriptor.fr0.values(i).L2;
@@ -34,8 +36,8 @@ for i=1:Nboxes
 end
 
 %% compute tform for side planes
-xzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,1);
-yzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,2);
+xzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,1,adjustPoseFlag);
+yzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,2,adjustPoseFlag);
 % top planes
 figure,
 for i=1:Nboxes
@@ -51,7 +53,10 @@ ylabel 'y'
 zlabel 'z'
 grid on
 title (['top frames at scene' num2str(scene)])
+display ('Physical Packing Sequence:')
+pps'
 
+return
 % xz planes
 figure,
 for i=1:Nboxes
@@ -83,6 +88,10 @@ ylabel 'y'
 zlabel 'z'
 grid on
 title (['yz frames at scene' num2str(scene)])
+
+
+
+
 return
 % compute distance btwn two planes poses to assess the accuracy in
 % reconstruction

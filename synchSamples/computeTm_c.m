@@ -20,7 +20,8 @@ VLC_HL2=[-5 -35 164.5 1]';%Distance between l6 vector and VLC camera in HL2 in m
 %% Load OpenSim libs
 import org.opensim.modeling.*
 %% Get the path to a C3D file
-mocap_path = rootPath + 'scene' + num2str(scene) + '\mocap\';
+% mocap_path = rootPath + 'scene' + num2str(scene) + '\mocap\';
+mocap_path = rootPath + 'corrida' + num2str(scene) + '\mocap\';
 c3dpath = fullfile(mocap_path,[fileName '.c3d']);
 %% Construct an opensimC3D object with input c3d path
 % Constructor takes full path to c3d file and an integer for forceplate

@@ -79,7 +79,7 @@ the path: rootPath/scenex/inputFrames; where x is the number of the scene
 2. There exists an empty folder with name detectedPlanes in the dataPath. The output
 will be recorded in this folder
 */
-int extractPlanesFromAFrame(const char* rootPath, int frame, double DistanceTreshold);
+int extractPlanesFromAFrame(const char* inputpath_c, const char* outputpath_c, int frame, double DistanceTreshold);
 void loadKeyFrames(const char* fileName_c, int keyFrames[][2], int row);
 int countNumberOfLines(const char* fileName);
 void buildKeyFramesVector(std::vector<int>& keyFramesV, int keyFrames[][2], int row);
@@ -95,33 +95,55 @@ int main(int argc, char** argv)
 	double DistanceTreshold=0.1;
 	std::vector<int> keyFramesV;
 	keyFramesV.resize(20,0);
-	std::string fileNameKeyFrames;
+/*
+	std::string fileNameKeyFrames, fileNameKeyFrames_base;
 	//assembly btwn rootpath and scene
 	std::string rootpath=argv[2];
 	std::string scene_s=argv[1];
 	rootpath=rootpath+"scene"+scene_s+"/";
-
-	//create log file
-	std::string logPlaneDetectorFileName = rootpath + "planeDetectionLog.txt";
-	std::ofstream out_txtFile(logPlaneDetectorFileName);
-	out_txtFile << "Log for plane detection in scene "<< scene_s <<std::endl;
-
-	//read available frames in rootPath/inputFrames and save in a vector frames
+	////read available frames in rootPath/inputFrames and save in a vector frames
 	fileNameKeyFrames=rootpath+"boxByFrame.txt";
+*/
+	std::string fileNameKeyFrames, fileNameKeyFrames_base, inputpath, outputpath;
+	std::string rootpath=argv[2];
+	std::string scene_s=argv[1];
+
+	inputpath=rootpath+"scene"+scene_s+"/";
+	outputpath=rootpath.std::string::substr(0,rootpath.length()-1) + "_processed/";
+	//outputpath=rootpath.substr(0, 3);
+	fileNameKeyFrames_base="/home/gacamacho/Documents/boxesDatabaseSample/";
+	fileNameKeyFrames= fileNameKeyFrames_base +"corrida"+scene_s+"/pinhole_projection/boxByFrame.txt";
+
+	std::cout << "Main paths," << std::endl;
+	std::cout << "\t rootPath:  " << rootpath << std::endl; // prints !!!Hello World!!!
+	std::cout << "\t inputPath:  " << inputpath << std::endl; // prints !!!Hello World!!!
+	std::cout << "\t outputPath: " << outputpath << std::endl; // prints !!!Hello World!!!
+	std::cout << "\t keyframes path: " << fileNameKeyFrames << std::endl; // prints !!!Hello World!!!
+
+
+
 	computeKeyFramesIDs(keyFramesV, fileNameKeyFrames.c_str());
 	std::cout<<"Scene "<<scene_s<<". We have loaded ids for "<<keyFramesV.size()<<" keyframes \n";
 
-	//create a folder detectedPlnaes in rootPath/
-		std::string myOutputFolder = "mkdir -p "+ rootpath + "detectedPlanes";
+
+
+	//create a folder scenex at outputPath in rootPath/
+		std::string myOutputFolder = "mkdir -p "+ outputpath + "corrida"+scene_s+"/";
 		const char* ccx = myOutputFolder.c_str();
 		statusFolderCreation=system(ccx);//This function returns zero if the command is executed without any errors.
 		if (statusFolderCreation==0)
-			std::cout << "detectedPlanes folder was created with success/n";
+			std::cout << "output folder for detected Planes was created with success\n";
 		else
 		{
-			std::cout << "detectedPlanes folder was not created/n";
+			std::cout << "output folder for detected Planes was not created\n";
 			return (-1);
 		}
+
+		//create log file
+		std::string logPlaneDetectorFileName = outputpath + "corrida"+scene_s+"/" + "planeDetectionLog.txt";
+		std::ofstream out_txtFile(logPlaneDetectorFileName);
+		out_txtFile << "Log for plane detection in scene "<< scene_s <<std::endl;
+
 
 	//loop
 	std::string framePath;
@@ -129,9 +151,9 @@ int main(int argc, char** argv)
 	for (int i=0;i<keyFramesV.size();i++)
 	{
 		frame=keyFramesV[i];
-		//add frame folder to the rootPath
-		framePath=rootpath+"frame"+std::to_string(i)+"/";
-		statusExtractPlanes=extractPlanesFromAFrame(rootpath.c_str(), frame, DistanceTreshold);
+		//add frame folder to the output path
+		framePath=outputpath + "corrida"+scene_s+"/";
+		statusExtractPlanes=extractPlanesFromAFrame(inputpath.c_str(), framePath.c_str(), frame, DistanceTreshold);
 		if (statusExtractPlanes!=0)
 		{
 			std::cout<<"\n --(error)--key frame with number "<<frame<<" was not processed with extract Planes \n";
@@ -160,16 +182,20 @@ void computeKeyFramesIDs(std::vector <int>& keyFramesV, const char * fileName_c)
 
 }
 
-int extractPlanesFromAFrame(const char* rootPath_c, int frame, double DistanceTreshold)
+//outputpath_c must include ../corridax/
+//inputpath_c must include ../scenex/
+
+int extractPlanesFromAFrame(const char* inputpath_c, const char* outputpath_c, int frame, double DistanceTreshold)
 {
 	/*-----declaring parameters and paths to load point cloud-------*/
 
 	bool status;
-	std::string rootPath=rootPath_c;//convert char* to string
+	std::string inputpath=inputpath_c;//convert char* to string
+	std::string outputpath=outputpath_c;//convert char* to string
 	std::stringstream frame_str;
 	frame_str << frame;
 
-	std::string writePath = rootPath + "detectedPlanes/" + "frame" + frame_str.str() + "/";
+	std::string writePath = outputpath + "frame" + frame_str.str() + "/";
 	//creating the output folder for the frame
 	std::string myOutputFolder = "mkdir -p "+writePath;
 	const char* ccx = myOutputFolder.c_str();
@@ -187,7 +213,7 @@ int extractPlanesFromAFrame(const char* rootPath_c, int frame, double DistanceTr
 	std::string algorithmParametersFileName = writePath + "algorithmParameters.txt";
 
 
-	std::string readPath = rootPath + "inputFrames/" + "frame" + frame_str.str() + ".ply";
+	std::string readPath = inputpath + "PointClouds/" + "frame" + frame_str.str() + ".ply";
 	/*-------declaring txt writing objects------*/
 	std::ofstream out_txtFile(planeParametersFileName);
 	std::ofstream out_txtFile2(algorithmParametersFileName);
