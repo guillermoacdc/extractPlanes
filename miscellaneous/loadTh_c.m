@@ -3,7 +3,8 @@ function [Traw time] = loadTh_c(rootPath,scene,frame)
 
 
 % T is available in the file rootPath/scenex/Depth Long Throw_rig2world.txt 
-fileName=rootPath  + 'scene' + num2str(scene) + '\Depth Long Throw_rig2world.txt';
+% fileName=rootPath  + 'scene' + num2str(scene) + '\Depth Long Throw_rig2world.txt';
+fileName=rootPath  + 'corrida' + num2str(scene) + '\Depth Long Throw_rig2world.txt';
 rig2W=load(fileName);
 % convert frame to index
 % %   load available keyframes

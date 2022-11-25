@@ -6,7 +6,8 @@ function [T time] = loadTm_c(rootPath,scene,frame, offset_synch)
 % time is the timestamp in ntfs
 
 
-fileName=rootPath  + 'scene' + num2str(scene) + '\rig2Mocap_offset' + num2str(offset_synch) + '.txt';
+% fileName=rootPath  + 'scene' + num2str(scene) + '\rig2Mocap_offset' + num2str(offset_synch) + '.txt';
+fileName=rootPath  + 'corrida' + num2str(scene) + '\rig2Mocap_offset' + num2str(offset_synch) + '.txt';
 rig2M=load(fileName);
 
 T=assemblyTmatrix(rig2M(frame,2:13));%distances in mm

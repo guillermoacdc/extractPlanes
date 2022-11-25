@@ -1,4 +1,3 @@
-
 function measurePoseIndexesInPlanes(rootPath,scene,boxID,planeType)
 
 % define planeType str
