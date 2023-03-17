@@ -1,0 +1,15 @@
+meta: actualizar código para que el número de cajas gt sea función del frame. Ejemplo 
+
+scene=3
+frame=5
+gtPose=loadInitialPose(datasetPath,scene,frame);
+length(gtPose)
+>>18
+
+frame=74
+gtPose=loadInitialPose(datasetPath,scene,frame);
+length(gtPose)
+>>17  --- la caja 13 debe ser eliminada
+-----------------------------------------------(concluido)
+
+meta. Actualizar el calculo de eADD para que corresponda con el definido en Hodan 2016

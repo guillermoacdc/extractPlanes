@@ -1,4 +1,4 @@
-function measurePoseIndexesInPlanes(rootPath,scene,boxID,planeType)
+function measurePoseIndexesInPlanes(rootPath, processedScenesPath,scene,boxID,planeType)
 
 % define planeType str
 switch planeType
@@ -9,6 +9,11 @@ switch planeType
     case 2
         planeType_str='yz';        
 end
+
+% build the output log folder
+logFolderPath=[processedScenesPath '\corrida' num2str(scene) '\logTrackPlanes\'];
+mkdir (logFolderPath)
+
 fileName=['log_planeType' planeType_str '_box' num2str(boxID) '.txt'];
 figureName=['trackError_planeType' planeType_str '_box' num2str(boxID) '.png'];
 
@@ -16,21 +21,28 @@ figureName=['trackError_planeType' planeType_str '_box' num2str(boxID) '.png'];
 % compute maximal search frame by box ID
 bxByFrame=computeMaximalSearchFrame(rootPath,scene,boxID);%box id initFrame LastFrame
 mxSearchFrame=bxByFrame(3);
-planesDescriptors_gt=convertPK2PlaneObjects_v2(rootPath,scene,planeType);
-plane_gt=extractPlaneByBoxID(planesDescriptors_gt,boxID);
 
-[detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionIndex_v3(plane_gt,scene,rootPath,planeType,mxSearchFrame);
 
-fid = fopen( [rootPath + ['scene' num2str(scene) '\logTrackPlanes\' fileName]], 'wt' );
+planesDescriptors_gt=convertPK2PlaneObjects_v2(rootPath,scene,planeType,0);
+plane_gt=extractPlaneByBoxID(planesDescriptors_gt,boxID);%used just for length measurements
+% [detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionIndex_v3(plane_gt,scene,rootPath,processedScenesPath,planeType,mxSearchFrame);
+
+[detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionIndex_v4(scene,...
+    rootPath,processedScenesPath,planeType,mxSearchFrame,boxID);
+
+fid = fopen( [logFolderPath fileName], 'wt' );
+
 if ~isempty(detectionByFrameObj_h)
-    [er,et,el1,el2,p_detection]=computeErrorMetrics(detectionByFrameObj_h,detectionByFrameDescriptor,plane_gt,rootPath,scene);
+%     [er,et,el1,el2,p_detection]=computeErrorMetrics(detectionByFrameObj_h,detectionByFrameDescriptor,plane_gt,rootPath,scene);
+    [er,et,el1,el2,p_detection]=computeErrorMetrics_v2(detectionByFrameObj_h, ...
+        detectionByFrameDescriptor,rootPath,scene,planeType,boxID);
     
     et_mean=mean(et);
 %     rotation error between estimated plane and gt plane
     er_mean=mean(real(er(:,1)));
     if er_mean>170
         er=real(er)-180;
-        er_mean=real(mean(er));
+        er_mean=real(mean(er(:,1)));
     end
     alpha=er(:,2);
     beta=er(:,3);
@@ -84,7 +96,8 @@ if ~isempty(detectionByFrameObj_h)
     samplingRes_max=max(samplingRes);
 
 
-    figure,
+    fig1 = figure;
+    fig1.WindowState = 'maximized';
     subplot(611),...
         stem(er(:,1))
         hold on
@@ -111,12 +124,16 @@ if ~isempty(detectionByFrameObj_h)
         grid
     
     subplot(613),...
-        stem(el1)
+%         stem(el1)
+        plot(el1,'yellow')    
         hold on
-        plot([0 N],[el1_mean el1_mean],'--');%plot mean value
-        ylabel (['e_{L1} ' num2str(el1_mean,'%4.1f')])
+        plot(el2,'blue')    
+        plot([0 N],[el1_mean el1_mean],'y--');%plot mean value at l1
+        plot([0 N],[el2_mean el2_mean],'--');%plot mean value at l2        
+        ylabel (['e_{L} ' num2str(el1_mean,'%4.1f') ',' num2str(el2_mean,'%4.1f')])
         xticks(myxticks)
         xticklabels(myxticksLabels')
+        legend('e_{L_1}','e_{L_2}')
         axis tight
         grid
   
@@ -163,7 +180,7 @@ if ~isempty(detectionByFrameObj_h)
         grid
 
 % save figure in disk
-saveas(gcf,[rootPath + ['scene' num2str(scene) '\logTrackPlanes\' figureName]])
+saveas(gcf,[logFolderPath figureName])
 
         % final report
         L1=plane_gt.L1;

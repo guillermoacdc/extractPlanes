@@ -1,4 +1,5 @@
-function [detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionIndex_v3(plane_gt,scene,rootPath,processedScenesPath,planeType,mxSearchFrame)
+function [detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionIndex_v4(scene,...
+    rootPath,processedScenesPath,planeType,mxSearchFrame,boxID)
 % computeDetectionIndex_v3 This function returns the plane objects that
 % matchs with a plane_gt. The output is composed by two main variables:
 % 1. detectionByFrameObj_h. Is a vector with a set of plane objects all
@@ -8,24 +9,27 @@ function [detectionByFrameObj_h, detectionByFrameDescriptor]=computeDetectionInd
 
 keyframes=loadKeyFrames(rootPath,scene);
 indexMxSearchFrame=find(keyframes==mxSearchFrame);
-% removing keyframe24 in scene 6 until tracking of bug
-if scene==6
-    [~,ikf24]=find(keyframes==24);
-    keyframes(ikf24)=[];
-    [~,ikf70]=find(keyframes==70);
-    keyframes(ikf70)=[];
-    indexMxSearchFrame=indexMxSearchFrame-2;
-end
-% number of frames where the box was in point of view of camera
+
+
 N=size(keyframes,2);
 
 detectionByFrameDescriptor=zeros(N,8);%keyframe, planeID, detectionFlag, distanceToCamera, rotation error btwn plane and camera frames, alpha, beta, gamma 
 k=1;
+[reposFlag,reposFrame] = isRepositioned(rootPath,scene,boxID);
+% compute plane ground truth for frame 0
+planesDescriptors_gt=convertPK2PlaneObjects_v2(rootPath,scene,planeType,0);
+plane_gt=extractPlaneByBoxID(planesDescriptors_gt,boxID);
 
 for i=1:indexMxSearchFrame
-    
     frame=keyframes(i);
     display(['computing index in frame ' num2str(frame) ])
+
+    if (reposFlag & frame>=reposFrame)
+        planesDescriptors_gt=convertPK2PlaneObjects_v2(rootPath,scene,planeType,reposFrame);
+        plane_gt=extractPlaneByBoxID(planesDescriptors_gt,boxID);
+        reposFlag=false;     %assumes one reposition as the maximum number of repositions for all scenes
+    end
+
     planesEstimated=detectPlanes(rootPath,scene,frame,processedScenesPath);
     [xzPlanes, xyPlanes, zyPlanes] =extractTypes(planesEstimated,planesEstimated.(['fr' num2str(frame)]).acceptedPlanes); 
 %     match based on plane type
