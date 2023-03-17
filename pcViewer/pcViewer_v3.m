@@ -7,18 +7,18 @@ clear all
 % scene=3;
 % frames=[24 25];
 
-% scene=5;%
-% frames=[4 5];
+scene=5;%
+frames=[4 5];
 
 % scene=6;
 % frame=66;
 
-scene=51;
-frames=[6 7];
+% scene=51;
+% frames=[6 7];
 
 % scene=51;
 % frame=29;
-rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample";
 % filter parameters
 maxDistance=30;%mm. To delete ground plane
 refVector=[0 1 0];%. To delete ground plane
