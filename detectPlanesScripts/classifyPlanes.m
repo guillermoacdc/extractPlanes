@@ -1,7 +1,8 @@
 function [acceptedPlanes, discardedByDorNormal, discardedByLength,...
     topOccludedPlanes]= classifyPlanes(myPlanes)
-%COMPUTEDESCRIPTIVESTATISTICSONPLANES Summary of this function goes here
-%   Detailed explanation goes here
+%CLASSIFYPLANES Classify planes into predefined categories, based on the
+%value of key properties: type, DFlag, lengthFlag
+% assumptions: the key properties have been filled. 
 acceptedPlanes=[];
 discardedByDorNormal=[];
 discardedByLength=[];

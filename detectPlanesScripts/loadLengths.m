@@ -19,7 +19,8 @@ function [boxLengths] = loadLengths(rootPath,scene)
 
 % Length information is in Aleatorizacion_v5.xlsx file, and requires the
 % physical packin sequence of the scene
-pps=getPPS(scene);
+% pps=getPPS_v2(rootPath,scene);
+pps=getPPS(rootPath,scene);
 lengthInfo=getPreviousKnowledge(rootPath, pps);
 boxLengths=lengthInfo(:,[1 4 5 3]);
 boxLengths(:,[2 3 4])=boxLengths(:,[2 3 4])*10; %length in mm

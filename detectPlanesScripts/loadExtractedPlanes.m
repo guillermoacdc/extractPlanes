@@ -1,0 +1,54 @@
+function localPlanes=loadExtractedPlanes(rootPath,scene,frames, processedScenesPath, tresholdsV)
+% This function load extracted planes per frame and its properties, classify those 
+% planes comparing properties with thresholds and pack the classified data 
+% into a cell of objects (localPlanes). The function also loads the camera 
+% pose (qc_h) at each keyframe in the session
+% 
+% The properties can be divided into two groups:
+% (1) primary properties. plane normal, geometric center, distance D,
+% path to pointcloud, 
+% (2) derived properties. type, xyTilt, ...
+
+% 1. declares parameters and init variables
+% 2. load previous knowledge of box size in form of lengthBounds
+% 3. load camera poses for keyframes of the session
+% 4. manages the processing of each keyframe in the session
+
+
+%% 1 declaring parameters 
+plotFlag=0;
+conditionalAssignationFlag=false;
+% initiallizing variables
+assignedPlanes=[];
+unassignedPlanes=[];
+globalPlanes={};
+localPlanes={};
+myBoxes=[];
+groundNormal=0;
+groundD=0;
+
+%% 2. load previous knowledge of box size in form of lengthBounds
+[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in cm
+%% 3. load camera poses for keyframes of the session
+cameraPoses=importdata(rootPath+['corrida' num2str(scene)]+'\HL2\Depth Long Throw_rig2world.txt');
+
+%% 4. manages the processing of each keyframe in the session
+for i=1:length(frames)
+% load planes of frame i and save acceptedPlanes
+    frame=frames(i);
+    cameraPose=from1DtoTform(cameraPoses(frame,:));
+    in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
+    cd1=cd;
+    cd(in_planesFolderPath);
+    Files1=dir('*.ply');
+    cd(cd1)
+    numberPlanes=length(Files1);
+% loads primary properties, extract ground plane properties and classify planes that belong to a single frame    
+    [localPlanes, localAcceptedPlanesByFrame, rejectedPlanesByFrame,...
+        groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
+        numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
+        lengthBoundsTop, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
+
+end
+
+end

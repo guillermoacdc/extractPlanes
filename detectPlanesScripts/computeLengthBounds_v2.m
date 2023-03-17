@@ -5,8 +5,11 @@ function [lengthBoundsTop, lengthBoundsP] = computeLengthBounds_v2(rootPath, sce
 % load previous knowledge of the scene: number of boxes, size of each box
 % and physical packing sequence
 
-parameters = loadLengths(rootPath,scene);%length in mm
+% parameters = loadLengths(rootPath,scene);%length in mm
 % parameters=load(fileName);%boxId, typeID, H(3) W(4) D(5)
+pps = getPPS(rootPath,scene);
+parameters =loadLengths_v2(rootPath,pps);
+
 NoBoxes=size(parameters,1);
 
 
@@ -20,17 +23,17 @@ for i=1:NoBoxes
 %     end
     % read box parameters
     W=parameters(i,3)/10;%Convert to cm
-    D=parameters(i,2)/10;
-    H=parameters(i,4)/10;
+    H=parameters(i,2)/10;
+    D=parameters(i,4)/10;
     % compute faces 1 to 3 from parameters
     [facexz faceyz facexy] = createBoxPCv4(W,D,H);
     % store plane parameters
     boxID=parameters(i,1);
-    planeDescriptor(planeID,:)=[planeID boxID facexz.L1 facexz.L2 facexz.normal];
+    planeDescriptor(planeID,:)=[planeID boxID facexz.L1 facexz.L2 facexz.normal];%P1
     planeID=planeID+1;
-    planeDescriptor(planeID,:)=[planeID boxID faceyz.L1 faceyz.L2 faceyz.normal];
+    planeDescriptor(planeID,:)=[planeID boxID faceyz.L1 faceyz.L2 faceyz.normal];%P2
     planeID=planeID+1;
-    planeDescriptor(planeID,:)=[planeID boxID facexy.L1 facexy.L2 facexy.normal];
+    planeDescriptor(planeID,:)=[planeID boxID facexy.L1 facexy.L2 facexy.normal];%TOP
     planeID=planeID+1;
 end
 % separate top and perpendicular planes

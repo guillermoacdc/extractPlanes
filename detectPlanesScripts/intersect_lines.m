@@ -1,7 +1,7 @@
 % from Unisalle project
 % 2019
 function [out,Pc]=intersect_lines(Px,u,Pa,Pb)
-% Detects when two lines (l1, l2) have the same slope and returns out=1; 
+% Detects when two lines (l1, l2) have the same slope and returns out=true; 
 % otherwise returns 0
 % line1=[Px, u]
 % line2=[Pa, Pb]
@@ -15,6 +15,9 @@ function [out,Pc]=intersect_lines(Px,u,Pa,Pb)
 % 
 % E1. line1 = line2   --- out=1
 % E2. line1 = half line2   --- out=1
+% init values
+Pc=zeros(1,2);
+out=false;
 
 m1=u(1,2)/u(1,1);%slope of u
 m2=(Pb(1,2)-Pa(1,2))/(Pb(1,1)-Pa(1,1));%slope of line2

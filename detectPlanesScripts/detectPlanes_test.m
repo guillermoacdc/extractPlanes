@@ -2,12 +2,13 @@ clc
 close all
 clear all
 
-scene=5;%
-frame=5;
 
-rootPath="C:\lib\boxTrackinPCs\";
-
-localPlanes=detectPlanes(rootPath,scene,frame);
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
+processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+scene=3;
+frame=63;
+localPlanes=detectPlanes(rootPath,scene,frame,processedPlanesPath);
 
 figure,
 myPlotPlanes_v2(localPlanes,localPlanes.(['fr' num2str(frame)]).acceptedPlanes)

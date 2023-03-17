@@ -1,4 +1,8 @@
-function localPlanes=detectPlanes(rootPath,scene,frames)
+function localPlanes=detectPlanes(rootPath,scene,frames, processedScenesPath)
+% 1. declares thresholds
+% 2. load previous knowledge of box size in form of lengthBounds
+% 3. load camera poses for keyframes of the session
+% 4. manages the processing of each keyframe in the session
 
 % declaring parameters 
 % scene=5;
@@ -12,7 +16,7 @@ parameters_PK=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 conditionalAssignationFlag=false;
 
 % load length bounds
-previousKnowledgeFileName=rootPath+['scene' num2str(scene)]+"\previousKnowledgeFile.txt";
+% previousKnowledgeFileName=rootPath+['scene' num2str(scene)]+"\previousKnowledgeFile.txt";
 % loading bound parameters for the scene
 % [lengthBoundsTop, lengthBoundsP] =computeLengthBounds(previousKnowledgeFileName);%in cm
 [lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in cm
@@ -25,14 +29,15 @@ localPlanes={};
 myBoxes=[];
 groundNormal=0;
 groundD=0;
-cameraPoses=importdata(rootPath+['scene' num2str(scene)]+'\Depth Long Throw_rig2world.txt');
-
+% cameraPoses=importdata(rootPath+['scene' num2str(scene)]+'\Depth Long Throw_rig2world.txt');
+cameraPoses=importdata(rootPath+['corrida' num2str(scene)]+'\HL2\Depth Long Throw_rig2world.txt');
 for i=1:length(frames)
 
 %%     load planes of frame i and save acceptedPlanes
     frame=frames(i);
     cameraPose=from1DtoTform(cameraPoses(frame,:));
-    in_planesFolderPath=[rootPath + 'scene' +  num2str(scene) + '\detectedPlanes\frame'  + num2str(frame) + '\'];%extracted planes with efficientRANSAC
+%     in_planesFolderPath=[rootPath + 'scene' +  num2str(scene) + '\detectedPlanes\frame'  + num2str(frame) + '\'];%extracted planes with efficientRANSAC
+    in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
     cd1=cd;
     cd(in_planesFolderPath);
     Files1=dir('*.ply');
