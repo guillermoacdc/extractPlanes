@@ -1,0 +1,12 @@
+1. run the script double2SinglePCs_vtext_test2.m from matlab in ubuntu environment; remember configure
+	a. the target scenes
+	b. the output folder name
+Assumption: there exist a file boxByFrame.txt in the path home/boxesDatabasSample/corridax
+
+Se esperan dos archivos de salida:
+(1) PCDouble2SingleID.txt 
+(2) scripToConvertPLYs.sh
+2. In the outputFolder/scenex run the bash file
+bash scriptToConvertPLYs.sh
+
+We expect the generation of the single precision point cloud there
