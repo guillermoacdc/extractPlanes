@@ -1,0 +1,31 @@
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 1/.  ~/Documents/6DViCuT_v1/session1/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 2/.  ~/Documents/6DViCuT_v1/session2/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 3/.  ~/Documents/6DViCuT_v1/session3/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 4.002/.  ~/Documents/6DViCuT_v1/session4/raw/Kinect/ 
+Loss of data. the file in floder 4.002 is corrupted
+
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 5/.  ~/Documents/6DViCuT_v1/session5/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 6/.  ~/Documents/6DViCuT_v1/session6/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 7/.  ~/Documents/6DViCuT_v1/session7/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 10/.  ~/Documents/6DViCuT_v1/session10/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 12.002/.  ~/Documents/6DViCuT_v1/session12/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 13/.  ~/Documents/6DViCuT_v1/session13/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 15/.  ~/Documents/6DViCuT_v1/session15/raw/Kinect/ 
+
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 16/.  ~/Documents/6DViCuT_v1/session16/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 17/.  ~/Documents/6DViCuT_v1/session17/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 18.002/.  ~/Documents/6DViCuT_v1/session18/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 19/.  ~/Documents/6DViCuT_v1/session19/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 20/.  ~/Documents/6DViCuT_v1/session20/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 21.002/.  ~/Documents/6DViCuT_v1/session21/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 25.002/.  ~/Documents/6DViCuT_v1/session25/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 27/.  ~/Documents/6DViCuT_v1/session27/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 32/.  ~/Documents/6DViCuT_v1/session32/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 33/.  ~/Documents/6DViCuT_v1/session33/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 35/.  ~/Documents/6DViCuT_v1/session35/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 36/.  ~/Documents/6DViCuT_v1/session36/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 39/.  ~/Documents/6DViCuT_v1/session39/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 45/.  ~/Documents/6DViCuT_v1/session45/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 52/.  ~/Documents/6DViCuT_v1/session52/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 53/.  ~/Documents/6DViCuT_v1/session53/raw/Kinect/ 
+cp -R /media/gacamacho/dctGuillermo/boxesDatabase_2021/capturasKinect/Corrida\ 54/.  ~/Documents/6DViCuT_v1/session54/raw/Kinect/ 

@@ -1,73 +1,34 @@
 clc
 close all
 clear all
-% 
-T_scene5=load("G:\Mi unidad\boxesDatabaseSample\corrida3\Th2m_v2.txt");
-
-scene=3;
-frames=[49 63];
-
-% scene=5;%
-% frames=[4 5];
-
-% scene=6;
-% frames=[66 67];
-
-% scene=10;%
-% frames=[16 17];
-
-% scene=12;%
-% frames=[3 4];
-
-
-% scene=21;
-% frames=[35 36];
-
-% scene=51;
-% frames=[29 30]; 
-
-% rootPath="C:\lib\boxTrackinPCs\";
+% path to extracted planes
+% processedScenesPath='G:\Mi unidad\semestre 9\MediumOcclusionScenes_processed';
+processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+% path to intiail value pose T_initialValue
+T_initialValue=load("G:\Mi unidad\boxesDatabaseSample\corrida32\Th2m.txt");
+% rootPath
 rootPath="G:\Mi unidad\boxesDatabaseSample\";
+
+flagGroundPlane=false;
+scene=32;
+% boxID=[17 ];
+frames = getTargetFramesFromScene(scene);
+idxBoxes=getIDxBoxes(rootPath,scene);
+
 frame=frames(1);
 % path to point cloud from HL2 sensors
 % pathData=[rootPath + '\scene' + num2str(scene) + '\inputFrames\frame' + num2str(frame) + '.ply'];
 pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
 
+
+gridStep=1;
 %% Generate synthetic model points
-% load previous knowledge in form of plane objects
-frame_gt=0;
-planeDescriptor_gt = convertPK2PlaneObjects(rootPath,scene);
-% create synthetic point clouds from loaded previous knowledge
-Nboxes=size(planeDescriptor_gt.fr0.acceptedPlanes,1);
 spatialSampling=10;
-for i=1:Nboxes
-    % compute angle btwn axis x (xm,xb)
-    T=planeDescriptor_gt.fr0.values(i).tform;
-    angle=computeAngleBtwnVectors([1 0 0]',T(1:3,1));
-    if(T(2,1)<0)
-        angle=-angle;
-    end
-    % load height
-    H=loadLengths(rootPath,scene);
-    H=H(i,4);
-    % load depth and width for each box in scene
-    L1=planeDescriptor_gt.fr0.values(i).L1;
-    L2=planeDescriptor_gt.fr0.values(i).L2;
-    % create the object
-    pcBox{i}=createSingleBoxPC_v2(L1,L2,H,spatialSampling);
-%     pcBox{i}=createSingleBoxPC(L1,L2,H,spatialSampling, angle);
-end
-% project synthetic point clouds with its own Tform
-model=[];
-for i=1:Nboxes
-    T=planeDescriptor_gt.fr0.values(i).tform;
-    pcBox_m{i}=myProjection_v3(pcBox{i},T);
-    model=[model; pcBox_m{i}.Location];%merge points into a single vector
-end
-% convert merged vector to a point cloud object
-pcmodel=pointCloud(model);
+numberOfSides=3;
+% groundFlag=true;
+[pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
+    scene,spatialSampling,numberOfSides,flagGroundPlane, idxBoxes);
 figure,
-% pcshow(pc_woutGround,"MarkerSize",10)
 hold on
 pcshow(pcmodel)
 for i=1:Nboxes
@@ -79,17 +40,19 @@ xlabel 'x'
 ylabel 'y'
 zlabel 'z'
 grid on
-title (['pc from scene/frame ' num2str(scene) '/' num2str(frame)])
-
+title (['synthetic pc from scene ' num2str(scene)])
 
 %% Load data points
-% filter parameters
-maxDistance=30;%mm. To delete ground plane
-refVector=[0 1 0];%. To delete ground plane
-opRange=[0.5 3]*1000;%[min max] in mm. To filter points by distance to camera
-gridStep=10;%grid step using for fusion
+% fusion two consecutive frames in their accepted planes version
 
-pc_h=fusionFrames(frames,scene,rootPath,maxDistance,refVector,opRange,gridStep);
+for i=1:length(frames)
+    frame=frames(i);
+    localPlanes=detectPlanes(rootPath,scene,frame, processedScenesPath);
+    pc_singleFrame{i}=fusePointCloudsFromDetectedPlanes(localPlanes,gridStep,flagGroundPlane);
+end
+pc_h = pcmerge(pc_singleFrame{1},pc_singleFrame{2},gridStep);
+
+% pc_h=fusionFrames(frames,scene,rootPath,maxDistance,refVector,opRange,gridStep);
 
 % apply transformation of initial value
     offsetSynch=computeOffsetByScene_resync(scene);
@@ -97,9 +60,9 @@ pc_h=fusionFrames(frames,scene,rootPath,maxDistance,refVector,opRange,gridStep);
     Th_c=loadTh_c(rootPath,scene,frame);
 % load Tm_c
 %     Tm_c=loadTm_c(rootPath,scene,frame,offsetSynch);
-    
+%     T_scene5=load("G:\Mi unidad\boxesDatabaseSample\corrida5\Th2m_v2.txt");
 %     T_scene5=load("G:\Mi unidad\boxesDatabaseSample\corrida10\Th2m_v2.txt");
-    Tm_h=assemblyTmatrix(T_scene5);
+    Tm_h=assemblyTmatrix(T_initialValue);
 % compute Tm_h
 %     Tm_h=Tm_c*inv(Th_c);
 % transform from h to m worlds
@@ -115,19 +78,17 @@ pc_woutGround=pointCloud(data);
 figure,
 pcshow(pc_woutGround,"MarkerSize",10)
 % pcshow(pc_h,"MarkerSize",10)
-% hold on
-% pcshow(pcmodel)
+hold on
+pcshow(pcmodel)
 xlabel 'x'
 ylabel 'y'
 zlabel 'z'
 grid on
 title (['pc from HL2 scene/frame ' num2str(scene) '/' num2str(frame)])
-
-
-
+return
 %% Running the ICP-algorithm. Least squares criterion
 data=double(data)';
-model=model';
+model=pcmodel.Location';
 maxIter=100;
 minIter=5;
 critFun=1;
@@ -155,7 +116,7 @@ ylabel 'y'
 zlabel 'z'
 grid on
 title(['Transformed data (gray) and model (color). Residual/iterations= ' num2str(res,'%.2f') '/' num2str(iter)])
-
+return
 % junction of gross transformation (Tm_h) and granular transformation
 % (Ticp) into a single transformation and saving in disk
 Tout=Ticp*Tm_h;
