@@ -4,11 +4,13 @@ function offset = computeOffsetByScene_resync(scene)
 	switch(scene)
 	
 	case 3
-		offset=-4885416;%	
+		offset=1603;%	-4885416
 	case 5
 		offset=47552083;
 	case 6
 		offset=37677084;%39739591;
+	case 12
+		offset=-4260416;%;        
 	case 21
 		offset=80010417;
 	case 51
