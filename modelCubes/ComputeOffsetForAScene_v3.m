@@ -22,6 +22,13 @@ clear
 % frame=5;
 % keyplaneID=[frame 2];%
 
+scene=12;%
+keyboxID=16;%
+minSample=1;
+maxSample=15000;
+frame=4;
+keyplaneID=[frame 11];%
+
 % scene=6;%
 % keyboxID=17;%
 % minSample=2963;
@@ -36,14 +43,15 @@ clear
 % frame=35;
 % keyplaneID=[frame 7];%
 
-scene=51;%
-keyboxID=29;%
-minSample=1;
-maxSample=19800;
-frame=29;
-keyplaneID=[frame 6];%
+% scene=51;%
+% keyboxID=29;%
+% minSample=1;
+% maxSample=19800;
+% frame=29;
+% keyplaneID=[frame 6];%
 
-rootPath="C:\lib\boxTrackinPCs\";
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
 step=10;
 
 % load Tm_c candidates
@@ -53,7 +61,7 @@ Tm_c_candidates=loadTcmCandidates(scene, rootPath, minSample, maxSample, step);
 
 % [Tkeybox_m,~,~]=loadGTData_v2(rootPath, scene, keyboxID);
 
-initialPoses=loadInitialPose_v2(rootPath,scene);
+initialPoses=loadInitialPose(rootPath,scene,0);
 % boxLengths = loadLengths(rootPath,scene);
 indexKeyBox=find(initialPoses(:,1)==keyboxID);
 Tkeybox_m=assemblyTmatrix(initialPoses(indexKeyBox,[2:13]));

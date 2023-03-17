@@ -4,7 +4,7 @@ function initialPoses=loadInitialPose_v2(rootPath,scene)
 % the rootPath/
 
     % tform is available in the file rootPath/scenex/Mocap_initialPoseBoxes.csv 
-    fileName=rootPath  + 'scene' + num2str(scene) + '\initialPoseBoxes.csv';
+    fileName=rootPath  + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv';
     initialPosesT= readtable(fileName);
     initialPosesA = table2array(initialPosesT);
 %     requires a 90deg rotation around z

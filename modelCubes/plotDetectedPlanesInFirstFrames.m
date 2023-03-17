@@ -3,11 +3,11 @@ close all
 clear
 
 
-scene=3;
-frame=24;
+% scene=3;
+% frame=24;
 
-% scene=5;%
-% frame=25;
+scene=5;%
+frame=5;
 
 % scene=6;
 % frame=66;
@@ -18,7 +18,8 @@ frame=24;
 % scene=51;
 % frame=29;
 
-rootPath="C:\lib\boxTrackinPCs\";
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
 % compute init discarded samples at each sensor
 [~,discardedinitHSamples]=synchInitEndh(rootPath, scene);%
 [~, discardedinitMocapSamples]=synchInitEndm_v4(rootPath, scene);% 
