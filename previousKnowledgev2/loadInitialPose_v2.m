@@ -34,39 +34,3 @@ end
 end
 
 
-% ----
-% Trot45n=eye(4);
-% Trot45n(1:3,1:3)=rotz(-45);
-% Trot45=eye(4);
-% Trot45(1:3,1:3)=rotz(45);
-% 
-% 
-% Tmirrory=eye(4);
-% Tmirrory(2,2)=-1;
-% if (flagAdjustPose)
-%     for i=1:size(initialPosesA,1)
-%         T=initialPosesA(i,3:end);
-%         T1=assemblyTmatrix(T);
-%         T2=T1*Tmirrory;
-%         angle=computeAngleBtwnVectors([1 0 0]',[T2(1:3,1)]);%angle btwn x axis
-%         if (T2(2,1)<0)
-%             angle=-angle;
-%         end
-% 
-% %         if angle>=0 & angle<45
-% %             T2=T2*Trot45n;
-% %         end        
-% % 
-% %         if angle>=90 & angle<135
-% %             T2=T2*Trot90;
-% %         end        
-% % 
-% %         if (angle>=45 & angle<90) | (angle>=135 & angle<180)
-% %             T2=T2*Trot45;
-% %         end 
-% 
-%         disp(['angle btwn box ' num2str(initialPosesA(i,1)) ' and mocap x frame: ' num2str(angle) ])
-%         initialPosesA(i,3:end)=[T2(1,[1:4]) T2(2,[1:4]) T2(3,[1:4])];
-%     end
-% end
-% 

@@ -1,4 +1,4 @@
-function [boxLengths] = loadLengths_v2(rootPath,scene,pps)
+function [boxLengths] = loadLengths_v2(rootPath,pps)
 %LOADLENGTHS Load lengths of boxes from a file called previousKnowledgeFile.txt
 % The lengths are loaded in millimiters
 % The output describes the box-length in the column sequence,

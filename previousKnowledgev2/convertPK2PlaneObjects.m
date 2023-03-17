@@ -3,7 +3,8 @@ function planeDescriptor = convertPK2PlaneObjects(rootPath,scene)
 %converts this knowledge into plane objects and save the result in
 %planeDescriptor vector
 %   Detailed explanation goes here
-initialPoses=loadInitialPose_v2(rootPath,scene);
+% initialPoses=loadInitialPose_v2(rootPath,scene, false);
+initialPoses=loadInitialPose(rootPath,scene, 0);
 boxLengths = loadLengths(rootPath,scene);
 % discard height
 % boxLengths = boxLengths(:,[1:2]);

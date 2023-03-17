@@ -1,5 +1,6 @@
 function pcBox=createSingleBoxPC_v2(L1,L2,H,spatialSampling)
-    % top plane for the first box
+    xyz=[];
+% top plane for the first box
     [x,y,z] = ndgrid(0:spatialSampling:L1,  0:spatialSampling:L2,   H);
     xyz=[x(:),y(:),z(:)];
 %     pcTop=pointCloud(xyz);

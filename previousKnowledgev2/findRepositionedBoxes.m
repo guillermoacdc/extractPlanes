@@ -4,11 +4,11 @@ clear all
 
 % rootPath="C:\lib\boxTrackinPCs\";
 rootPath="G:\Mi unidad\boxesDatabaseSample\";
-scene=3;
+scene=7;
 % boxID=13;
 planeType=0;
-adjustPoseFlag=false;
-[topPlaneDescriptor, pps]= convertPK2PlaneObjects_v2(rootPath,scene,planeType, adjustPoseFlag);
+repositionFlag=0;
+[topPlaneDescriptor, pps]= convertPK2PlaneObjects_v2(rootPath,scene,planeType, repositionFlag);
 
 
 %% create point clouds from loaded previous knowledge
@@ -22,7 +22,8 @@ for i=1:Nboxes
         angle=-angle;
     end
     % load height
-    H=loadLengths_v2(rootPath,scene,pps);
+%     H=loadLengths_v2(rootPath,scene,pps);
+    H=loadLengths_v2(rootPath,pps);
     H=H(i,2);
     % load depth, width and height in scene
     L1=topPlaneDescriptor.fr0.values(i).L1;
@@ -36,8 +37,8 @@ for i=1:Nboxes
 end
 
 %% compute tform for side planes
-xzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,1,adjustPoseFlag);
-yzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,2,adjustPoseFlag);
+xzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,1,repositionFlag);
+yzPlaneDescriptor = convertPK2PlaneObjects_v2(rootPath,scene,2,repositionFlag);
 % top planes
 figure,
 for i=1:Nboxes
