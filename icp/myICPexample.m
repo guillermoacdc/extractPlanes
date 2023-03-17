@@ -2,8 +2,8 @@
 clc
 close all
 clear all
-% scene=3;
-% frame=24;
+scene=3;
+frame=24;
 
 % scene=5;%
 % frame=5;
@@ -11,14 +11,16 @@ clear all
 % scene=6;
 % frame=66;
 
-scene=51;
-frame=6;
+% scene=51;
+% frame=6;
 
 % scene=51;
 % frame=29;
 
-rootPath='C:\lib\boxTrackinPCs\';
-pathPoints=[rootPath '\scene' num2str(scene) '\inputFrames\frame' num2str(frame) '.ply'];
+% rootPath='C:\lib\boxTrackinPCs\';
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
+% pathPoints=[rootPath '\scene' num2str(scene) '\inputFrames\frame' num2str(frame) '.ply'];
+pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
 
 %% Generate model points
 % load previous knowledge in form of plane objects
@@ -28,25 +30,31 @@ planeDescriptor_gt = convertPK2PlaneObjects(rootPath,scene);
 Nboxes=size(planeDescriptor_gt.fr0.acceptedPlanes,1);
 spatialSampling=5;
 for i=1:Nboxes
+    % compute sign angle between (x-world,x-box)
+    T=planeDescriptor_gt.fr0.values(i).tform;
+    angle=computeAngleBtwnVectors([1 0 0],T(1:3,1));
+    if (T(2,1)<0)
+        angle=-angle;
+    end
     % load height
     H=loadLengths(rootPath,scene);
     H=H(i,4);
     % load depth, width and height in scene
     L1=planeDescriptor_gt.fr0.values(i).L1;
     L2=planeDescriptor_gt.fr0.values(i).L2;
-    pcBox{i}=createSingleBoxPC(L1,L2,H,spatialSampling);
+    pcBox{i}=createSingleBoxPC(L1,L2,H,spatialSampling,angle);
 end
 % project point clouds with its own Tform
 model=[];
 for i=1:Nboxes
     T=planeDescriptor_gt.fr0.values(i).tform;
     pcBox_m{i}=myProjection_v3(pcBox{i},T);
-    model=[model; pcBox_m{i}.Location]
+    model=[model; pcBox_m{i}.Location];
 end
-return
+
 
 %% Generate data points
-pc = pcread(pathData);%in [mt]; indices begin at 0
+pc = pcread(pathPoints);%in [mt]; indices begin at 0
 % convert to mm
     xyz=pc.Location*1000;
     pc_mm=pointCloud(xyz);
@@ -65,10 +73,11 @@ xlabel 'x'
 ylabel 'y'
 zlabel 'z'
 grid on
-title (['pc from scene/frame ' num2str(scene) '/' num2str(frame)])
+title (['pc scanned from scene/frame ' num2str(scene) '/' num2str(frame)])
 
+
+return
 %% Running the ICP-algorithm. Least squares criterion
-
 [RotMat,TransVec,dataOut]=icp(model,data);
 
 % Reference:
