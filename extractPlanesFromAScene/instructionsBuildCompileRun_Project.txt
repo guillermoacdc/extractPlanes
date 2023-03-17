@@ -41,3 +41,4 @@ Assumptions: all the data sources are populated
 8. Create a new run configuration: Eclipse/Run/Run Configurations/C C++ Application/New; adjust the input values
 
 9. Run the project
+We expect the output at Documnents/lowOcclussionScenes_processed/

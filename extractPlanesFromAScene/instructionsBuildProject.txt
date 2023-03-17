@@ -1,0 +1,37 @@
+Assumptions: 
+	efficient RANSAC and PCL have been installed in the path /usr/local/include/
+	source files are available
+		file boxByFrame is available in dataPath/scenex/ folder
+
+2. create a folder for the project with name extractPlanesFromScene. Add two sub folders: (1) src, (2) build
+
+3. copy two files to src folder: CMakeLists.txt, extractPlanesFromScene.cpp
+
+4. Modify the parameter tao in efficient RANSAC implementation with value 50
+//was set by updating the constructor in RansacShapeDetector.cpp lines 25, 32
+//remember to ask edit permission:   sudo -H gedit /usr/local/include/ransac/RansacShapeDetector.cpp
+
+5. build the project from build folder
+cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
+
+6. create the binares from build folder using
+make
+
+7. compiling Test from terminal
+
+inputs:
+	scene
+	dataPath
+
+example creating map of planes for scene 5; command executed from build folder
+./extractPlanesFromScene 5 /home/guillermo/Documents/ptCloudsData/ 
+
+Assumptions: all the data sources are populated
+
+---------------compiling from Eclipse
+
+6. open the project in eclipse
+
+7. create a new run configuration: Eclipse/Run/Run Configurations/C C++ Application/New
+
+8. if necessary update the input/output paths in extractPlanes.cpp and run the project
