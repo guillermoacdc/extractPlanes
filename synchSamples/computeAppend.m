@@ -1,5 +1,5 @@
 function [append] = computeAppend(scene)
-%COMPUTEAPPEND Summary of this function goes here
+%COMPUTEAPPEND Computes the number that is append to the mocap filename
 %   Detailed explanation goes here
 
 switch scene

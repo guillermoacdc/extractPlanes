@@ -13,9 +13,12 @@ scene=51;%
 offset=0;
 % offset = computeOffsetByScene_resync(scene);
 
-rootPath="C:\lib\boxTrackinPCs\";
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
 fileName = ['rig2Mocap_offset'  num2str(offset)  '.txt'];
-fullFilePath=rootPath + 'scene' + num2str(scene) + '\' + fileName;
+
+% fullFilePath=rootPath + 'scene' + num2str(scene) + '\' + fileName;
+fullFilePath=rootPath + 'corrida' + num2str(scene) + '\' + fileName;
 fs=960;%mocap sampling frequence
 
 %% 1. load times synchronized at init and end

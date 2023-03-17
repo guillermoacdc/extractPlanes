@@ -23,7 +23,7 @@ Nframes=val.frames;
 
 % 2. computes a tick value for each mocap sample considering: 
 %   (a) init scanning time for mocap
-%   (b) fs=694Hz
+%   (b) fs=960Hz
 %   (c) ntfs ticks
 
 % estimate init scanning time based on metadata

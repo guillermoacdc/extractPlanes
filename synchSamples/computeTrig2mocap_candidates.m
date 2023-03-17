@@ -16,14 +16,17 @@ clear all
 % keyframe=5;
 % scene=21;%
 % keyframe=35;
-scene=51;%
-keyframe=29;
-
-rootPath="C:\lib\boxTrackinPCs\";
+% scene=51;%
+% keyframe=29;
+scene=12;%
+keyframe=4;
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="G:\Mi unidad\boxesDatabaseSample\";
 
 [mocapTimes,discardedinitMocapSamples,discardedendMocapSamples]=synchInitEndm_v4(rootPath, scene);
 [~,discardedinitHSamples,discardedendHSamples]=synchInitEndh(rootPath,scene);
 % discardedHL2Samples=loadInitDiscardedSamples(rootPath,scene,'HL2 ');
+
 centralSample=uint64((keyframe-discardedinitHSamples)*(1/4)*960)+discardedinitMocapSamples;
 % centralSample=uint64((keyframe)*(1/4)*960)+discardedMocapSamples;
 minSample=centralSample-15000;
@@ -33,10 +36,10 @@ if minSample<1
     minSample=1;
 end
 disp(['candidates at frames [ ' num2str(minSample) ' to ' num2str(maxSample) '] with ' num2str(centralSample) ' as central sample'  ])
-return
+
 step=10;%step between samples
 fileName = ['rig2Mocap_sample'  num2str(minSample)  '_to' num2str(maxSample)  '_step_'  num2str(step) '.txt'];
-fullFilePath=rootPath + 'scene' + num2str(scene) + '\' + fileName;
+fullFilePath=rootPath + 'corrida' + num2str(scene) + '\' + fileName;
 candidateSamples_m=minSample:step:maxSample;
 fs=960;
 ticksPerSec=1e7;

@@ -5,8 +5,8 @@ clear
 
 % set parameters
 
-scene=2;%
-offset=3389;
+scene=5;%
+offset=7569;
 % rootPath="C:\lib\boxTrackinPCs\";
 rootPath="G:\Mi unidad\boxesDatabaseSample\";
 

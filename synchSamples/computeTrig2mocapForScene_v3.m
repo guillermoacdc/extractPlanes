@@ -4,14 +4,15 @@
 % Trig2Mocap in the sequence,
 % r11 r12 r13 px r21 r22 r23 py r31 r32 r33 pz
 % Name> computeTrig2mocapForScene
+% v3: update for new data paths, processing of low occlusion scenes
 clc
 close all
 clear all
 
 %% define parameters
-scene=3;%
-offset=0;
-% offset = computeOffsetByScene_resync(scene);
+scene=12;%
+% offset=0;
+offset = computeOffsetByScene_resync(scene);
 
 % rootPath="C:\lib\boxTrackinPCs\";
 rootPath="G:\Mi unidad\boxesDatabaseSample\";
