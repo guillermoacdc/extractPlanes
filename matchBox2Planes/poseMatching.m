@@ -44,7 +44,9 @@ for i=1:Ngtp
             dataSetPath,frameID, cameraPose, tao);
         matchFlag=matchAssessmentPose_v2(eADD,theta);
         if matchFlag
-            display(['match in box ' num2str(boxID) ' with plane ID: ' num2str(frameID) '-' num2str(estimatedPlaneID) '   ' datestr(datetime)])
+            logtxt=['match in box ' num2str(boxID) ' with plane ID: ' num2str(frameID) '-' num2str(estimatedPlaneID) '   ' datestr(datetime)];
+            writeProcessingState(logtxt,evalPath,sessionID);
+            disp(logtxt);
             writeMainOutput(evalPath,sessionID,frameID,boxID,...
                 estimatedPlaneID,estimatedPose_m,eADD,tao,theta);
             writeAux1Output(evalPath,sessionID,frameID,boxID,...

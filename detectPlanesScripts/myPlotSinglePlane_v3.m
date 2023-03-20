@@ -39,12 +39,12 @@ if (boxID~=0)
      H=text(planeDescriptor.geometricCenter(1),...
         planeDescriptor.geometricCenter(2),...
         planeDescriptor.geometricCenter(3),...
-        [num2str(boxID) '-' num2str(planeDescriptor.idPlane)],'Color','white');
+        [num2str(boxID) '-' num2str(planeDescriptor.idPlane)],'Color','black');
 else
     H=text(planeDescriptor.geometricCenter(1),...
         planeDescriptor.geometricCenter(2),...
         planeDescriptor.geometricCenter(3),...
-        num2str(planeDescriptor.idPlane),'Color','white');
+        num2str(planeDescriptor.idPlane),'Color','black');
 end
 
 set(H,'FontSize',15)
@@ -54,7 +54,7 @@ if frameFlag
     scale=1;
     width=1;
     T=planeDescriptor.tform;
-    dibujarsistemaref (T,' ',scale,width,10,'white');
+    dibujarsistemaref (T,' ',scale,width,10,'black');
 end
  
 end

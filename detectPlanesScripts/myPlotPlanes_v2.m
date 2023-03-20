@@ -20,6 +20,8 @@ end
 
 view(2)
 camup([0 1 0])
+set(gcf,'color','w');
+set(gca,'color','w');
 xlabel 'x (m)'
 ylabel 'y (m)'
 zlabel 'z (m)'

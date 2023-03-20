@@ -7,7 +7,6 @@ processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 evalPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed\evalFolder';
 % basic IDs
 sessionID=3;
-frameID=6;
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
@@ -17,14 +16,36 @@ th_occlusion=1.4;%
 D_Tolerance=0.1;%mt
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 %% parameters 3.  Pose matching
-tao=50;
-theta=0.5;
+tao_v=[10:10:50];
+theta_v=[0.1:0.1:0.5];
 spatialSampling=10;
 %% processing
-% load extracted planes, filter planes, and estimated pose
-estimatedPlanes=loadExtractedPlanes(dataSetPath,sessionID,frameID,processedPlanesPath, tresholdsV);
+% computing keyframes for the session
+keyframes=loadKeyFrames(dataSetPath,sessionID);
+Nframes=length(keyframes);
+Ntao=length(tao_v);
+Ntheta=length(theta_v);
+% performing the computation for each frame
 
+for i=1:Nframes
+    frameID=keyframes(i);
+    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
+    estimatedPlanes=loadExtractedPlanes(dataSetPath,sessionID,frameID,processedPlanesPath, tresholdsV);
+    for j=1:Ntao
+        tao=tao_v(j);
+        for k=1:Ntheta
+            theta=theta_v(k);
+            logtxt=['Matching of frame ' num2str(frameID) ' with tao/theta= '...
+                num2str(tao) '/' num2str(theta)];
+            writeProcessingState(logtxt,evalPath,sessionID);
+            disp(logtxt);
+            poseMatching(sessionID, frameID, estimatedPlanes,planeType,...
+            gtPoses,tao,theta,spatialSampling,dataSetPath, evalPath)
+        end
+    end
+end
 
+return
 
 %% plotting
 % create folder
@@ -42,19 +63,7 @@ figure,
 fileName=['frame' num2str(frameID) '.jpg'];
 myPlotPlanes_v2(estimatedPlanes,estimatedPlanes.(['fr' num2str(frameID)]).acceptedPlanes)
 title (['boxes detected in sessionID/frame ' num2str(sessionID) '/' num2str(frameID)])
-
-
 saveas(gcf,[evalPath '\' folderName '\' fileName])
-disp('End of the test')
-
-return
-
-% pose matching
-gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
-poseMatching(sessionID, frameID, estimatedPlanes,planeType,...
-    gtPoses,tao,theta,spatialSampling,dataSetPath, evalPath)
-
-
 
 
 
