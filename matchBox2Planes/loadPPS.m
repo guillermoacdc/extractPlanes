@@ -1,5 +1,5 @@
 function PPS=loadPPS(rootPath,scene)
-%LOADPPS Summary of this function goes here
+%LOADPPS Do not use this function, use getPPS
 %   Detailed explanation goes here
 
     fileName=rootPath  + 'scene' + num2str(scene) + '\boxByFrame.txt';
