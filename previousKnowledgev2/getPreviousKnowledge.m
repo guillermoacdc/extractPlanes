@@ -5,12 +5,15 @@ function lengthKnowledge = getPreviousKnowledge(rootPath, ...
 %columns are in the sequence>
 % IdBox,TypeBox,Heigth(cm),Width(cm),Depth(cm)
 
-filename=rootPath+'misc\'+'Aleatorizacionv5.xlsx';
-previousKnowledge_t = readtable(filename,'Sheet','boxesDescriptors');%Id,Type,Heigth(cm),Width(cm),Depth(cm)
-% previousKnowledge = xlsread(filename,3);
+% filename=rootPath+'misc\'+'Aleatorizacionv5.xlsx';
+% previousKnowledge_t = readtable(filename,'Sheet','boxesDescriptors');%Id,Type,Heigth(cm),Width(cm),Depth(cm)
 
-previousKnowledge_t =previousKnowledge_t([2:32],[1:5]);
-previousKnowledge = table2array(previousKnowledge_t);
+% filename=rootPath+'misc/'+'boxDescriptors.csv';
+fileName='boxDescriptors.csv';
+filePath=fullfile(rootPath,'misc');
+previousKnowledge_t = readtable(fullfile(filePath,fileName));
+% previousKnowledge_t =previousKnowledge_t([2:32],[1:5]);
+previousKnowledge = table2array(previousKnowledge_t(:,[1:5]));
 
 lengthKnowledge=zeros(length(physicalPackingSequence),5);
 for i=1:length(physicalPackingSequence)

@@ -3,10 +3,12 @@ function keyframes=loadKeyFrames(rootPath,scene)
 %   Detailed explanation goes here
 keyframes=[];
 % keframes is available in the file rootPath/scenex/boxByFrame.txt 
-fileName=rootPath  + 'corrida' + num2str(scene) + '\HL2\pinhole_projection\boxByFrame.txt';
-% rig2M=load(fileName);
+%fileName=rootPath  + 'corrida' + num2str(scene) + '\HL2\pinhole_projection\boxByFrame.txt';
+% fileName=rootPath  + 'session'+ num2str(scene) + '/analyzed/HL2/boxByFrame.txt';
+fileName='boxByFrame.txt';
+filePath=fullfile(rootPath,['session'  num2str(scene)],'analyzed','HL2');
 
-fid = fopen( fileName );
+fid = fopen( fullfile(filePath,fileName));
 cac = textscan( fid, '%d ', 'CollectOutput'  ...
                 ,   true, 'Delimiter', ' '  );
 [~] = fclose( fid );

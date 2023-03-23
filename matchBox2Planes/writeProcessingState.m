@@ -20,7 +20,8 @@ cd (currentcd);
 
 %% write to csv file
 fileName='processingState.txt';
-filePath=[evalPath '\' folderName '\' fileName];
+filePath=fullfile(evalPath, folderName, fileName);
+% filePath=[evalPath '/' folderName '/' fileName];
 existFlag=exist(filePath, 'file');
 
 if existFlag~=2

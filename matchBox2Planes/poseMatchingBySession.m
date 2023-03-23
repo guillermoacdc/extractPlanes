@@ -2,9 +2,15 @@ clc
 close all
 clear all
 
-dataSetPath="G:\Mi unidad\boxesDatabaseSample\";
-processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
-evalPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed\evalFolder';
+%dataSetPath="G:\Mi unidad\boxesDatabaseSample\";
+dataSetPath="/home/gacamacho/Documents/6DViCuT_v1/";
+
+%processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+processedPlanesPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/lowOcclusionScenes_processed';
+% processedPlanesPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/MediumOcclusionScenes_processed';
+
+%evalPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed\evalFolder';
+evalPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/evalFolder';
 % basic IDs
 sessionID=3;
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system

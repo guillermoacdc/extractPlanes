@@ -6,9 +6,12 @@ if nargin==2
     frame=1;
 end
 
-filename=[rootPath + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv'];
+% filename=[rootPath + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv'];
+% filename=[rootPath + 'session' + num2str(scene) + '/filtered/MoCap/sessionDescriptor.csv'];
+filename='sessionDescriptor.csv';
+filePath=fullfile(rootPath, ['session' num2str(scene)], 'filtered', 'MoCap');
 % load initialpose1.csv
-pps_t=readtable(filename);
+pps_t=readtable(fullfile(filePath,filename));
 pps_a=table2array(pps_t);
 % extract column 1
 pps=pps_a(:,1);

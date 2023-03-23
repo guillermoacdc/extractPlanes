@@ -26,7 +26,8 @@ T = table(frameID, boxID, estimatedPlaneID, Restimated, testimated, eADD );
 
 %% write to csv file
 fileName=['estimatedPoseA_session' num2str(sessionID) '_tao' num2str(tao) '_theta' num2str(theta) '.csv'];
-filePath=[evalPath '\' folderName '\' fileName];
+filePath=fullfile(evalPath, folderName, fileName);
+% filePath=[evalPath '/' folderName '/' fileName];
 existFlag=exist(filePath, 'file');
 
 if ~existFlag
