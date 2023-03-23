@@ -1,4 +1,4 @@
-function [er, et, eL1, eL2,  eADD, ninliers, dcamera, Testimated_m] = comparePlanes(scene, boxID,...
+function [er, et, eL1, eL2,  eADD, ninliers, dcamera, Testimated_m, L1gt, L2gt] = comparePlanes(scene, boxID,...
     gtPlanePose, detectedPlane, spatialSampling, datasetPath,frame, cameraPose, tao)
 %COMPAREPLANES compute error metrics between estimated and ground truth
 %values
@@ -18,7 +18,8 @@ Tref=gtPlanePose;
 Testimated=detectedPlane.tform;%mt
 Testimated(1:3,4)=Testimated(1:3,4)*1000;%mm
 % load Th_m
-pathTh_m=[convertStringsToChars(datasetPath) 'corrida' num2str(scene) '\Th2m.txt'];
+% pathTh_m=[convertStringsToChars(datasetPath) 'corrida' num2str(scene) '\Th2m.txt'];
+pathTh_m=[convertStringsToChars(datasetPath) 'session' num2str(scene) '/analyzed/Th2m.txt'];
 Th_m_array=load(pathTh_m);
 Th_m=assemblyTmatrix(Th_m_array);
 Testimated_m=Th_m*Testimated;
@@ -56,7 +57,7 @@ plane_model=createSingleBoxPC_topSide(L1gt,L2gt,H,spatialSampling);%centered in 
 % project the pc with the estimated pose
     plane_model_estimated=myProjection_v3(plane_model,Testimated_m);
 % compute the average distance distingushable
-eADD=compute_eADD(plane_model_gt,plane_model_estimated, er, tao, L2gt);%mm
+eADD=compute_eADD(plane_model_gt,plane_model_estimated, er, tao);%mm
 
 
 %% compute detection metrics: number of inliers (n_inliers) and distance to camera (dc)

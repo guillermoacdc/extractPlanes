@@ -39,12 +39,13 @@ for i=1:Ngtp
     for j=1:Nep
         estimatedPlaneID=estimatedPlanesID_updated(j,2);
         estimatedPlane=estimatedPlanes.(['fr' num2str(frameID)]).values(estimatedPlaneID);
-        [er, et, eL1, eL2, eADD, n_inliers, dc, estimatedPose_m] = comparePlanes(sessionID,...
+        [er, et, eL1, eL2, eADD, n_inliers, dc, estimatedPose_m,L1gt,L2gt] = comparePlanes(sessionID,...
             boxID, gtPose, estimatedPlane, spatialSampling,...
             dataSetPath,frameID, cameraPose, tao);
-        matchFlag=matchAssessmentPose_v2(eADD,theta);
+        matchFlag=matchAssessmentPose_v2(eADD,theta,L1gt,L2gt);
         if matchFlag
-            logtxt=['match in box ' num2str(boxID) ' with plane ID: ' num2str(frameID) '-' num2str(estimatedPlaneID) '   ' datestr(datetime)];
+            logtxt=['match in box ' num2str(boxID) ' with plane ID: '...
+                num2str(frameID) '-' num2str(estimatedPlaneID) '   ' datestr(datetime)];
             writeProcessingState(logtxt,evalPath,sessionID);
             disp(logtxt);
             writeMainOutput(evalPath,sessionID,frameID,boxID,...

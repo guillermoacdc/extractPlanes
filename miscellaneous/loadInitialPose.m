@@ -9,8 +9,11 @@ function [initialPoses] = loadInitialPose(rootPath,scene,frame)
 % Warning. The poses must be returned in the sequence of pps (physical packing seq)
 
     % tform is available in the file rootPath/corridax/mocap/initialPose1.csv 
-    fileName=rootPath  + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv';
-    initialPosesT= readtable(fileName);
+%    fileName=rootPath  + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv';
+%     fileName=rootPath  + 'session' + num2str(scene) + '/filtered/MoCap/sessionDescriptor.csv';
+    fileName='sessionDescriptor.csv';
+    filePath=fullfile(rootPath, ['session' num2str(scene)], 'filtered', 'MoCap');
+    initialPosesT= readtable(fullfile(filePath,fileName));
     initialPosesA = table2array(initialPosesT);
     reposIndexes=findDuplicatedValues(initialPosesA(:,1));
 

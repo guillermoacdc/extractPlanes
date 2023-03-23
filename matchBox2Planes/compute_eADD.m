@@ -1,4 +1,4 @@
-function [e] = compute_eADD(pc_gt,pc_estimated, eR, tao, L2)
+function [e] = compute_eADD(pc_gt,pc_estimated, eR, tao)
 %COMPUTE_EADD compute average distance btwn points that belong to a (1) ground
 %truth and a (2) estimated point cloud. Assumptions
 % 1. all the points are visible. 
@@ -30,7 +30,7 @@ for i=1:N
         diff_points_a(i)=norm(pc_gt.Location(i,:)-pc_estimated.Location(N-i+1,:));%inverted
     end
 
-    if diff_points_a(i)>L2*tao/100% comparison between millimeters
+    if diff_points_a(i)>tao% comparison between millimeters
         eADD_a(i)=1;
     end
 end

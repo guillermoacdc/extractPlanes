@@ -30,14 +30,19 @@ groundD=0;
 %% 2. load previous knowledge of box size in form of lengthBounds
 [lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in cm
 %% 3. load camera poses for keyframes of the session
-cameraPoses=importdata(rootPath+['corrida' num2str(scene)]+'\HL2\Depth Long Throw_rig2world.txt');
+% cameraPoses=importdata(rootPath+['corrida' num2str(scene)]+'\HL2\Depth Long Throw_rig2world.txt');
+% cameraPoses=importdata(rootPath+['session' num2str(scene)]+'/raw/HL2/Depth Long Throw_rig2world.txt');
+cameraPosePath=fullfile(rootPath, ['session' num2str(scene)],...
+    'raw', 'HL2', 'Depth Long Throw_rig2world.txt');
+cameraPoses=importdata(cameraPosePath);
 
 %% 4. manages the processing of each keyframe in the session
 for i=1:length(frames)
 % load planes of frame i and save acceptedPlanes
     frame=frames(i);
     cameraPose=from1DtoTform(cameraPoses(frame,:));
-    in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
+%     in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
+    in_planesFolderPath=[processedScenesPath '/corrida'  num2str(scene) '/frame'  num2str(frame) '/'];%extracted planes with efficientRANSAC
     cd1=cd;
     cd(in_planesFolderPath);
     Files1=dir('*.ply');
