@@ -7,11 +7,14 @@ function [modelParameters, pcCount] = loadPlaneParameters(planesPath,frame,i)
 % pc is a pointcloud with the inliers that fit the plane model
 
 % planesPath=[planesPath + "frame (" + num2str(frame) + ")/" ];
-A=load([planesPath + "planeParameters.txt"]);
+parametersFileName='planeParameters.txt';
+pointCloudFileName= ['Plane'  num2str(i-1)  'A.ply'];
+A=load(fullfile(planesPath,parametersFileName));
 modelParameters=A(i,:);% A B C D geometricCenter_x geometricCenter_y geometricCenter_z
 modelParameters(4)=-modelParameters(4);%?
 
-pc = pcread([planesPath + "Plane" + num2str(i-1) + "A.ply"]);%in [mt]; indices begin at 0
+% pc = pcread([planesPath + "Plane" + num2str(i-1) + "A.ply"]);%in [mt]; indices begin at 0
+pc = pcread(fullfile(planesPath,pointCloudFileName));%in [mt]; indices begin at 0
 pcCount=pc.Count;
 %% paint the point cloud
 % pointscolor=uint8(zeros(pc.Count,3));

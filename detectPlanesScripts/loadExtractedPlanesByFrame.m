@@ -31,8 +31,9 @@ D_Tolerance=tresholdsV(5);%mt
 planesByFrame=[];
 for i=1:numberPlanes
     planeID=i;
-    inliersPath=[in_planesFolderPath + "Plane" + num2str(i-1) + "A.ply"];
-    [modelParameters pcCount]=loadPlaneParameters(in_planesFolderPath, frame,...
+%     inliersPath=[in_planesFolderPath + "Plane" + num2str(i-1) + "A.ply"];
+    inliersPath=fullfile(in_planesFolderPath, ['Plane'  num2str(i-1)  'A.ply']);
+    [modelParameters, pcCount]=loadPlaneParameters(in_planesFolderPath, frame,...
         planeID);
 %% 1. Load basic plane descriptors in a cell of plane objects
     planesByFrame{i}=plane(scene, frame, planeID, modelParameters,...
@@ -70,6 +71,8 @@ end
 myPlanes.(['fr' num2str(frame)]).cameraPose=cameraPose;
 myPlanes.(['fr' num2str(frame)]).values=[];
 myPlanes.(['fr' num2str(frame)]).acceptedPlanes=acceptedPlanesByFrame;
+myPlanes.(['fr' num2str(frame)]).ground.D=groundD;
+myPlanes.(['fr' num2str(frame)]).ground.n=groundNormal;
 for i=1:numberPlanes
     myPlanes.(['fr' num2str(frame)]).values=[myPlanes.(['fr' num2str(frame)]).values planesByFrame{i}];
 end

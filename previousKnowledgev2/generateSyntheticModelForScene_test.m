@@ -3,18 +3,20 @@ close all
 clear
 
 
-rootPath="G:\Mi unidad\boxesDatabaseSample\";
-
-spatialSampling=10;
+% rootPath="G:\Mi unidad\boxesDatabaseSample\";
+rootPath="D:\6DViCuT_p1";
+NpointsDiagTopSide=50;
 numberOfSides=3;
 groundFlag=false;
-scene=3;
+scene=10;
+frameID=101;
+planeType=0;
 
-
-% boxID=[17];%For plottin a subset of boxes, put the boxID that you want to plot
+boxID=[17];%For plottin a subset of boxes, put the boxID that you want to plot
 % frames = getTargetFramesFromScene(scene);
-% idxBoxes=getIDxBoxes(rootPath,scene, boxID);
-idxBoxes=getIDxBoxes(rootPath,scene);
+idxBoxes=getIDxBoxes(rootPath,scene, boxID);
+% idxBoxes=getIDxBoxes(rootPath,scene);
+
 
 % pps=getPPS(rootPath,scene);
 % idxBoxes=1:length(pps);
@@ -27,7 +29,9 @@ idxBoxes=getIDxBoxes(rootPath,scene);
 
 
 [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
-    scene,spatialSampling,numberOfSides,groundFlag, idxBoxes,0);
+    scene,numberOfSides,groundFlag, idxBoxes,frameID, NpointsDiagTopSide, planeType);
+% [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
+%     scene,spatialSampling,numberOfSides,groundFlag, idxBoxes,frameID);
 % [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
 %     scene,spatialSampling,numberOfSides,groundFlag);
 

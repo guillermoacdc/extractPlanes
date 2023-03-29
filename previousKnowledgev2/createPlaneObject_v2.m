@@ -18,6 +18,9 @@ planeDescriptor.planeTilt=[];%
 planeDescriptor.L1=boxLength(1);%mm
 planeDescriptor.L2=boxLength(2);%mm
 planeDescriptor.L2toY=[];%
+if planeType==0
+    planeDescriptor.D=boxLength(3);
+end
 
 
 end

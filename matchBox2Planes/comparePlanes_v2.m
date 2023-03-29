@@ -1,4 +1,4 @@
-function [er, et, eL1, eL2,  eADD, ninliers, dcamera, Testimated_m, L1gt, L2gt] = comparePlanes(scene, boxID,...
+function [er, et, eL1, eL2,  eADD, ninliers, dcamera, Testimated_m, L1gt, L2gt] = comparePlanes_v2(scene, boxID,...
     gtPlanePose, detectedPlane, spatialSampling, datasetPath,frame, cameraPose, tao)
 %COMPAREPLANES compute error metrics between estimated and ground truth
 %values
@@ -11,22 +11,14 @@ function [er, et, eL1, eL2,  eADD, ninliers, dcamera, Testimated_m, L1gt, L2gt] 
 % ninliers: number of inliers in the plane detected
 % dcamera: distance between camera and plane estimated, in mm
 
+% _v2 se asume que las poses estimadas llegan en el sistema de coordeandas
+% qm, en consecuencia, se eliminan las etapas que proyectaban a ese
+% sistema. También se asume que las poses estimadas llegan en mm
 %   Detailed explanation goes here
 
 %% compute rotation and translation errors: er, et
 Tref=gtPlanePose;
-Testimated=detectedPlane.tform;%mt
-Testimated(1:3,4)=Testimated(1:3,4)*1000;%mm
-% load Th_m
-pathTh_m=fullfile(datasetPath,['session' num2str(scene)],'analyzed');
-fileName='Th2m.txt';
-Th_m_array=load(fullfile(pathTh_m,fileName));
-Th_m=assemblyTmatrix(Th_m_array);
-Testimated_m=Th_m*Testimated;
-%Requires an additional transformation to obtain the z-height in projected frame 
-Theight=[0 1 0; 0 0 1; 1 0 0];
-Testimated_m(1:3,1:3)=Testimated_m(1:3,1:3)*Theight;
-
+Testimated_m=detectedPlane.tform;%mt
 [et, er]=computeSinglePoseError(Tref,Testimated_m);%as stated in Hodane 2016 we compute Reference-Estimated
 %% compute lenght errors; eL1, eL2
 % load gt lengths
@@ -47,10 +39,12 @@ eL1=abs(L1gt-detectedPlane.L1*1000)/L1gt;%mm
 eL2=abs(L2gt-detectedPlane.L2*1000)/L2gt;
 
 %% compute average distance distinguishable error eADD
-pps=getPPS(datasetPath,scene,frame);
-matchIndex=find(pps==boxID);
-planeDescriptor=convertPK2PlaneObjects_v2(datasetPath,scene,0,frame);
-planeObject=planeDescriptor.fr0.values(matchIndex);
+% pps=getPPS(datasetPath,scene,frame);
+% matchIndex=find(pps==boxID);
+% planeDescriptor=convertPK2PlaneObjects_v2(datasetPath,scene,0,frame);
+% 
+% planeObject=planeDescriptor.fr0.values(matchIndex);
+
 plane_model=createSingleBoxPC_topSide(L1gt,L2gt,H,spatialSampling);%centered in the origin
 % project the pc with the gt pose
     plane_model_gt=myProjection_v3(plane_model,Tref);

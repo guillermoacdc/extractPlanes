@@ -8,10 +8,11 @@ rootPath="G:\Mi unidad\boxesDatabaseSample\";
 spatialSampling=10;
 numberOfSides=3;
 groundFlag=false;
-scene=5;
+scene=3;
 
-boxID=[17];%For plotting a subset of boxes, put the boxID that you want to plot
-idxBoxes=getIDxBoxes(rootPath,scene, boxID);
+% boxID=[17];%For plotting a subset of boxes, put the boxID that you want to plot
+% idxBoxes=getIDxBoxes(rootPath,scene, boxID);
+idxBoxes=getIDxBoxes(rootPath,scene);
 
 
 [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...

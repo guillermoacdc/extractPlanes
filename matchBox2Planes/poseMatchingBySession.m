@@ -3,16 +3,17 @@ close all
 clear all
 
 %dataSetPath="G:\Mi unidad\boxesDatabaseSample\";
-dataSetPath="/home/gacamacho/Documents/6DViCuT_v1/";
+dataSetPath="D:\6DViCuT_p1\";
+% dataSetPath="/home/gacamacho/Documents/6DViCuT_v1/";
 
-%processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
-processedPlanesPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/lowOcclusionScenes_processed';
+processedPlanesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+% processedPlanesPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/lowOcclusionScenes_processed';
 % processedPlanesPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/MediumOcclusionScenes_processed';
 
-%evalPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed\evalFolder';
-evalPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/evalFolder';
+evalPath='G:\Mi unidad\semestre 9\evalFolder';
+% evalPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/evalFolder';
 % basic IDs
-sessionID=3;
+sessionID=10;
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
@@ -36,7 +37,8 @@ Ntheta=length(theta_v);
 for i=1:Nframes
     frameID=keyframes(i);
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
-    estimatedPlanes=loadExtractedPlanes(dataSetPath,sessionID,frameID,processedPlanesPath, tresholdsV);
+    estimatedPlanes=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
+        processedPlanesPath, tresholdsV);
     for j=1:Ntao
         tao=tao_v(j);
         for k=1:Ntheta
@@ -45,7 +47,7 @@ for i=1:Nframes
                 num2str(tao) '/' num2str(theta)];
             writeProcessingState(logtxt,evalPath,sessionID);
             disp(logtxt);
-            poseMatching(sessionID, frameID, estimatedPlanes,planeType,...
+            poseMatching_v2(sessionID, frameID, estimatedPlanes,planeType,...
             gtPoses,tao,theta,spatialSampling,dataSetPath, evalPath)
         end
     end

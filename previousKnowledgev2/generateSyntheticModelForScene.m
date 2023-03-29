@@ -1,5 +1,5 @@
 function [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
-    scene,spatialSampling,numberOfSides,groundFlag,idxBoxes,frameHL2)
+    scene,numberOfSides,groundFlag,idxBoxes,frameHL2, NpointsDiagTopSide, planeType)
 %GENERATESYNTHETICMODELFORSCENE Summary of this function goes here
 % inputs
 % rootPath, path to the packing dataset
@@ -10,13 +10,20 @@ function [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(
 % idxBoxes. index of target boxes in the physical packin sequence of the
 % scene; do not confuse with box ids
 
+% UPDATES: 29/03/2023 - Delete input spatialSampling. This value is
+% computed inside the function as spatialSampling=sqrt(L1^2+L2^2)/NpointsDiagTopSide;
+
 % load previous knowledge in form of plane objects
 % planeDescriptor_gt = convertPK2PlaneObjects(rootPath,scene);
-planeDescriptor_gt = convertPK2PlaneObjects_v2(rootPath,scene,0,frameHL2);
 
-Nboxes=size(planeDescriptor_gt.fr0.acceptedPlanes,1);
-if nargin==5
-    idxBoxes=1:Nboxes;
+
+planeDescriptor_gt = convertPK2PlaneObjects_v2(rootPath,scene,planeType,frameHL2);
+
+if length(idxBoxes)>1
+    Nboxes=size(planeDescriptor_gt.fr0.acceptedPlanes,1);
+    idxBoxes=idxBoxes(1:Nboxes);%reduce the number of boxes based on the frame number
+else
+    Nboxes=1;
 end
 
 for i=1:Nboxes
@@ -26,6 +33,7 @@ for i=1:Nboxes
     % load depth and width for each box in scene
     L1=planeDescriptor_gt.fr0.values(i).L1;
     L2=planeDescriptor_gt.fr0.values(i).L2;
+    spatialSampling=sqrt(L1^2+L2^2)/NpointsDiagTopSide;
     pcTopPlane{i}=createSingleBoxPC_topSide(L1,L2,H,spatialSampling);
 %     create the objects
     switch numberOfSides

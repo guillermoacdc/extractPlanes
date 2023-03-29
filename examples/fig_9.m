@@ -8,8 +8,8 @@ clc
 close all
 clear
 % parameters
-scene=3;
-frame=25;
+scene=10;
+frame=101;
 
 %% set paths
 % path to extracted planes
@@ -60,9 +60,9 @@ zmax=600;
 figure,
 pcshow(pc_m)
 hold on
-dibujarsistemaref(qc,'c_h',250,2,10,'k')
-dibujarsistemaref(qh,'h',250,2,10,'k')
-dibujarsistemaref(qm,'m',250,2,10,'k')
+dibujarsistemaref(qc,'c_h',250,2,10,'w')
+dibujarsistemaref(qh,'h',250,2,10,'w')
+dibujarsistemaref(qm,'m',250,2,10,'w')
 % axis([xmin xmax ymin ymax zmin 1600])
 xlabel 'x'
 ylabel 'y'

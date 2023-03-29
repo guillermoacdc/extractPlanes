@@ -42,11 +42,13 @@ for i=1:length(frames)
     frame=frames(i);
     cameraPose=from1DtoTform(cameraPoses(frame,:));
 %     in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
-    in_planesFolderPath=[processedScenesPath '/corrida'  num2str(scene) '/frame'  num2str(frame) '/'];%extracted planes with efficientRANSAC
+%     in_planesFolderPath=[processedScenesPath '/corrida'  num2str(scene) '/frame'  num2str(frame) '/'];%extracted planes with efficientRANSAC
+    in_planesFolderPath=fullfile(processedScenesPath,['corrida' num2str(scene)],...
+        ['frame' num2str(frame)] );
     cd1=cd;
     cd(in_planesFolderPath);
     Files1=dir('*.ply');
-    cd(cd1)
+    cd(cd1);
     numberPlanes=length(Files1);
 % loads primary properties, extract ground plane properties and classify planes that belong to a single frame    
     [localPlanes, localAcceptedPlanesByFrame, rejectedPlanesByFrame,...
