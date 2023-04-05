@@ -1,6 +1,10 @@
-function myPlotPlaneContour(planeDescriptor)
+function myPlotPlaneContour(planeDescriptor, fc)
 %MYPLOTPLANECONTOUR Summary of this function goes here
 %   Detailed explanation goes here
+
+if nargin==1
+    fc='b';
+end
 
 % create the rectangule based on L1, L2 values
 %top plane version; with y=0. extended vector
@@ -25,10 +29,10 @@ p4t=p4t(1:3);
 
 % plot the transformed rectangle
 
-dibujarlinea(p2t,p1t,'b',1)
-dibujarlinea(p3t,p2t,'b',1)
-dibujarlinea(p4t,p3t,'b',1)
-dibujarlinea(p1t,p4t,'b',1)
+dibujarlinea(p2t,p1t,fc,1)
+dibujarlinea(p3t,p2t,fc,1)
+dibujarlinea(p4t,p3t,fc,1)
+dibujarlinea(p1t,p4t,fc,1)
 
 end
 

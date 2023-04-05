@@ -1,4 +1,4 @@
-function myPlotSinglePlane_v3(planeDescriptor, boxID, frameFlag)
+function myPlotSinglePlane_v3(planeDescriptor, boxID, frameFlag, fc)
 %MYPLOTSINGLEPLANE Plots three data associated with a plane:
 % (1) raw points (or inliers to the model)
 % (2) normal of plain
@@ -7,6 +7,10 @@ function myPlotSinglePlane_v3(planeDescriptor, boxID, frameFlag)
 % (5) framework of the plane; just if input frameFlag is true
 if nargin==2
     frameFlag=false;
+end
+
+if nargin==3
+    fc='white';
 end
 
 p=[planeDescriptor.geometricCenter]';
@@ -25,7 +29,7 @@ hold on
 quiver3(p(1),p(2), p(3),n(1), n(2), n(3),normalColor);
 % (3) plot contour of the plane
 if (planeDescriptor.type==0)
-    myPlotPlaneContour(planeDescriptor)
+    myPlotPlaneContour(planeDescriptor,fc)
 else
 
     if ~isempty(planeDescriptor.planeTilt)
@@ -39,12 +43,12 @@ if (boxID~=0)
      H=text(planeDescriptor.geometricCenter(1),...
         planeDescriptor.geometricCenter(2),...
         planeDescriptor.geometricCenter(3),...
-        [num2str(boxID) '-' num2str(planeDescriptor.idPlane)],'Color','black');
+        [num2str(boxID) '-' num2str(planeDescriptor.idPlane)],'Color',fc);
 else
     H=text(planeDescriptor.geometricCenter(1),...
         planeDescriptor.geometricCenter(2),...
         planeDescriptor.geometricCenter(3),...
-        num2str(planeDescriptor.idPlane),'Color','black');
+        num2str(planeDescriptor.idPlane),'Color',fc);
 end
 
 set(H,'FontSize',15)
@@ -54,7 +58,7 @@ if frameFlag
     scale=1;
     width=1;
     T=planeDescriptor.tform;
-    dibujarsistemaref (T,' ',scale,width,10,'black');
+    dibujarsistemaref (T,' ',scale,width,10,fc);
 end
  
 end

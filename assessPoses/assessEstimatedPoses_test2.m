@@ -1,11 +1,11 @@
-% test with non-incremental approach
+% modification of functions to avoid passing a field called frame: v2
 clc
 close all
 clear
 
-sessionID=10;
+sessionID=3;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses.json';
+fileName='estimatedPoses_v2.json';
 
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
@@ -17,6 +17,10 @@ D_Tolerance=0.1;%mt
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 %% parameters 3.  Assesment Pose with e_ADD
 tao_v=10:10:50;
+%% parameters 4. Merging planes between frames
+% parameters of merging planes - used in the function computeTypeOfTwin
+tao_merg=50/1000;%in meters----50mm
+theta_merg=0.5;%in percentage
 
 %% processing
 % computing keyframes for the session
@@ -28,49 +32,45 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 % for i=1:Nframes
-for i=1:10
+for i=1:5
     frameID=keyframes(i);
-    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
-    estimatedPlanes=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
-        PCpath, tresholdsV);
-%     project estimated poses to qm
-    estimatedPlanes_m=myProjectionPlaneObject(estimatedPlanes,frameID,...
-        sessionID,dataSetPath);
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);
     %     writeProcessingState(logtxt,evalPath,sessionID);
-% restrict by type of plane
-    [xzPlanes, xyPlanes, zyPlanes] =extractTypes(estimatedPlanes_m,...
-        estimatedPlanes.(['fr' num2str(frameID)]).acceptedPlanes); 
-    switch planeType
-        case 0
-            estimatedPlanesID = xzPlanes;
-        case 1
-            estimatedPlanesID = xyPlanes;
-        case 2
-            estimatedPlanesID = zyPlanes;
-    end
+
+    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
+    estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
+        PCpath, tresholdsV);%returns a struct with a property frx
+    % extract target identifiers based on type of plane
+    estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
 
     if isempty(estimatedPlanesID)
         estimatedPoses.(['frame' num2str(frameID)])=[];%empty frames are frames where detections were null
         continue
     else
-        estimatedPoses.(['frame' num2str(frameID)]).IDObjects=estimatedPlanesID(:,2);
-        [poses, L1e, L2e, dc, Ninliers]=convertToArrays(estimatedPlanes_m,estimatedPlanesID);
+        estimatedPlanes=loadPlanesFromIDs(estimatedPlanesfr,estimatedPlanesID);%vector
+    
+    %     project estimated poses to qm. The rest of properties is kept
+        estimatedPlanes_m=myProjectionPlaneObject_v2(estimatedPlanes,...
+            sessionID,dataSetPath);
+
+
+
+        estimatedPoses.(['frame' num2str(frameID)]).IDObjects=estimatedPlanesID;
+        [poses, L1e, L2e, dc, Ninliers]=convertToArrays_v2(estimatedPlanes_m);
         estimatedPoses.(['frame' num2str(frameID)]).poses=poses;
         estimatedPoses.(['frame' num2str(frameID)]).L1=L1e;
         estimatedPoses.(['frame' num2str(frameID)]).L2=L2e;
         estimatedPoses.(['frame' num2str(frameID)]).Ninliers=Ninliers;
         estimatedPoses.(['frame' num2str(frameID)]).dc=dc;
-        
         for j=1:Ntao
             tao=tao_v(j);
             logtxt=['Processing with tao= ' num2str(tao)];
             disp(logtxt);
     %         writeProcessingState(logtxt,evalPath,sessionID);
     %         write eADD to the struct
-            estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD(estimatedPlanes,...
-            estimatedPlanesID, gtPoses, frameID, tao, dataSetPath);
+            estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v2(estimatedPlanes,...
+             gtPoses,  tao, dataSetPath);
         end
 %     write descriptors of length, ninliers, dc, ... to the struct
 
@@ -78,6 +78,8 @@ for i=1:10
 
 %     
 end
+
+return
 % write json file to disk
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
 

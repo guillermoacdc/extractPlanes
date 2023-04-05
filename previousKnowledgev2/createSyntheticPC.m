@@ -3,7 +3,8 @@ function pcBox=createSyntheticPC(planeDescriptor,NpointsDiagTopSide, numberOfSid
 %Nboxes is the number of boxes in planeDescriptor
 % Assumption: planeDescriptor just have information of top planes
 %   Detailed explanation goes here
-Nboxes=length(planeDescriptor.fr0.values);
+% Nboxes=length(planeDescriptor.fr0.values);
+Nboxes=size(planeDescriptor.fr0.values,1);
 for i=1:Nboxes
     % load height
     H=planeDescriptor.fr0.values(i).D;

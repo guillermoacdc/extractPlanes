@@ -1,4 +1,4 @@
-function [modelParameters, pcCount] = loadPlaneParameters(planesPath,frame,i)
+function [modelParameters, pcCount] = loadPlaneParameters(planesPath,i)
 %LOADPLANEMODEL Summary of this function goes here
 %   Detailed explanation goes here
 % OUTPUTS

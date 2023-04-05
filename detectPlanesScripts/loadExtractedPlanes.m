@@ -35,6 +35,7 @@ groundD=0;
 cameraPosePath=fullfile(rootPath, ['session' num2str(scene)],...
     'raw', 'HL2', 'Depth Long Throw_rig2world.txt');
 cameraPoses=importdata(cameraPosePath);
+%***** convert to mm
 
 %% 4. manages the processing of each keyframe in the session
 for i=1:length(frames)
@@ -55,7 +56,8 @@ for i=1:length(frames)
         groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
         numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
         lengthBoundsTop, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
-
+% add property distanceToCamera for acceptedPlanes () 
+    addDistanceToCamera(localPlanes,localAcceptedPlanesByFrame);
 end
 
 end

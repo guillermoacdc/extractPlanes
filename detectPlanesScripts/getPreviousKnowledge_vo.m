@@ -1,8 +1,8 @@
-function lengthKnowledge = getPreviousKnowledge(rootPath, ...
+function lengthKnowledge = getPreviousKnowledge_vo(rootPath, ...
     physicalPackingSequence)
 %GETPREVIOUSKNOWLEDGE Loads previous knowledge from a physical packing
 %sequence
-
+% _vo version obsoleta
 filename=rootPath+'misc\'+'Aleatorizacionv5.xlsx';
 previousKnowledge_t = readtable(filename,'Sheet','boxesDescriptors');
 % previousKnowledge = xlsread(filename,3);

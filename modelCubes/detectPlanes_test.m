@@ -2,10 +2,11 @@ clc
 close all
 clear all
 
-scene=5;%
+scene=10;%
 frame=5;
 
-rootPath="C:\lib\boxTrackinPCs\";
+% rootPath="C:\lib\boxTrackinPCs\";
+rootPath="D:\6DVicuT_p1\";
 
 localPlanes=detectPlanes(rootPath,scene,frame);
 

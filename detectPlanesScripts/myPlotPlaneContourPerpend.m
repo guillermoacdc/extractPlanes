@@ -1,6 +1,10 @@
-function myPlotPlaneContourPerpend(planeDescriptor)
+function myPlotPlaneContourPerpend(planeDescriptor, fc)
 %MYPLOTPLANECONTOUR Summary of this function goes here
 %   Detailed explanation goes here
+
+if nargin==1
+    fc='b';
+end
 
 % create the rectangule based on L1, L2 values
 %perpendicular plane version; with zero value at x or z. extended vector
@@ -50,10 +54,10 @@ p4t=p4t(1:3);
 
 % plot the transformed rectangle
 
-dibujarlinea(p1t,p2t,'b',1)
-dibujarlinea(p2t,p3t,'b',1)
-dibujarlinea(p3t,p4t,'b',1)
-dibujarlinea(p4t,p1t,'b',1)
+dibujarlinea(p1t,p2t,fc,1)
+dibujarlinea(p2t,p3t,fc,1)
+dibujarlinea(p3t,p4t,fc,1)
+dibujarlinea(p4t,p1t,fc,1)
 
 end
 

@@ -35,8 +35,8 @@ classdef plane < handle
         x2;
         y1;
         y2;
-%         area;
-        
+%         distance between camera and object;
+        distanceToCamera;%in meters
     end
     
     methods
@@ -150,6 +150,11 @@ classdef plane < handle
 
         function id=getID(obj)
             id=[obj.idFrame obj.idPlane];
+        end
+
+        function setDistanceToCamera(obj, cameraPosition)
+            distanceToCamera_ref=norm(obj.tform(1:3,4)-cameraPosition);
+            obj.distanceToCamera=distanceToCamera_ref;
         end
     end
 end

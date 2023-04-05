@@ -1,0 +1,13 @@
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida19\HL2\PointClouds D:\muelle6DViCuT\session19\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida20\HL2\PointClouds D:\muelle6DViCuT\session20\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida25\HL2\PointClouds D:\muelle6DViCuT\session25\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida27\HL2\PointClouds D:\muelle6DViCuT\session27\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida32\HL2\PointClouds D:\muelle6DViCuT\session32\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida33\HL2\PointClouds D:\muelle6DViCuT\session33\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida35\HL2\PointClouds D:\muelle6DViCuT\session35\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida36\HL2\PointClouds D:\muelle6DViCuT\session36\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida39\HL2\PointClouds D:\muelle6DViCuT\session39\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida45\HL2\PointClouds D:\muelle6DViCuT\session45\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida52\HL2\PointClouds D:\muelle6DViCuT\session52\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida53\HL2\PointClouds D:\muelle6DViCuT\session53\PointClouds /i 
+xcopy G:\"Mi unidad"\boxesDatabaseSample\corrida54\HL2\PointClouds D:\muelle6DViCuT\session54\PointClouds /i 

@@ -8,14 +8,14 @@ rootPath="D:\6DViCuT_p1";
 NpointsDiagTopSide=50;
 numberOfSides=3;
 groundFlag=false;
-scene=10;
-frameID=101;
+scene=36;
+frameID=1;
 planeType=0;
 
-boxID=[17];%For plottin a subset of boxes, put the boxID that you want to plot
+% boxID=[17];%For plottin a subset of boxes, put the boxID that you want to plot
 % frames = getTargetFramesFromScene(scene);
-idxBoxes=getIDxBoxes(rootPath,scene, boxID);
-% idxBoxes=getIDxBoxes(rootPath,scene);
+% idxBoxes=getIDxBoxes(rootPath,scene, boxID);
+idxBoxes=getIDxBoxes(rootPath,scene);
 
 
 % pps=getPPS(rootPath,scene);

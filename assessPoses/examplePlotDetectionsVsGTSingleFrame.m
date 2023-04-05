@@ -2,9 +2,9 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=3;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-frameID=16; 
+frameID=363; 
 tao=50;
 theta=0.5;
 NpointsDiagTopSide=50;%used in the creation of synthetic point clouds
