@@ -1,5 +1,6 @@
 function estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,NpointsDiagPpal)
+            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,...
+            NpointsDiagPpal, estimatedPoses)
 %COMPUTEESTIMATEDPOSESSTRUCT project estimated poses to qm and compute 
 % estimatedPoses struct. 
 % 1. Project estimated poses to qm (.tform). The rest of the properties is not

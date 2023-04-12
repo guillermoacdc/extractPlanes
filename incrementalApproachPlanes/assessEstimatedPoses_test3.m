@@ -4,7 +4,7 @@ clc
 close all
 clear
 
-sessionID=3;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia1.json';
 
@@ -34,8 +34,8 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
-% for i=1:Nframes
-for i=1:5
+for i=1:Nframes
+% for i=1:5
     frameID=keyframes(i);
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);
@@ -65,7 +65,8 @@ for i=1:5
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
         globalPlanes_t=clonePlaneObject(globalPlanes);
         estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,NpointsDiagPpal);
+            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,...
+            NpointsDiagPpal,estimatedPoses);
 
     end
 
