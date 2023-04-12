@@ -1,5 +1,5 @@
 function [eADD_m] = compute_eADD_v2(estimatedPlanes, ...
-    gtPoses,  tao, dataSetPath)
+    gtPoses,  tao, dataSetPath, NpointsDiagPpal)
 %COMPUTE_EADD Computes e_ADD for point clouds objects. 
 
 %   Detailed explanation goes here
@@ -13,7 +13,7 @@ for i=1:Ngtp
     for j=1:Nep
 %         estimatedPlaneID=estimatedPlanesID(j,2);
         estimatedPlane=estimatedPlanes(j);
-        eADD=comparePlanes(boxID, gtPose, estimatedPlane,dataSetPath,tao);%boxID, gtPose, detectedPlane,dataSetPath,tao
+        eADD=comparePlanes(boxID, gtPose, estimatedPlane,dataSetPath,tao, NpointsDiagPpal);%boxID, gtPose, detectedPlane,dataSetPath,tao
         eADD_m(j,i)=eADD;
     end
 end

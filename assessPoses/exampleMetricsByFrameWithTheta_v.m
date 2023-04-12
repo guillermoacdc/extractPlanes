@@ -2,15 +2,15 @@ clc
 close all
 clear
 
-sessionID=3;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 theta_v=0.1:0.1:0.5;
 Ntheta=length(theta_v);
-tao=50;
+tao=10;
 
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
-% keyFramesT=19:1:24;
-keyFramesT=360:1:365;
+keyFramesT=14:1:19;
+% keyFramesT=360:1:365;
 Nkft=length(keyFramesT);
 indexkfT=zeros(Nkft,1);
 for i=1:Nkft
@@ -51,6 +51,10 @@ for i=1:Nkft
     end
 end
 
+xmin=0;
+xmax=0.5;
+ymin=0;
+ymax=1;
 % plot recall
 figure,
 for i=1:Nkft
@@ -61,6 +65,7 @@ for i=1:Nkft
     ylabel 'recall'
     grid
     title (['Frame=' num2str(keyFrames(indexkfT(i))) '. Tao=' num2str(tao) ])
+    axis([xmin xmax ymin ymax]);
 end
 % plot precision
 figure,
@@ -72,5 +77,6 @@ for i=1:Nkft
     ylabel 'precision'
     grid
     title (['Frame=' num2str(keyFrames(indexkfT(i))) '. Tao=' num2str(tao) ])
+    axis([xmin xmax ymin ymax]);
 end
 

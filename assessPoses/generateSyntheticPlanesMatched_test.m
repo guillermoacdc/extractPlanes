@@ -4,12 +4,12 @@ clear
 
 
 sessionID=10;
-boxID=30;
+boxID=17;
 frameID=14;
-planeID=4;
-tao=50;
+planeID=3;
+tao=20;
 planeType=0;
-NpointsDiagTopSide=50;
+NpointsDiagTopSide=20;
 numberOfSides=1;
 fileName='estimatedPoses.json';
 [dataSetPath,evalPath] = computeMainPaths(sessionID);

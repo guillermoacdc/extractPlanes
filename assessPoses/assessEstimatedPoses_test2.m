@@ -3,7 +3,7 @@ clc
 close all
 clear
 
-sessionID=3;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_v2.json';
 
@@ -21,7 +21,7 @@ tao_v=10:10:50;
 % parameters of merging planes - used in the function computeTypeOfTwin
 tao_merg=50/1000;%in meters----50mm
 theta_merg=0.5;%in percentage
-
+NpointsDiagPpal=20;% number of points
 %% processing
 % computing keyframes for the session
 keyframes=loadKeyFrames(dataSetPath,sessionID);
@@ -32,7 +32,7 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 % for i=1:Nframes
-for i=1:5
+for i=9:9
     frameID=keyframes(i);
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);
@@ -70,7 +70,7 @@ for i=1:5
     %         writeProcessingState(logtxt,evalPath,sessionID);
     %         write eADD to the struct
             estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v2(estimatedPlanes,...
-             gtPoses,  tao, dataSetPath);
+             gtPoses,  tao, dataSetPath, NpointsDiagPpal);
         end
 %     write descriptors of length, ninliers, dc, ... to the struct
 

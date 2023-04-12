@@ -1,4 +1,4 @@
-function [eADD] = comparePlanes(boxID, gtPose, detectedPlane,dataSetPath,tao)
+function [eADD] = comparePlanes(boxID, gtPose, detectedPlane,dataSetPath,tao, NpointsDiagPpal)
 %COMPAREPLANES compute error function eADD between estimated and ground truth
 %values
 % asume que las poses estimadas llegan en el sistema de coordeandas
@@ -6,6 +6,9 @@ function [eADD] = comparePlanes(boxID, gtPose, detectedPlane,dataSetPath,tao)
 % sistema. También se asume que las poses estimadas llegan en mm
 %   Detailed explanation goes here
 
+% if boxID==17 & detectedPlane.idPlane==3
+%     disp('hello w')
+% end
 
 %% compute rotation error er
 Tref=gtPose;
@@ -25,7 +28,7 @@ else
     L1gt=W;
     L2gt=D;    
 end
-spatialSampling=sqrt(L1gt^2+L2gt^2)/20;
+spatialSampling=sqrt(L1gt^2+L2gt^2)/NpointsDiagPpal;
 %% compute average distance distinguishable error eADD
     plane_model=createSingleBoxPC_topSide(L1gt,L2gt,H,spatialSampling);%centered in the origin
 % project the pc with the gt pose
