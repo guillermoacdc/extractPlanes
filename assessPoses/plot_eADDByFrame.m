@@ -1,10 +1,10 @@
 function eADD_m= plot_eADDByFrame(sessionID,frameID,tao,theta,evalPath,...
-    dataSetPath,PCpath, NpointsDiagTopSide, planeType)
+    dataSetPath,PCpath, NpointsDiagTopSide, planeType, fileName)
 %PLOT_EADDBYFRAME Summary of this function goes here
 %   Detailed explanation goes here
 
 % read json file
-fileName='estimatedPoses.json';
+% fileName='estimatedPoses.json';
 jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     fid = fopen(jsonpath); 
     raw = fread(fid,inf); 
