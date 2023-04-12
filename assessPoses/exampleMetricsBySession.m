@@ -4,12 +4,13 @@ clc
 close all
 clear
 %% parameters
-sessionID=3;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 theta_v=0.1:0.1:0.5;
 Ntheta=length(theta_v);
 tao=50;
-fileName='estimatedPoses.json';
+% fileName='estimatedPoses.json';
+fileName='estimatedPoses_ia1.json';
 %% compute recall by theta for all keyframes
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);

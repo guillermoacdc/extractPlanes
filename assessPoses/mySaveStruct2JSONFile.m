@@ -1,7 +1,8 @@
 function  mySaveStruct2JSONFile(theStruct,fileName,savePath,sessionID)
 %MYSAVESTRUCT2JSONFILE Summary of this function goes here
 %   Detailed explanation goes here
-    str = jsonencode(theStruct);
+%     str = jsonencode(theStruct);
+    str = mps.json.encode(theStruct);
     % add a return character after all commas:
     new_string = strrep(str, ',', ',\n');
     % add a return character after curly brackets:

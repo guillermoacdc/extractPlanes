@@ -1,5 +1,6 @@
 function plotEstimatedPlaneVsAllGtPlanes(estimatedPose,dataSetPath,...
-    sessionID, frameID, boxID, pathPCScanned, NpointsDiagTopSide, planeType, planeID, eADD_m)
+    sessionID, frameID, boxID, pathPCScanned, NpointsDiagTopSide,...
+    planeType, planeID, eADD_m)
 % estimatedPose,dataSetPath,...
 %     sessionID, boxID, pathPCScanned, NpointsDiagTopSide
 
@@ -63,7 +64,8 @@ figure,
 	ylabel 'y'
 	zlabel 'z'
 	grid on
-	title (['scanned pc vs gt pc. Estimation ID ' num2str(planeID) ' eADD=' num2str(eADD_m)])
+	title (['Estimation ID [' num2str(planeID)...
+        '] eADD=' num2str(eADD_m)])
 
 
 

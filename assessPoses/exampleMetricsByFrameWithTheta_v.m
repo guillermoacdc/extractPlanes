@@ -6,7 +6,7 @@ sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 theta_v=0.1:0.1:0.5;
 Ntheta=length(theta_v);
-tao=10;
+tao=50;
 
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 keyFramesT=14:1:19;
@@ -19,7 +19,7 @@ end
 
 
 % read json file
-fileName='estimatedPoses.json';
+fileName='estimatedPoses_ia1.json';
 jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     fid = fopen(jsonpath); 
     raw = fread(fid,inf); 

@@ -34,8 +34,8 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
-for i=1:Nframes
-% for i=1:5
+% for i=1:Nframes
+for i=5:10
     frameID=keyframes(i);
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);

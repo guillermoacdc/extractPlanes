@@ -7,6 +7,7 @@ jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     raw = fread(fid,inf); 
     str = char(raw'); 
     fclose(fid); 
-    estimatedPoses = jsondecode(str);
+%     estimatedPoses = jsondecode(str);
+    estimatedPoses = mps.json.decode(str);
 end
 

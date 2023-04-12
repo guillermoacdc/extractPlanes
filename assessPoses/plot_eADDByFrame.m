@@ -5,28 +5,34 @@ function eADD_m= plot_eADDByFrame(sessionID,frameID,tao,theta,evalPath,...
 
 % read json file
 % fileName='estimatedPoses.json';
-jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
-    fid = fopen(jsonpath); 
-    raw = fread(fid,inf); 
-    str = char(raw'); 
-    fclose(fid); 
-    estimatedPoses = jsondecode(str);
+estimatedPoses = loadEstimationsFile(fileName,sessionID, evalPath);
+
+% jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
+%     fid = fopen(jsonpath); 
+%     raw = fread(fid,inf); 
+%     str = char(raw'); 
+%     fclose(fid); 
+%     estimatedPoses = jsondecode(str);
 % compute matchID
 pps=getPPS(dataSetPath,sessionID,frameID);
 matchID=computeMatchID(estimatedPoses.(['frame' num2str(frameID)]),theta,tao,pps);%[estimatedPlaneID boxID]
 Ne=size(matchID,1);
-Ngt=size(matchID,2);
+
 eADD_m=estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)]);
 for i=1:Ne
     eADD_row=eADD_m(i,:);
-    planeID=matchID(i,1);
+    frameID_g=matchID(i,1);
+    planeID=matchID(i,2);
     pathPCScanned=fullfile(PCpath,['corrida' num2str(sessionID)],...
-        ['frame' num2str(frameID)], ['Plane' num2str(planeID-1) 'A.ply']);
-    boxID=matchID(i,2);
-    indexEstimatedPose=find(estimatedPoses.(['frame' num2str(frameID)]).IDObjects==planeID);
+        ['frame' num2str(frameID_g)], ['Plane' num2str(planeID-1) 'A.ply']);
+    boxID=matchID(i,3);
+%     indexEstimatedPose=find(estimatedPoses.(['frame' num2str(frameID)]).IDObjects==planeID);
+    indexEstimatedPose=myFind2D([frameID_g planeID],...
+        estimatedPoses.(['frame' num2str(frameID)]).IDObjects);
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]).poses(indexEstimatedPose,:);
     plotEstimatedPlaneVsAllGtPlanes(estimatedPose,dataSetPath,...
-    sessionID, frameID, boxID, pathPCScanned, NpointsDiagTopSide, planeType, planeID, eADD_row);
+    sessionID, frameID, boxID, pathPCScanned, NpointsDiagTopSide,...
+    planeType, [frameID_g planeID], eADD_row);
 end
 end
 
