@@ -20,7 +20,8 @@ if(planeDescriptor.antiparallelFlag)
     normalColor='w';
 end
 [x1 y1 z1 ] = computeBoundingPlanev2(planeDescriptor);
-pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
+% pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
+pc = myPCread(planeDescriptor.pathPoints);%in [mm]; indices begin at 0
 
 % (1) plot raw points
 pcshow(pc)

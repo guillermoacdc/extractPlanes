@@ -21,8 +21,8 @@ if(L2_lower<0)
     L2_lower=0;
 end
 
-if(myPlane.L1*100>L1_upper | myPlane.L1*100<L1_lower ...
-        | myPlane.L2*100>L2_upper | myPlane.L2*100<L2_lower)
+if(myPlane.L1>L1_upper | myPlane.L1<L1_lower ...
+        | myPlane.L2>L2_upper | myPlane.L2<L2_lower)
         lengthFlag=1;
 end
 

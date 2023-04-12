@@ -8,7 +8,7 @@ function [lengthBoundsTop, lengthBoundsP] = computeLengthBounds_v2(rootPath, sce
 % parameters = loadLengths(rootPath,scene);%length in mm
 % parameters=load(fileName);%boxId, typeID, H(3) W(4) D(5)
 pps = getPPS(rootPath,scene);
-parameters =loadLengths_v2(rootPath,pps);
+parameters =loadLengths_v2(rootPath,pps);%boxID H, W, D in mm
 
 NoBoxes=size(parameters,1);
 
@@ -22,9 +22,9 @@ for i=1:NoBoxes
 %         disp("stop the code");
 %     end
     % read box parameters
-    W=parameters(i,3)/10;%Convert to cm
-    H=parameters(i,2)/10;
-    D=parameters(i,4)/10;
+    W=parameters(i,3);%
+    H=parameters(i,2);
+    D=parameters(i,4);
     % compute faces 1 to 3 from parameters
     [facexz faceyz facexy] = createBoxPCv4(W,D,H);
     % store plane parameters

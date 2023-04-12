@@ -9,10 +9,7 @@ function  myPlotPlanes_v3(myPlaneDescriptor, frameFlag)
 N=size(myPlaneDescriptor,2);
 for i=1:N
     frame_tp=myPlaneDescriptor(i).idFrame;
-
-    %     myPlotSinglePlane(myPlaneDescriptor.(['fr' num2str(frame_tp)])(element_tp),frame_tp)
-%     myPlotSinglePlane(myPlaneDescriptor.(['fr' num2str(frame_tp)]).values(element_tp),frame_tp)
-    myPlotSinglePlane_v3(myPlaneDescriptor(i),frame_tp, frameFlag)
+    myPlotSinglePlane_v3(myPlaneDescriptor(i),frame_tp, frameFlag);
 end
 
 view(2)

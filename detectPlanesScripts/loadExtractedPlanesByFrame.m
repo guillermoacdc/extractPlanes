@@ -23,9 +23,9 @@ function [myPlanes, acceptedPlanesByFrame, rejectedPlanesByFrame,...
 % decodify thresholds
 th_angle=tresholdsV(3);%radians
 th_size=tresholdsV(2);%number of points
-th_lenght=tresholdsV(1);%cm - Update with tolerance_length; is in a high value to pass most of the planes
+th_lenght=tresholdsV(1);%mm - Update with tolerance_length; is in a high value to pass most of the planes
 th_occlusion=tresholdsV(4);%
-D_Tolerance=tresholdsV(5);%mt
+D_Tolerance=tresholdsV(5);%mm
 
 
 planesByFrame=[];
@@ -33,7 +33,7 @@ for i=1:numberPlanes
     planeID=i;
     inliersPath=fullfile(in_planesFolderPath, ['Plane'  num2str(i-1)  'A.ply']);
     [modelParameters, pcCount]=loadPlaneParameters(in_planesFolderPath,... 
-        planeID);
+        planeID);%modelParameters: normal( A, B, C) distance (D), geometric center (x, y, z) in m
 %% 1. Load basic plane descriptors in a cell of plane objects
     planesByFrame{i}=plane(scene, frame, planeID, modelParameters,...
         inliersPath, pcCount);%scene,frame,pID,pnormal,Nmbinliers
@@ -53,7 +53,7 @@ if (mode)
             lengthBoundsP, 0);
     end
 %% 3. classify planes in predefined cateogories, based on the value of some of the plane's descriptors
-    [acceptedPlanesByFrame, discardedByNormal, discardedByLength, topOccludePlanes]=classifyPlanes(planesByFrame);
+    [acceptedPlanesByFrame, discardedByNormal, discardedByLength, ~]=classifyPlanes(planesByFrame);
     rejectedPlanesByFrame = [discardedByNormal; discardedByLength];
     [~,indexes]=unique(rejectedPlanesByFrame,'rows','stable');
     rejectedPlanesByFrame=rejectedPlanesByFrame(indexes,:);

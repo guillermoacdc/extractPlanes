@@ -6,7 +6,9 @@ function fillDerivedDescriptors_PK(planeDescriptor, th_lenght, th_size, ...
 
 
 % load of point cloud
-pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
+% pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
+pc = myPCread(planeDescriptor.pathPoints);% in mm
+
 %     classify the plane object in the categories type, xyTilt
 planeDescriptor.classify(pc, th_angle, groundNormal);%
 

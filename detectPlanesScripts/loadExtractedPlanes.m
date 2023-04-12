@@ -28,15 +28,13 @@ groundNormal=0;
 groundD=0;
 
 %% 2. load previous knowledge of box size in form of lengthBounds
-[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in cm
+[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene);%in mm
 %% 3. load camera poses for keyframes of the session
 % cameraPoses=importdata(rootPath+['corrida' num2str(scene)]+'\HL2\Depth Long Throw_rig2world.txt');
 % cameraPoses=importdata(rootPath+['session' num2str(scene)]+'/raw/HL2/Depth Long Throw_rig2world.txt');
 cameraPosePath=fullfile(rootPath, ['session' num2str(scene)],...
     'raw', 'HL2', 'Depth Long Throw_rig2world.txt');
-cameraPoses=importdata(cameraPosePath);
-%***** convert to mm
-
+cameraPoses = myCameraPosesRead(cameraPosePath);%mm
 %% 4. manages the processing of each keyframe in the session
 for i=1:length(frames)
 % load planes of frame i and save acceptedPlanes
@@ -52,12 +50,14 @@ for i=1:length(frames)
     cd(cd1);
     numberPlanes=length(Files1);
 % loads primary properties, extract ground plane properties and classify planes that belong to a single frame    
-    [localPlanes, localAcceptedPlanesByFrame, rejectedPlanesByFrame,...
+    [localPlanes, localAcceptedPlanesByFrame, ~,...
         groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
         numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
         lengthBoundsTop, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
 % add property distanceToCamera for acceptedPlanes () 
-    addDistanceToCamera(localPlanes,localAcceptedPlanesByFrame);
+    if ~isempty(localAcceptedPlanesByFrame)
+        addDistanceToCamera(localPlanes,localAcceptedPlanesByFrame);
+    end
 end
 
 end
