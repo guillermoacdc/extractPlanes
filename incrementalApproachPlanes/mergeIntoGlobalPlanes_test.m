@@ -10,12 +10,12 @@ planeType=0;
 % parameters of detection
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
-th_lenght=10;% 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
+th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
 th_occlusion=1.4;%
-D_Tolerance=0.1;%mt
+D_Tolerance=0.1*1000;%mm ... 0.1m
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 % parameters of merging planes - used in the function computeTypeOfTwin
-tao=50/1000;%in meters----50mm
+tao=50;%----50mm
 theta=0.5;%in percentage
 
 %% create myPlanes cell with two frames
@@ -78,6 +78,16 @@ title('local planes')
 
 % plot new global planes
 figure,
+myPlotPlanes_v3(nglobalPlanes,0);
+view([0 0])
+% camup([0 1 0])
+xlabel 'x (m)'
+ylabel 'y (m)'
+zlabel 'z (m)'
+title ('new global planes')
+
+
+return
 Nplanes=size(globalIDs,1);
 for i=1:Nplanes
     frame_tp=globalIDs(i,1);

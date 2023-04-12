@@ -12,15 +12,16 @@ planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
-th_lenght=10;% 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
+th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
 th_occlusion=1.4;%
-D_Tolerance=0.1;%mt
+D_Tolerance=0.1*1000;%mm ... 0.1 m
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 %% parameters 3.  Assesment Pose with e_ADD
 tao_v=10:10:50;
+NpointsDiagPpal=20;
 %% parameters 4. Merging planes between frames
 % parameters of merging planes - used in the function computeTypeOfTwin
-tao_merg=50/1000;%in meters----50mm
+tao_merg=50;% mm
 theta_merg=0.5;%in percentage
 
 %% processing
@@ -42,52 +43,46 @@ for i=1:5
 
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
-        PCpath, tresholdsV);%returns a struct with a property frx
+        PCpath, tresholdsV);%returns a struct with a property frx - h world
     % extract target identifiers based on type of plane
     estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
 
+% fill estimatedPoses output
     if isempty(estimatedPlanesID)
         estimatedPoses.(['frame' num2str(frameID)])=[];%empty frames are frames where detections were null
         continue
     else
-        localPlanes=loadPlanesFromIDs(estimatedPlanesfr,estimatedPlanesID);%vector
+% convert struct to vector localPlanes
+        localPlanes=loadPlanesFromIDs(estimatedPlanesfr,estimatedPlanesID);%vector in h world
+% update globalPlanesPrevious vector        
         if isempty(globalPlanesPrevious)
-            globalPlanesPrevious=localPlanes;
+            globalPlanesPrevious=clonePlaneObject(localPlanes);%h-world
         else
-            globalPlanesPrevious=globalPlanes;
+            globalPlanesPrevious=clonePlaneObject(globalPlanes);
         end
-
-        
-        globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);
-        coordinateFrameFlag=0;
-%         myPlotPlanes_v3(globalPlanes,coordinateFrameFlag);
-        %     project estimated poses to qm. The rest of properties is kept
-        globalPlanes_m=myProjectionPlaneObject_v2(globalPlanes,...
-            sessionID,dataSetPath);
-        estimatedPoses.(['frame' num2str(frameID)]).IDObjects=estimatedPlanesID;
-        [poses, L1e, L2e, dc, Ninliers]=convertToArrays_v2(globalPlanes_m);
-        estimatedPoses.(['frame' num2str(frameID)]).poses=poses;
-        estimatedPoses.(['frame' num2str(frameID)]).L1=L1e;
-        estimatedPoses.(['frame' num2str(frameID)]).L2=L2e;
-        estimatedPoses.(['frame' num2str(frameID)]).Ninliers=Ninliers;
-        estimatedPoses.(['frame' num2str(frameID)]).dc=dc;
-        for j=1:Ntao
-            tao=tao_v(j);
-            logtxt=['Processing with tao= ' num2str(tao)];
-            disp(logtxt);
-    %         writeProcessingState(logtxt,evalPath,sessionID);
-    %         write eADD to the struct
-            estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v2(globalPlanes,...
-             gtPoses,  tao, dataSetPath);
-        end
-%     write descriptors of length, ninliers, dc, ... to the struct
+% perform the merge        
+        globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
+% project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
+        globalPlanes_t=clonePlaneObject(globalPlanes);
+        estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
+            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,NpointsDiagPpal);
 
     end
 
 %     
 end
 
-return
+
+
+% figure,
+%     myPlotPlanes_v3(localPlanes,0);
+%     title(['local planes in frame ' num2str(frameID)])
+% 
+% figure,
+%     myPlotPlanes_v3(globalPlanes,0);
+%     dibujarsistemaref(eye(4),'m',150,2,10,'w');
+%     title(['global planes in frame ' num2str(frameID)])
+
 % write json file to disk
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
 

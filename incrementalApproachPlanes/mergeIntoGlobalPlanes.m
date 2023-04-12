@@ -19,7 +19,7 @@ function globalPlanes = mergeIntoGlobalPlanes(localPlanes,globalPlanes, tao, the
 
 Nlp=size(localPlanes,2);
 Ngp=size(globalPlanes,2);
-globalPlane=globalPlanes(1);
+% globalPlane=globalPlanes(1);
 
 for i=1:Nlp
     localPlane=localPlanes(i);%
