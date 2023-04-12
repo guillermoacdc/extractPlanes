@@ -8,7 +8,7 @@ rootPath="D:\6DViCuT_p1";
 NpointsDiagTopSide=50;
 numberOfSides=3;
 groundFlag=false;
-scene=36;
+scene=10;
 frameID=1;
 planeType=0;
 

@@ -1,4 +1,4 @@
-function [xzPlanes, xyPlanes, zyPlanes] = extractTypes(myPlanes, planeIndex)
+    function [xzPlanes, xyPlanes, zyPlanes] = extractTypes(myPlanes, planeIndex)
 %EXTRACTTYPES Extract the type of each plane and returns the groups xz, xy,
 %zy; the type is codified in two properties: plane.type, plane.planeTilt
 %   Detailed explanation goes here
