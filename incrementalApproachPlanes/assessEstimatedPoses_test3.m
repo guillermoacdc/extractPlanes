@@ -64,8 +64,9 @@ for i=1:Nframes
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
         globalPlanes_t=clonePlaneObject(globalPlanes);
+        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
         estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,...
+            sessionID,frameID,estimatedGlobalPlanesID,tao_v,evalPath,dataSetPath,...
             NpointsDiagPpal,estimatedPoses);
 
     end
