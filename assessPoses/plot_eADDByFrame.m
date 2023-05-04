@@ -21,10 +21,15 @@ Ne=size(matchID,1);
 eADD_m=estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)]);
 for i=1:Ne
     eADD_row=eADD_m(i,:);
-    frameID_g=matchID(i,1);
+    frameID_g=matchID(i,1);%with ia2, will have some values in 0; those 
+    % corresponding with composed planes. We dont save those point clouds
     planeID=matchID(i,2);
-    pathPCScanned=fullfile(PCpath,['corrida' num2str(sessionID)],...
+    if frameID_g==0% we dont have a path for composed planes
+        pathPCScanned=[];
+    else
+        pathPCScanned=fullfile(PCpath,['corrida' num2str(sessionID)],...
         ['frame' num2str(frameID_g)], ['Plane' num2str(planeID-1) 'A.ply']);
+    end
     boxID=matchID(i,3);
 %     indexEstimatedPose=find(estimatedPoses.(['frame' num2str(frameID)]).IDObjects==planeID);
     indexEstimatedPose=myFind2D([frameID_g planeID],...

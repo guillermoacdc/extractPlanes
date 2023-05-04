@@ -2,6 +2,7 @@ clc
 close all
 clear
 
+algorithm=1;
 sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 theta_v=0.1:0.1:0.5;
@@ -9,7 +10,10 @@ Ntheta=length(theta_v);
 tao=50;
 
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
-keyFramesT=14:1:19;
+% keyFrames=keyFrames(8:24);
+
+initKeyFrame=150;
+keyFramesT=initKeyFrame:initKeyFrame+5;
 % keyFramesT=360:1:365;
 Nkft=length(keyFramesT);
 indexkfT=zeros(Nkft,1);
@@ -19,7 +23,13 @@ end
 
 
 % read json file
-fileName='estimatedPoses_ia1.json';
+if algorithm==1
+    fileName='estimatedPoses_ia1_v2.json';
+else
+    fileName='estimatedPoses_ia2_v2.json';
+end
+
+
 jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     fid = fopen(jsonpath); 
     raw = fread(fid,inf); 
@@ -27,8 +37,8 @@ jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     fclose(fid); 
     estimatedPoses = jsondecode(str);
 
-DP_v=zeros(Nkft,Ntheta);
-DPm_v=zeros(Nkft,Ntheta);
+% DP_v=zeros(Nkft,Ntheta);
+% DPm_v=zeros(Nkft,Ntheta);
 precision_v=zeros(Nkft,Ntheta);
 recall_v=zeros(Nkft,Ntheta);
 
@@ -40,12 +50,12 @@ for i=1:Nkft
     for j=1:Ntheta
         theta=theta_v(j);
         if ~isempty(estimatedPose)
-            [DP, DPm, precision, recall] = computeMetricsByFrame(estimatedPose,theta,tao, pps);
+            [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
         else
             continue
         end
-        DP_v(i,j)=DP;
-        DPm_v(i,j)=DPm;
+%         DP_v(i,j)=DP;
+%         DPm_v(i,j)=DPm;
         precision_v(i,j)=precision;
         recall_v(i,j)=recall;
     end

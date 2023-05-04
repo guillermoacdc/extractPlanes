@@ -15,14 +15,18 @@ fileName='Th2m.txt';
 Th2m_array=load(fullfile(pathTh2m,fileName));
 Th2m=assemblyTmatrix(Th2m_array);
 
+if ~isempty(pathPCScanned)% when the plane was composed (=0) we can not recover the point cloud
 % load pc_e scanned with HL2
     pc_t=pcread(pathPCScanned);
     % convert lengths to mm
     xyz=pc_t.Location*1000;
     pc_e_h=pointCloud(xyz);
 
-% project pc_e to qm coordinate reference
-pc_e=myProjection_v3(pc_e_h,Th2m);
+    % project pc_e to qm coordinate reference
+    pc_e=myProjection_v3(pc_e_h,Th2m);
+else
+    pc_e=[];
+end
 
 %% load synthetic pc
 % iterative generation of synthetic point clouds (pc_gt) for groundtruth planes
@@ -41,11 +45,11 @@ Nboxes=length(boxesID);
 
 % boxesID=getPPS(dataSetPath,sessionID);
 figure,
-    pcshow(pc_e,"MarkerSize",20)
+    if ~isempty(pc_e)
+        pcshow(pc_e,"MarkerSize",20)
+    end
 	hold on
     dibujarsistemaref(assemblyTmatrix(estimatedPose),'e',150,2,10,'w');
-    T0=eye(4);
-% 	dibujarsistemaref(T0,'m',150,2,10,'w');
 	pcshow(pcmodel)
     if boxID==0
         for i=1:Nboxes
@@ -55,7 +59,6 @@ figure,
         end
     else
         i=find(boxesID==boxID);
-%         boxIDt=planeDescriptor_gt.fr0.values(i).idBox;
 	    Tmt=planeDescriptor_gt.fr0.values(i).tform;
 	    dibujarsistemaref(Tmt,boxID,150,2,10,'w');
     end
