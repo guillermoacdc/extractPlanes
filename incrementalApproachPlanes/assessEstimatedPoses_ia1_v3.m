@@ -96,7 +96,7 @@ for i=1:Nframes
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
         globalPlanes=mergePlanesOfASingleFrame_a1(globalPlanes, th_IoU, th_coplanarDistance);
 % compute presence of a particle using localPlanes
-particlesVector = computeParticlesVector_v2(localPlanes,...
+[particlesVector, localPlanes]= computeParticlesVector_v2(localPlanes,...
             particlesVector, radii, frameID);
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);

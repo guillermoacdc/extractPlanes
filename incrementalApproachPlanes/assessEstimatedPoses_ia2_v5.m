@@ -123,7 +123,7 @@ for i=1:Nframes
 %             lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
 %% temporal filtering
 % compute presence of a particle using localPlanes
-particlesVector = computeParticlesVector_v2(localPlanes,...
+[particlesVector, localPlanes] = computeParticlesVector_v2(localPlanes,...
             particlesVector, radii, frameID);
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);

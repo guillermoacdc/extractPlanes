@@ -1,4 +1,4 @@
-function particlesVector = computeParticlesVector_v2(globalPlanes,particlesVector, radii, frameID)
+function [particlesVector, globalPlanes] = computeParticlesVector_v2(globalPlanes,particlesVector, radii, frameID)
 %TEMPORALPLANESFILTERING Identifica planos globales que estén en la
 %vecindad de una partícula. En caso de identificación nula, crea una nueva
 %partícula con la posisción del plano no identificado. 
