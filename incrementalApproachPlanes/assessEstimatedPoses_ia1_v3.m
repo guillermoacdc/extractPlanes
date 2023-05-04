@@ -7,7 +7,7 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=2;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia1.json';
 
@@ -54,7 +54,7 @@ for i=1:Nframes
     tic;% init timer
     frameID=keyframes(i);
     radii=computeRaddi(dataSetPath,sessionID,frameID,planeType);%use of pps
-    logtxt=['Assessing detections in frame ' num2str(frameID) ' with radii ' num2str(radii) ' mm'];
+    logtxt=['Assessing detections in frame ' num2str(frameID) ' with radii ' num2str(radii) ' mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
 %%     writeProcessingState(logtxt,evalPath,sessionID);
 

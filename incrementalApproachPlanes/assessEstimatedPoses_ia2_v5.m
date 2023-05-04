@@ -10,7 +10,7 @@ clc
 close all
 clear
 
-sessionID=2;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia2.json';
 
@@ -34,9 +34,9 @@ theta_merg=0.5;%in percentage
 % particlesVector(1)=particle(1,[0 0 0], 100, 150, 5);
 particlesVector(1)=particle(1,[0 0 0], 1, 5);
 particlesVector(1)=[];
-radii=computeRaddi(dataSetPath,sessionID,1,planeType)/2;
-% radii=50;%mm
-windowSize=15;%frames
+% radii=computeRaddi(dataSetPath,sessionID,1,planeType)/2;
+radii=15;%mm
+windowSize=5;%frames
 th_detections=0.3;%percent - not used in version 1
 
 %% parameters 5. To compute the plane model from the new pointclouds
@@ -65,18 +65,19 @@ estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
 bufferComposedPlanes={};
 [lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(dataSetPath, sessionID);%[L1min L1max L2min L2max]
-
+globalPlanesPrevious=[];
+globalPlanes=[];
+localPlanes=[];
 
 for i=1:Nframes
     tic;
-% for i=8:24
     frameID=keyframes(i);
     radii=computeRaddi(dataSetPath,sessionID,frameID,planeType );
-    logtxt=['Assessing detections in frame ' num2str(frameID) '; i=' num2str(i) ', radii=' num2str(radii) 'mm'];
+    logtxt=['Assessing detections in frame ' num2str(frameID) ', radii=' num2str(radii) 'mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
-    if i==51
-        disp('control point from assessEstimatedPoses_ia2')
-    end
+%     if frameID==68
+%         disp('control point from assessEstimatedPoses_ia2')
+%     end
 %     writeProcessingState(logtxt,evalPath,sessionID);
 %% load initial pose and extract raw planes from the current frame
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
@@ -121,8 +122,8 @@ for i=1:Nframes
             globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
             lengthBoundsP,bufferComposedPlanes, tresholdsV, planeModelParameters);%h-world
 % merge between planes of globalPlanes - type 4
-%          [globalPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(globalPlanes,bufferComposedPlanes,tresholdsV,...
-%             lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
+         [globalPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(globalPlanes,bufferComposedPlanes,tresholdsV,...
+            lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
 %% temporal filtering
 
 % associate particles with global planes
@@ -132,11 +133,11 @@ globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, 
 %% assess estimated poses
 ProcessingTime=toc;
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-%         globalPlanes_t=clonePlaneObject(globalPlanes);
-%         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-%         estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
-%             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
-%             NpointsDiagPpal,estimatedPoses, ProcessingTime);
+        globalPlanes_t=clonePlaneObject(globalPlanes);
+        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
+        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+            sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
+            NpointsDiagPpal,estimatedPoses, ProcessingTime);
 
     end
 
@@ -147,21 +148,14 @@ end
 
 % write json file to disk
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
-return
-% figure,
-%     myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr27.acceptedPlanes,0);
-%     title(['local planes in frame ' num2str(frameID)])
-%     hold on
-%     dibujarsistemaref(eye(4),'m',150,2,10,'w');
-    
-
-figure,
-    myPlotPlanes_v3(localPlanes,0);
-    title(['local planes in frame ' num2str(frameID)])
-
 figure,
     myPlotPlanes_v3(globalPlanes,0);
     title(['global planes  in frame ' num2str(frameID)])
+return
+    
+figure,
+    myPlotPlanes_v3(localPlanes,0);
+    title(['local planes in frame ' num2str(frameID)])
 
 figure,
     hold on
