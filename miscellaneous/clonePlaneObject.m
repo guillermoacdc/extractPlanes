@@ -1,6 +1,7 @@
 function [outputVector] = clonePlaneObject(inputVector)
 %CLONEPLANEOBJECT Clones a handle object called plane
-%   Detailed explanation goes here
+%   Detailed explanation goes here.
+% outputVector=[];
 N=size(inputVector,2);
 for i=1:N
 %     copy properties required in the constructor
@@ -34,6 +35,12 @@ for i=1:N
     outputVector(i).y1=inputVector(i).y1;
     outputVector(i).y2=inputVector(i).y2;
     outputVector(i).distanceToCamera=inputVector(i).distanceToCamera;
+
+    outputVector(i).composed_idFrame=inputVector(i).composed_idFrame;
+    outputVector(i).composed_idPlane=inputVector(i).composed_idPlane;
+    outputVector(i).angleBtwn_zc_unitNormal=inputVector(i).angleBtwn_zc_unitNormal;
+    outputVector(i).fitness=inputVector(i).fitness;
+    outputVector(i).timeParticleID=inputVector(i).timeParticleID;
 end
 
 end
