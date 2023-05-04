@@ -107,7 +107,9 @@ for i=1:Nframes
 % merge between planes of localPlanes - type 4        
         [localPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(localPlanes,bufferComposedPlanes,tresholdsV,...
             lengthBoundsTop, lengthBoundsP, planeModelParameters);%
-
+% compute presence of a particle using localPlanes
+        [particlesVector, localPlanes] = computeParticlesVector_v2(localPlanes,...
+                    particlesVector, radii, frameID);
 % update globalPlanesPrevious vector        
         if isempty(globalPlanesPrevious)
             globalPlanesPrevious=clonePlaneObject(localPlanes);%h-world
@@ -122,9 +124,7 @@ for i=1:Nframes
 %          [globalPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(globalPlanes,bufferComposedPlanes,tresholdsV,...
 %             lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
 %% temporal filtering
-% compute presence of a particle using localPlanes
-[particlesVector, localPlanes] = computeParticlesVector_v2(localPlanes,...
-            particlesVector, radii, frameID);
+
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
 

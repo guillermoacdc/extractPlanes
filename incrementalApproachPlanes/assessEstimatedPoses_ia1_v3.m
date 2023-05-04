@@ -84,7 +84,9 @@ for i=1:Nframes
     else
 %% convert struct to vector localPlanes
         localPlanes=loadPlanesFromIDs(estimatedPlanesfr,estimatedPlanesID);%vector in h world
-%         localPlanes=mergePlanesOfASingleFrame_a1(localPlanes, th_IoU, th_coplanarDistance);
+% compute presence of a particle using localPlanes
+        [particlesVector, localPlanes]= computeParticlesVector_v2(localPlanes,...
+                    particlesVector, radii, frameID);
         
 %% update globalPlanesPrevious vector        
         if isempty(globalPlanesPrevious)
@@ -95,9 +97,7 @@ for i=1:Nframes
 %% perform the merge        
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
         globalPlanes=mergePlanesOfASingleFrame_a1(globalPlanes, th_IoU, th_coplanarDistance);
-% compute presence of a particle using localPlanes
-[particlesVector, localPlanes]= computeParticlesVector_v2(localPlanes,...
-            particlesVector, radii, frameID);
+
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
 
