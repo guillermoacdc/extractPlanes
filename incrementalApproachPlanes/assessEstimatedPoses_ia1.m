@@ -1,5 +1,7 @@
-% modification of functions to avoid passing a field called frame: v2
-% first version of an incremental approach. 
+% First version of an incremental approach. In the merge stage performs a
+% selection of planes. This selection is based on criteria of distance
+% between camera and object, area of the candidates and intersection over
+% union metrics. 
 clc
 close all
 clear

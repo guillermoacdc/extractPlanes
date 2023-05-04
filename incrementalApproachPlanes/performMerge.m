@@ -19,6 +19,7 @@ function globalPlanes=performMerge(localPlane,globalPlanes, idx, typeOfTwin)
 % -------2 planes with merged area
 % -------3 partial occluded planes
 
+
 % Outputs-------------
 % 1. globalPlanes. Output with pass by reference. 
 % Assumptions-------------
@@ -26,17 +27,22 @@ function globalPlanes=performMerge(localPlane,globalPlanes, idx, typeOfTwin)
 % 2. 
 
 
-distance_c_l=localPlane.distanceToCamera;
-distance_c_g=globalPlanes(idx).distanceToCamera;
+% distance_c_l=localPlane.distanceToCamera;
+% distance_c_g=globalPlanes(idx).distanceToCamera;
 
 A_l=localPlane.L1*localPlane.L2;
 A_g=globalPlanes(idx).L1*globalPlanes(idx).L2;
 
 switch (typeOfTwin)
     case 1
-        if (distance_c_l<distance_c_g & distance_c_l>0.5)
+        if localPlane.fitness>globalPlanes(idx).fitness
             globalPlanes(idx)=localPlane;
+%             modificate gemetric Center of globalPlane
+        [wg,wl]=computeWeigths(globalPlanes(idx).fitness,localPlane.fitness);
+            globalPlanes(idx).geometricCenter=wg*globalPlanes(idx).geometricCenter+...
+                wl*localPlane.geometricCenter;
         end
+
     case 2
 
         if A_l<A_g
@@ -46,6 +52,7 @@ switch (typeOfTwin)
         if A_l>A_g
             globalPlanes(idx)=localPlane;%replace the previous Plane with the new local Plane
         end        
+
 end
 
 end

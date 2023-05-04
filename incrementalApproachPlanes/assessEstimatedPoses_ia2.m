@@ -1,12 +1,17 @@
-% modification of functions to avoid passing a field called frame: v2
-% first version of an incremental approach. 
+% Second version of an incremental approach. In the merge stage performs a
+% a hybrid strategy which includes: (1) selection of planes or (2) creation 
+% of new planes. The second strategy includes (1)  creation of a new point 
+% cloud through fusion of two or more point clouds, (2) the processment of 
+% the new pc to compute the plane properties, (3) the managmente of a
+% buffer to keep the record of components in new pointclouds/planes
+
 clc
 close all
 clear
 
 sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia1.json';
+fileName='estimatedPoses_ia2.json';
 
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
@@ -34,19 +39,22 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
+bufferComposedPlanes={};
+[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(dataSetPath, sessionID);%no actualizar según cajas en escena; esa info no está disponible en cada frame para el extractor de cajas
 for i=1:Nframes
-% for i=5:10
+% for i=8:24
     frameID=keyframes(i);
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);
-    %     writeProcessingState(logtxt,evalPath,sessionID);
+%     if frameID==10
+%         disp('control point from assessEstimatedPoses_ia2')
+%     end
 
+    %     writeProcessingState(logtxt,evalPath,sessionID);
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if frameID==27
-        disp("stop mark")
-    end
+
     % extract target identifiers based on type of plane
     estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
 
@@ -57,6 +65,10 @@ for i=1:Nframes
     else
 % convert struct to vector localPlanes
         localPlanes=loadPlanesFromIDs(estimatedPlanesfr,estimatedPlanesID);%vector in h world
+        
+        [localPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame(localPlanes,bufferComposedPlanes,tresholdsV,...
+            lengthBoundsTop, lengthBoundsP, sessionID);%to merge cases type4 in a single frame
+
 % update globalPlanesPrevious vector        
         if isempty(globalPlanesPrevious)
             globalPlanesPrevious=clonePlaneObject(localPlanes);%h-world
@@ -64,7 +76,11 @@ for i=1:Nframes
             globalPlanesPrevious=clonePlaneObject(globalPlanes);
         end
 % perform the merge        
-        globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
+%         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
+
+        [globalPlanes, bufferComposedPlanes]=mergeIntoGlobalPlanes_v2(localPlanes,...
+            globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
+            lengthBoundsP,bufferComposedPlanes, tresholdsV);%h-world
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
         globalPlanes_t=clonePlaneObject(globalPlanes);
         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
@@ -77,11 +93,16 @@ for i=1:Nframes
 %     
 end
 
-figure,
-    myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr27.acceptedPlanes,0);
-    title(['local planes in frame ' num2str(frameID)])
-    hold on
-    dibujarsistemaref(eye(4),'m',150,2,10,'w');
+
+return
+% write json file to disk
+mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
+
+% figure,
+%     myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr27.acceptedPlanes,0);
+%     title(['local planes in frame ' num2str(frameID)])
+%     hold on
+%     dibujarsistemaref(eye(4),'m',150,2,10,'w');
     
 
 figure,
@@ -89,13 +110,8 @@ figure,
     title(['local planes in frame ' num2str(frameID)])
 
 figure,
-    myPlotPlanes_v3(globalPlanesPrevious,0);
-    title(['global planes previous in frame ' num2str(frameID)])
-
-% write json file to disk
-return
-mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
-
+    myPlotPlanes_v3(globalPlanes,0);
+    title(['global planes  in frame ' num2str(frameID)])
 
 
 % removing warnings

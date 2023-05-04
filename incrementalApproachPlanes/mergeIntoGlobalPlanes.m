@@ -6,8 +6,9 @@ function globalPlanes = mergeIntoGlobalPlanes(localPlanes,globalPlanes, tao, the
 % 1. localPlanes: vector with descriptors of planes in local scope. size 1xNlp
 % 2. globalPlanes: vector with descriptors of planes in global scope size
 % 1xNgp
-% 3. dc_l: vector of distances between camera and local planes
-% 4. dc_g: vector of distances between camera and global planes
+% 3. tao: misalignment tolerance to consider two planes as twins-case1
+% 4. theta: threshold for correctness to consider two planes as twins-case1
+% 
 % ---Output
 % globaPlanes. vector with updated elements: (1) merged version of non
 % occluded planes, (2) splitted version of overimposed planes, (3) merged
@@ -24,23 +25,19 @@ Ngp=size(globalPlanes,2);
 for i=1:Nlp
     localPlane=localPlanes(i);%
     twinFlag=false;
-    for j=1:Ngp
+    j=1;
+    while j<=Ngp & ~twinFlag
         globalPlane=globalPlanes(j);
-%         plotTypeInPairOfPlanes; %plot script
-%         if (localPlane.idPlane==2 & globalPlane.idPlane==7)
-%             disp('hello world')
-%         end
         typeOfTwin=computeTypeOfTwin(localPlane,globalPlane, tao, theta);
         if typeOfTwin~=0
             globalPlanes=performMerge(localPlane,globalPlanes, j, typeOfTwin);
             twinFlag=true;
-%             j=Ngp;%do not work to break the for loop. Use continue
-            continue
         end
+        j=j+1;
     end
 
     if twinFlag==false
-        globalPlanes=[globalPlanes localPlane];%add a new element to global plane
+        globalPlanes=[globalPlanes localPlane];%add a new element to global plane 
     end
 end
 

@@ -1,5 +1,7 @@
-% modification of functions to avoid passing a field called frame: v2
-% first version of an incremental approach. 
+% First version of an incremental approach. In the merge stage performs a
+% selection of planes. This selection is based on criteria of distance
+% between camera and object, area of the candidates and intersection over
+% union metrics. 
 clc
 close all
 clear
@@ -23,6 +25,13 @@ NpointsDiagPpal=20;
 % parameters of merging planes - used in the function computeTypeOfTwin
 tao_merg=50;% mm
 theta_merg=0.5;%in percentage
+%% parameters of temporal filtering
+%define an empty vector of type particle
+particlesVector(1)=particle(1,[0 0 0], 100, 150, 5);
+particlesVector(1)=[];
+radii=35;%mm
+windowSize=20;%frames
+th_detections=0.3;%percent - not used in version 1
 
 %% processing
 % computing keyframes for the session
@@ -34,9 +43,14 @@ Ntao=length(tao_v);
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
+% vectors to plot distance vs eADD
+distanceAcc=[];
+eADD_dist=[];
+fitnessVector=[];
 for i=1:Nframes
-% for i=5:10
     frameID=keyframes(i);
+
+
     logtxt=['Assessing detections in frame ' num2str(frameID)];
     disp(logtxt);
     %     writeProcessingState(logtxt,evalPath,sessionID);
@@ -44,7 +58,7 @@ for i=1:Nframes
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if frameID==27
+    if frameID==16
         disp("stop mark")
     end
     % extract target identifiers based on type of plane
@@ -65,23 +79,47 @@ for i=1:Nframes
         end
 % perform the merge        
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
-% project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-        globalPlanes_t=clonePlaneObject(globalPlanes);
-        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedGlobalPlanesID,tao_v,evalPath,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses);
+        distanceVector=extractDistanceCameraFromVector(localPlanes);
+%         [min(distanceVector) max(distanceVector)]
+% compute presence of a particle using localPlanes
+% particlesVector = computeParticlesVector(localPlanes,...
+%             particlesVector, radii, frameID);
+% associate particles with global planes
+% globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
 
+%         if mod(i,windowSize)==0 & i>=2*windowSize
+%             globalPlanes=updatePresence(globalPlanes,particlesVector,windowSize, frameID, th_detections);
+%         end
+
+% project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
+        localPlanes_t=clonePlaneObject(localPlanes);
+        estimatedlocalPlanesID=extractIDsFromVector(localPlanes_t);
+        estimatedPoses=computeEstimatedPosesStruct(localPlanes_t,gtPoses,...
+            sessionID,frameID,estimatedlocalPlanesID,tao_v,evalPath,dataSetPath,...
+            NpointsDiagPpal,estimatedPoses);
+% save distance and eADD
+    distanceAcc=[distanceAcc; distanceVector];
+    eADD_dist=[eADD_dist; min(estimatedPoses.(['frame' num2str(frameID)]).eADD.tao50,[],2)];%for tao=50 
+    fitnessVector=[fitnessVector; extractFitnessFromVector(localPlanes)];
     end
 
 %     
 end
 
 figure,
-    myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr27.acceptedPlanes,0);
+    stem(distanceAcc,eADD_dist)
+    xlabel 'distance (mm)'
+    ylabel 'e_{ADD}'
+    grid
+    title (['session ID=' num2str(sessionID)])
+return
+
+figure,
+    myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr31.acceptedPlanes,0);
     title(['local planes in frame ' num2str(frameID)])
     hold on
-    dibujarsistemaref(eye(4),'m',150,2,10,'w');
+    Tc=estimatedPlanesfr.fr31.cameraPose;
+    dibujarsistemaref(Tc,'h',150,2,10,'w');
     
 
 figure,
@@ -89,8 +127,12 @@ figure,
     title(['local planes in frame ' num2str(frameID)])
 
 figure,
+    myPlotPlanes_v3(globalPlanes,0);
+    title(['global planes  in frame ' num2str(frameID)])
+
+figure,
     myPlotPlanes_v3(globalPlanesPrevious,0);
-    title(['global planes previous in frame ' num2str(frameID)])
+    title(['previous global planes in frame ' num2str(frameID)])
 
 % write json file to disk
 return

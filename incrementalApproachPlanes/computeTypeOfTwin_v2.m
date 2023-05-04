@@ -1,4 +1,5 @@
-function type = computeTypeOfTwin(localPlane,globalPlane, tao, theta)
+function type = computeTypeOfTwin_v2(localPlane,globalPlane,...
+    tao, theta, lengthBoundsTop, lengthBoundsP, th_cd)
 %COMPUTETYPEOFTWIN Summary of this function goes here
 %   Detailed explanation goes here
 % parameters
@@ -8,7 +9,14 @@ function type = computeTypeOfTwin(localPlane,globalPlane, tao, theta)
 % 1         Non-occluded twins
 % 2         Twins with merged superficies
 % 3         With partial occlusion
+% 4         Twins that require creation of derived point cloud
 
+% th_cd: dispersión entre puntos que perenecen al mismo plano, a lo largo de la normal del plano
+
+% if localPlane.idFrame==26 & localPlane.idPlane==5 & ...
+%         globalPlane.idFrame==25 & globalPlane.idPlane==2
+%     disp("stop the code")
+% end
 
 dgc_2=compute_gc2(localPlane,globalPlane);
 L2max=max(localPlane.L2,globalPlane.L2);
@@ -28,7 +36,7 @@ bandSLAM_A=0.05;%percentage or adimensional
 bandSLAM_a=3;%angle
 
 % measurements
-d=measureGeomCenterBtwnPlanes(localPlane,globalPlane);
+DistanceBtwnGC=measureGeomCenterBtwnPlanes(localPlane,globalPlane);
 IoU=measureIoUbtwnPlanes(localPlane,globalPlane);
 angleL1=measureAngleBtwnL1Lines_v2(localPlane,globalPlane);
 % angleL2=measureAngleBtwnL2Lines(localPlane,globalPlane);
@@ -44,12 +52,6 @@ end
 % analysis
 type=0;
 
-% c1  =   (d>=0 & d<=(dgc_1+bandSLAM_d1)) & ...
-%     (IoU>=IoU_1) & ...
-%     (angleL1<=(angle_L1_ref+bandSLAM_a));
-
-% tao=50/1000;%in meters----50mm
-% theta=0.5;%in percentage
 eADD=compute_eADDTwins(localPlane,globalPlane,tao);
 if eADD<theta 
     c1=true;
@@ -58,12 +60,18 @@ else
 end
 
 c2= (IoU>=IoU_2-bandSLAM_A & IoU<=IoU_2) & ...
-    (d>=dgc_2-bandSLAM_d2 & d<=dgc_2+bandSLAM_d2) & ...
+    (DistanceBtwnGC>=dgc_2-bandSLAM_d2 & DistanceBtwnGC<=dgc_2+bandSLAM_d2) & ...
     (angleL1<=angle_L1_ref+bandSLAM_a);
 
-c3= (d>=(dgc_3-bandSLAM_d1) & d<=(dgc_3+bandSLAM_d1))& ...
+c3= (DistanceBtwnGC>=(dgc_3-bandSLAM_d1) & DistanceBtwnGC<=(dgc_3+bandSLAM_d1))& ...
     IoU>=IoU_3 &...
     xor( topOccludedL , topOccludedG );
+
+    if(localPlane.type==0)
+        maxTopSize=sqrt(lengthBoundsTop(1)^2+lengthBoundsTop(2)^2);%update 
+    else
+        maxTopSize=sqrt(lengthBoundsP(1)^2+lengthBoundsP(2)^2);%update 
+    end
 
 
 if c1
@@ -74,6 +82,10 @@ else
     else
         if c3
             type=3;
+        else
+            if isType4(localPlane,globalPlane,maxTopSize, th_cd)
+                type=4;
+            end
         end
     end
 end

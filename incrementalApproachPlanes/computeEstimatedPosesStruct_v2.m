@@ -1,6 +1,6 @@
-function estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedPlanesID,tao_v,evalPath,dataSetPath,...
-            NpointsDiagPpal, estimatedPoses)
+function estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+            sessionID,frameID,estimatedPlanesID,tao_v,dataSetPath,...
+            NpointsDiagPpal, estimatedPoses, ProcessingTime)
 %COMPUTEESTIMATEDPOSESSTRUCT project estimated poses to qm and compute 
 % estimatedPoses struct. 
 % 1. Project estimated poses to qm (.tform). The rest of the properties is not
@@ -48,6 +48,7 @@ Ntao=length(tao_v);
         estimatedPoses.(['frame' num2str(frameID)]).L2=L2e;
         estimatedPoses.(['frame' num2str(frameID)]).Ninliers=Ninliers;
         estimatedPoses.(['frame' num2str(frameID)]).dc=dc;
+        estimatedPoses.(['frame' num2str(frameID)]).ProcessingTime=ProcessingTime;
         for j=1:Ntao
             tao=tao_v(j);
             logtxt=['Processing with tao= ' num2str(tao)];
