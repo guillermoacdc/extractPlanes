@@ -123,7 +123,7 @@ for i=1:Nframes
 %             lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
 %% temporal filtering
 % compute presence of a particle using localPlanes
-particlesVector = computeParticlesVector(localPlanes,...
+particlesVector = computeParticlesVector_v2(localPlanes,...
             particlesVector, radii, frameID);
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
@@ -144,10 +144,10 @@ ProcessingTime=toc;
 end
 
 
-return
+
 % write json file to disk
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
-
+return
 % figure,
 %     myPlotPlanes_v2(estimatedPlanesfr,estimatedPlanesfr.fr27.acceptedPlanes,0);
 %     title(['local planes in frame ' num2str(frameID)])

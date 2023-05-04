@@ -96,7 +96,7 @@ for i=1:Nframes
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
         globalPlanes=mergePlanesOfASingleFrame_a1(globalPlanes, th_IoU, th_coplanarDistance);
 % compute presence of a particle using localPlanes
-particlesVector = computeParticlesVector(localPlanes,...
+particlesVector = computeParticlesVector_v2(localPlanes,...
             particlesVector, radii, frameID);
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
@@ -114,24 +114,24 @@ ProcessingTime=toc;%stop the timer
 
 %     
 end
-
-  
-
-figure,
-    myPlotPlanes_v3(localPlanes,0);
-    title(['local planes in frame ' num2str(frameID)])
-
-figure,
-    myPlotPlanes_v3(globalPlanes,0);
-    title(['global planes  in frame ' num2str(frameID)])
-
-figure,
-    myPlotPlanes_v3(globalPlanesPrevious,0);
-    title(['previous global planes in frame ' num2str(frameID)])
-
 % write json file to disk
-return
+
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
+
+return 
+
+% figure,
+%     myPlotPlanes_v3(localPlanes,0);
+%     title(['local planes in frame ' num2str(frameID)])
+% 
+% figure,
+%     myPlotPlanes_v3(globalPlanes,0);
+%     title(['global planes  in frame ' num2str(frameID)])
+% 
+% figure,
+%     myPlotPlanes_v3(globalPlanesPrevious,0);
+%     title(['previous global planes in frame ' num2str(frameID)])
+
 
 
 
