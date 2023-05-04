@@ -12,6 +12,9 @@ classdef plane < handle
         geometricCenter;
         limits;%[xmin xmax ymin ymax zmin zmax]
 
+        composed_idFrame;%just for composed planes
+        composed_idPlane;%just for composed planes
+        
         pathPoints;%path to 3D points that conform the plane segment (PLY file)
         type;%type of plane {0, parallel; 1, perpendicular; 2 non-expected}
         numberInliers;
@@ -37,6 +40,9 @@ classdef plane < handle
         y2;
 %         distance between camera and object;
         distanceToCamera;%in meters
+        angleBtwn_zc_unitNormal;%angle btwn z-axis of HL2 camera and unitNormal of the plane; in degrees
+        timeParticleID;%id of object particle associated
+        fitness;%fitness of the plane
     end
     
     methods
@@ -155,6 +161,48 @@ classdef plane < handle
         function setDistanceToCamera(obj, cameraPosition)
             distanceToCamera_ref=norm(obj.tform(1:3,4)-cameraPosition);
             obj.distanceToCamera=distanceToCamera_ref;
+        end
+
+        function setAngleBtwn_zc_unitNormal(obj, zcVector)
+            obj.angleBtwn_zc_unitNormal=computeAngleBtwnVectors(obj.unitNormal,zcVector);%degrees
+        end
+        function setfitness(obj, th_dis)
+        %SETFITNESS Computes the fitness of a plane object assuming that
+        %the best fitness is related with:
+        % (a) objects where the distance to camera is in the range [th_dmin th_dmax].
+        % The distance thresholds depends on the sensor, for HL2/depth camera I 
+        % suggest: th_dmin=1.5 m, th_dmax=2.5 m 
+        % (b) Angle between the axis z in camera and the normal of the plane is 
+        % near to 0 or 180 
+ 
+        % deltaPoseCamera=1;
+        th_dmin=th_dis(1);%mm
+        th_dmax=th_dis(2);%mm
+        
+        % compute inrange  flag
+        dcoinrange=false;
+        if obj.distanceToCamera<th_dmax & obj.distanceToCamera>th_dmin
+            dcoinrange=true;
+        end
+        % compute fitness
+        if dcoinrange
+            if obj.angleBtwn_zc_unitNormal<90
+                obj.fitness=1-obj.angleBtwn_zc_unitNormal/90;
+            else
+                obj.fitness=obj.angleBtwn_zc_unitNormal/90-1;
+            end
+        else
+            obj.fitness=0;
+        end
+        % add the delta camera pose to the fitnness
+        % fitness=(1-deltaPoseCamera)*fitness;
+        
+
+
+        end
+        function normal_mm=getUnitNormal(obj)
+%             returns the normalized normal vector
+            normal_mm=obj.unitNormal;
         end
     end
 end

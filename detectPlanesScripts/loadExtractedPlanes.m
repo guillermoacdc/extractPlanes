@@ -54,9 +54,9 @@ for i=1:length(frames)
         groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
         numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
         lengthBoundsTop, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
-% add property distanceToCamera for acceptedPlanes () 
+% add properties related with fitness for acceptedPlanes () 
     if ~isempty(localAcceptedPlanesByFrame)
-        addDistanceToCamera(localPlanes,localAcceptedPlanesByFrame);
+        mySetFitnessPlane(localPlanes,localAcceptedPlanesByFrame);
     end
 end
 

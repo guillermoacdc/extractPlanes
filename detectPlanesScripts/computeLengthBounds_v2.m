@@ -1,13 +1,11 @@
-function [lengthBoundsTop, lengthBoundsP] = computeLengthBounds_v2(rootPath, scene)
+function [lengthBoundsTop, lengthBoundsP] = computeLengthBounds_v2(rootPath, scene, frameID)
 %COMPUTELENGTHBOUNDS compute length bounds for expected planes in the
 %scene. 
-% C:\lib\boxTrackinPCs\scene5\previousKnowledgeFile.txt
-% load previous knowledge of the scene: number of boxes, size of each box
-% and physical packing sequence
-
-% parameters = loadLengths(rootPath,scene);%length in mm
-% parameters=load(fileName);%boxId, typeID, H(3) W(4) D(5)
-pps = getPPS(rootPath,scene);
+% The output is sorted in sequence [L1min L1max L2min L2max]
+if nargin==2
+    frameID=1;
+end
+pps = getPPS(rootPath,scene, frameID);
 parameters =loadLengths_v2(rootPath,pps);%boxID H, W, D in mm
 
 NoBoxes=size(parameters,1);
