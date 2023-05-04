@@ -61,9 +61,9 @@ for i=1:Nframes
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if i==21
-        disp("stop mark")
-    end
+%     if i==21
+%         disp("stop mark")
+%     end
 %% extract target identifiers based on type of plane
     estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
 %% forget old planes
@@ -117,16 +117,16 @@ end
 % write json file to disk
 
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
-
+figure,
+    myPlotPlanes_v3(globalPlanes,0);
+    title(['global planes  in frame ' num2str(frameID)])
 return 
 
 % figure,
 %     myPlotPlanes_v3(localPlanes,0);
 %     title(['local planes in frame ' num2str(frameID)])
 % 
-% figure,
-%     myPlotPlanes_v3(globalPlanes,0);
-%     title(['global planes  in frame ' num2str(frameID)])
+
 % 
 % figure,
 %     myPlotPlanes_v3(globalPlanesPrevious,0);

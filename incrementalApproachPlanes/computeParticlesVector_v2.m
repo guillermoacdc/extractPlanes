@@ -31,7 +31,8 @@ if Npv>0
             particlesVector(end+1)=particle(Npv_dinamic+1, globalPlane.geometricCenter,...
                 globalPlane.fitness,frameID);
 %             adición de llave foránea en plano global
-            globalPlane.timeParticleID=Npv_dinamic+1;
+%             globalPlane.timeParticleID=Npv_dinamic+1;
+            globalPlanes(i).timeParticleID=Npv_dinamic+1;
         end
     end
 % update matchFlag to avoid multiple global planes pointing to a single
