@@ -31,7 +31,6 @@ if Npv>0
             particlesVector(end+1)=particle(Npv_dinamic+1, globalPlane.geometricCenter,...
                 globalPlane.fitness,frameID);
 %             adición de llave foránea en plano global
-%             globalPlane.timeParticleID=Npv_dinamic+1;
             globalPlanes(i).timeParticleID=Npv_dinamic+1;
         end
     end
@@ -73,7 +72,20 @@ end
             globalPlanes(i).timeParticleID=particlesVector(indexpv).id;
         end
     end
-
+% create new particle for global planes with null relationship with
+% particles
+    nullIDs=extractIDWithNullTimeParticle(globalPlanes);
+    if ~isempty(nullIDs)
+        Nnid=length(nullIDs);
+        for i=1:Nnid
+                Npv_dinamic=size(particlesVector,2);
+    %             creación de la nueva partícula
+                particlesVector(end+1)=particle(Npv_dinamic+1, globalPlanes(nullIDs(i)).geometricCenter,...
+                    globalPlanes(nullIDs(i)).fitness,frameID);
+    %             adición de llave foránea en plano global
+                globalPlanes(nullIDs(i)).timeParticleID=Npv_dinamic+1;
+        end
+    end
 else
     for i=1:Ngp
         pos_ref=globalPlanes(i).geometricCenter;

@@ -10,7 +10,7 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=2;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia2.json';
 
@@ -74,7 +74,7 @@ for i=1:Nframes
     radii=computeRaddi(dataSetPath,sessionID,frameID,planeType );
     logtxt=['Assessing detections in frame ' num2str(frameID) '; i=' num2str(i) ', radii=' num2str(radii) 'mm'];
     disp(logtxt);
-    if i==15
+    if i==51
         disp('control point from assessEstimatedPoses_ia2')
     end
 %     writeProcessingState(logtxt,evalPath,sessionID);
@@ -132,11 +132,11 @@ globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, 
 %% assess estimated poses
 ProcessingTime=toc;
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-        globalPlanes_t=clonePlaneObject(globalPlanes);
-        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses, ProcessingTime);
+%         globalPlanes_t=clonePlaneObject(globalPlanes);
+%         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
+%         estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+%             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
+%             NpointsDiagPpal,estimatedPoses, ProcessingTime);
 
     end
 
