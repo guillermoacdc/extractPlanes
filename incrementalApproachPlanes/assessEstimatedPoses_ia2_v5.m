@@ -10,7 +10,7 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=1;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia2.json';
 
@@ -62,7 +62,6 @@ Ntao=length(tao_v);
 
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
-globalPlanesPrevious=[];
 bufferComposedPlanes={};
 [lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(dataSetPath, sessionID);%[L1min L1max L2min L2max]
 globalPlanesPrevious=[];

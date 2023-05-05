@@ -1,18 +1,18 @@
 function [radii] = computeRaddi(rootPath,scene,frameID,planeType)
-%COMPUTERADDI Computes the min length of ppal diagonal between planes in
+%COMPUTERADDI Computes the raddi as the max length of ppal diagonal between planes in
 %the consolidation zone. The planes belong to a single type
 
 [lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(rootPath, scene, frameID);%in mm
 
 switch planeType
     case 0
-        L1min=lengthBoundsTop(1);
-        L2min=lengthBoundsTop(3);
+        L1=lengthBoundsTop(2);
+        L2=lengthBoundsTop(4);
     case [1, 2]
-        L1min=lengthBoundsP(1);
-        L2min=lengthBoundsP(3);
+        L1=lengthBoundsP(2);
+        L2=lengthBoundsP(4);
 end
 
-radii=sqrt(L1min^2+L2min^2)/2;
+radii=sqrt(L1^2+L2^2)/2;
 end
 
