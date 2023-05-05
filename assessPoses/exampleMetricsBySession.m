@@ -11,9 +11,9 @@ theta_v=0.1:0.1:0.5;
 Ntheta=length(theta_v);
 tao=50;
 if algorithm==1
-    fileName='estimatedPoses_ia1_v2.json';
+    fileName='estimatedPoses_ia1.json';
 else
-    fileName='estimatedPoses_ia2_v2.json';
+    fileName='estimatedPoses_ia2.json';
 end
 %% compute recall by theta for all keyframes
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
@@ -59,15 +59,15 @@ figure,
 subplot(211),...
 stem(keyFrames,AUCRecall)
     xlabel 'frame'
-    ylabel 'AUC recall'
+    ylabel (['recall with mean/std=' num2str(mean(AUCRecall),'%4.2f') '/' num2str(std(AUCRecall),'%4.2f') ])
     grid
-    title (['Perfomance in session ' num2str(sessionID) '. Tao=' num2str(tao) ])
+    title (['Algorithm ' num2str(algorithm) '. AUC in session ' num2str(sessionID) '. Tao=' num2str(tao) ])
 
 % plot AUC precision
 subplot(212),...
     stem(keyFrames,AUCPrecision)
     xlabel 'frame'
-    ylabel 'AUC precision'
+    ylabel (['precision with mean/std=' num2str(mean(AUCPrecision),'%4.2f') '/' num2str(std(AUCPrecision),'%4.2f') ])
     grid
 %     title (['Perfomance in session ' num2str(sessionID) '. Tao=' num2str(tao) ])
     
