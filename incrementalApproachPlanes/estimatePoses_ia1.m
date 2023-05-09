@@ -1,17 +1,17 @@
 
-function estimatePoses_ia1(sessionID)
+function estimatePoses_ia1(sessionID, planeType, fileName)
 % ESTIMATEPOSES_IA1()  First version of an incremental approach. In the 
 % merge stage performs a % selection of planes. This selection is based on 
 % criteria of distance % between camera and object, area of the candidates 
 % and intersection over % union metrics. 
 % v3: select between pair of planes with IoU greater than a threshold
-
+% planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 
 % sessionID=2;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia1.json';
+% fileName='estimatedPoses_ia1.json';
 
-planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
+
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points

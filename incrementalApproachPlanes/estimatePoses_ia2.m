@@ -1,4 +1,4 @@
-function estimatePoses_ia2(sessionID)
+function estimatePoses_ia2(sessionID, planeType, fileName)
 % ESTIMATEPOSES_IA1() Second version of an incremental approach. In the 
 % merge stage performs a % a hybrid strategy which includes: (1) selection 
 % of planes or (2) creation of new planes. The second strategy includes (1)  
@@ -10,9 +10,9 @@ function estimatePoses_ia2(sessionID)
 
 % sessionID=1;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia2.json';
+% fileName='estimatedPoses_ia2.json';
 
-planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
+% planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
