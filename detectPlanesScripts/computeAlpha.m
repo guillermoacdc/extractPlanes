@@ -1,4 +1,4 @@
-function [alpha ix pc_temp] = computeAlpha(pc, planeDescriptor)
+function [alpha, ix, pc_temp] = computeAlpha(pc, planeDescriptor)
 %COMPUTEALPHA computes the sign and magnitude of angle alpha. This is the
 %angle required to allign the plane with a reference framework (xy or zy)
 
@@ -10,7 +10,7 @@ pc_temp=cutLength_Y(pc,planeDescriptor.geometricCenter,0.3);% keep 30% of height
 
 % compute components xL, zL
 % [xL zL yL ix iz iy] = computeFartherPointv2([0 0 0]',pc_temp, [1 0 0]', [0 0 1]', [0 1 0]');
-[xmax ymax zmax ix iz iy] = computeFartherPointv3(pc_temp);
+[xmax, ymax, zmax, ix, iz, iy] = computeFartherPointv3(pc_temp);
 xL=pc_temp.Location(ix,1);
 zL=pc_temp.Location(ix,3);
 % xL=pc_temp.Location(ix,1);
