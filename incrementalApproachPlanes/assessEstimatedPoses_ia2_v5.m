@@ -14,7 +14,7 @@ sessionID=1;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia2.json';
 
-planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
+planeType=2;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
@@ -74,9 +74,9 @@ for i=1:Nframes
     radii=computeRaddi(dataSetPath,sessionID,frameID,planeType );
     logtxt=['Assessing detections in frame ' num2str(frameID) ', radii=' num2str(radii) 'mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
-%     if frameID==68
-%         disp('control point from assessEstimatedPoses_ia2')
-%     end
+    if i==12
+        disp('control point from assessEstimatedPoses_ia2')
+    end
 %     writeProcessingState(logtxt,evalPath,sessionID);
 %% load initial pose and extract raw planes from the current frame
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);

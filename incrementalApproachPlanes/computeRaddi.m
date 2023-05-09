@@ -8,9 +8,12 @@ switch planeType
     case 0
         L1=lengthBoundsTop(2);
         L2=lengthBoundsTop(4);
-    case [1, 2]
+    case 1 % cases 1 and 2 are equal, update when discover how
         L1=lengthBoundsP(2);
         L2=lengthBoundsP(4);
+    case 2 
+        L1=lengthBoundsP(2);
+        L2=lengthBoundsP(4);    
 end
 
 radii=sqrt(L1^2+L2^2)/2;

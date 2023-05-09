@@ -22,7 +22,8 @@ planeB=vectorPlanes(indexB);
         pcB=myPCreadComposedPlane(planeB.pathPoints, planeB.idFrame, planeB.idPlane, bufferCP);
         pcnew=pcmerge(pcA,pcB,0.1);%mm
         
-        model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
+%         model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
+        model = pcfitplane(pcnew,maxDistance);
 
         newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be
  
