@@ -39,9 +39,14 @@ while myCounter>=1
         [vectorPlanes, bufferCP]=performSingleMerge(vectorPlanes,indexA,...
             indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop, lengthBoundsP);
         N=size(vectorPlanes,2);
-        nonRPairs=nchoosek(1:N,2);
-        myCounter=size(nonRPairs,1);
-        i=1;
+        if N>1
+	        nonRPairs=nchoosek(1:N,2);
+	        myCounter=size(nonRPairs,1);
+	        i=1;
+        end
+%         nonRPairs=nchoosek(1:N,2);
+%         myCounter=size(nonRPairs,1);
+%         i=1;
     else
         myCounter=myCounter-1;
         i=i+1;

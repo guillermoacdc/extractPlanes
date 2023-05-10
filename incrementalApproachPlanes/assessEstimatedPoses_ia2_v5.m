@@ -10,7 +10,7 @@ clc
 close all
 clear
 
-sessionID=1;
+sessionID=27;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia2.json';
 
@@ -74,7 +74,7 @@ for i=1:Nframes
     radii=computeRaddi(dataSetPath,sessionID,frameID,planeType );
     logtxt=['Assessing detections in frame ' num2str(frameID) ', radii=' num2str(radii) 'mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
-    if i==12
+    if i==246
         disp('control point from assessEstimatedPoses_ia2')
     end
 %     writeProcessingState(logtxt,evalPath,sessionID);
