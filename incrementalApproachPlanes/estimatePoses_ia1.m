@@ -1,50 +1,56 @@
 
-function estimatePoses_ia1(sessionID, planeType, fileName)
+function estimatePoses_ia1(sessionID, fileName, planeFilteringParameters, ...
+            asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
+            planeType)
 % ESTIMATEPOSES_IA1()  First version of an incremental approach. In the 
 % merge stage performs a % selection of planes. This selection is based on 
 % criteria of distance % between camera and object, area of the candidates 
 % and intersection over % union metrics. 
-% v3: select between pair of planes with IoU greater than a threshold
-% planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 
-% sessionID=2;
-[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-% fileName='estimatedPoses_ia1.json';
+%% unzip parameters
+% 2. Parameters used in the stage Assesment Pose 
+NpointsDiagPpal=asessmentPoseParameters(1);
+tao_v=asessmentPoseParameters(2);%mm
 
+% 3. Parameteres used in the stage Merging planes between frames
+% - used in the function computeTypeOfTwin
+tao_merg=mergingPlaneParameters(1);% mm
+theta_merg=mergingPlaneParameters(2);%in percentage
+th_IoU=mergingPlaneParameters(3);% percent
+th_coplanarDistance=mergingPlaneParameters(4);%mm
 
-%% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
-th_angle=15*pi/180;%radians
-th_size=150;%number of points
-th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
-th_occlusion=1.4;%
-D_Tolerance=0.1*1000;%mm ... 0.1 m
-tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
-%% parameters 3.  Assesment Pose with e_ADD
-tao_v=10:10:50;
-NpointsDiagPpal=20;
-%% parameters 4. Merging planes between frames
-% parameters of merging planes - used in the function computeTypeOfTwin
-tao_merg=50;% mm
-theta_merg=0.5;%in percentage
-th_IoU=0.2;% percent
-th_coplanarDistance=20;%mm
-%% parameters 5. temporal filtering
+% 4. Parameters used in temporal filtering stage
+radii=tempFilteringParameters(1);%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
+windowSize=tempFilteringParameters(2);%frames
+th_detections=tempFilteringParameters(3);%percent - not used in version 1
 %define an empty vector of type particle
 particlesVector(1)=particle(1,[0 0 0], 1, 5);
 particlesVector(1)=[];
-% radii=computeRaddi(dataSetPath,sessionID,1,planeType);
-radii=15;%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
 
-windowSize=5;%frames
-th_detections=0.3;%percent - not used in version 1
+% 5. Parameteres used to set the type of planes to process: perpendicular or
+% parallel to ground. {0 for parallel to ground, 1 for perpendicular to ground}
+% (a) syntheticPlaneType {0 for top planes, 1 for front and back planes, 
+% 2 for right and left planes, 3 for [front right, back, and left planes]}
+% (b) estimatedPlaneType {0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes, 
+% 3 for [zyPlanes; zyPlanes]} in qh_c coordinate system
+
+if planeType==0
+    % For top planes use
+    syntheticPlaneType=0;
+    estimatedPlaneType=0;
+else
+    % For perpendicular planes use
+    syntheticPlaneType=3;
+    estimatedPlaneType=3;
+end
+
+% 6. paths to read and write data
+[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 
 %% processing
 % computing keyframes for the session
 keyframes=loadKeyFrames(dataSetPath,sessionID);
-
 Nframes=length(keyframes);
-Ntao=length(tao_v);
-
 % performing the computation for each frame
 estimatedPoses.tao=tao_v;
 globalPlanesPrevious=[];
@@ -53,19 +59,19 @@ localPlanes=[];
 for i=1:Nframes
     tic;% init timer
     frameID=keyframes(i);
-    radii=computeRaddi(dataSetPath,sessionID,frameID,planeType);%use of pps
+    radii=computeRaddi(dataSetPath,sessionID,frameID,estimatedPlaneType);%use of pps
     logtxt=['Assessing detections in frame ' num2str(frameID) ' with radii ' num2str(radii) ' mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
 %%     writeProcessingState(logtxt,evalPath,sessionID);
 
-    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
+    gtPlanes=loadInitialPose_v3(dataSetPath,sessionID,frameID, syntheticPlaneType);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
-        PCpath, tresholdsV);%returns a struct with a property frx - h world
-%     if i==21
-%         disp("stop mark")
-%     end
+        PCpath, planeFilteringParameters);%returns a struct with a property frx - h world
+    if  i==31
+        disp("stop mark")
+    end
 %% extract target identifiers based on type of plane
-    estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
+    estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,estimatedPlaneType);
 %% forget old planes
         if mod(i,windowSize)==0 %& i>=2*windowSize
             if (i-windowSize)>=1
@@ -73,7 +79,6 @@ for i=1:Nframes
             else
                 windowInit=keyframes(1);
             end
-            
             globalPlanes=updatePresence_v2(globalPlanes,particlesVector,windowInit, th_detections);
         end
 %% fill estimatedPoses output
@@ -106,7 +111,7 @@ ProcessingTime=toc;%stop the timer
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
         globalPlanes_t=clonePlaneObject(globalPlanes);
         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPlanes,...
             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
             NpointsDiagPpal,estimatedPoses, ProcessingTime);
 
@@ -118,7 +123,7 @@ end
 
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
 figure,
-    myPlotPlanes_v3(globalPlanes,0);
+    myPlotPlanes_v3(globalPlanes,1);
     title(['global planes  in frame ' num2str(frameID)])
 return 
 
@@ -135,7 +140,3 @@ return
 
 
 
-% removing warnings
-w = warning('query','last');
-id=w.identifier;
-warning('off',id)

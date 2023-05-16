@@ -53,10 +53,10 @@ Ntao=length(tao_v);
             tao=tao_v(j);
             logtxt=['Processing with tao= ' num2str(tao)];
             disp(logtxt);
-    %         writeProcessingState(logtxt,evalPath,sessionID);
-    %         write eADD to the struct
-            estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v2(globalPlanes_m.fr0.values,...
-             gtPoses,  tao, dataSetPath, NpointsDiagPpal);
+%             estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v2(globalPlanes_m.fr0.values,...
+%              gtPoses,  tao, dataSetPath, NpointsDiagPpal);
+            estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v3(globalPlanes_m.fr0.values,...
+             gtPoses,  tao, NpointsDiagPpal);
         end
 end
 

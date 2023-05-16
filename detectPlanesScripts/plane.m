@@ -159,7 +159,8 @@ classdef plane < handle
         end
 
         function setDistanceToCamera(obj, cameraPosition)
-            distanceToCamera_ref=norm(obj.tform(1:3,4)-cameraPosition);
+%             distanceToCamera_ref=norm(obj.tform(1:3,4)-cameraPosition);
+            distanceToCamera_ref=norm(obj.geometricCenter-cameraPosition);
             obj.distanceToCamera=distanceToCamera_ref;
         end
 

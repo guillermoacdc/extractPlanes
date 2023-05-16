@@ -2,16 +2,18 @@
 % selection of planes. This selection is based on criteria of distance
 % between camera and object, area of the candidates and intersection over
 % union metrics. 
-% v3: select between pair of planes with IoU greater than a threshold
+% v4: load initial poses for top and lateral planes, both in form of plane
+% objects
 clc
 close all
 clear
 
-sessionID=2;
+sessionID=5;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia1.json';
+fileName='estimatedPoses_ia1_v2.json';
 
-planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
+planeType=3;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes, 3 for [zyPlanes; zyPlanes]} in qh_c coordinate system
+planesGroup=3;%for generation of synthetic gt objects {0 for top planes, 1 for front and back planes, 2 for right and left planes}
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
@@ -20,7 +22,7 @@ th_occlusion=1.4;%
 D_Tolerance=0.1*1000;%mm ... 0.1 m
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 %% parameters 3.  Assesment Pose with e_ADD
-tao_v=10:10:50;
+tao_v=50:10:50;
 NpointsDiagPpal=20;
 %% parameters 4. Merging planes between frames
 % parameters of merging planes - used in the function computeTypeOfTwin
@@ -58,10 +60,10 @@ for i=1:Nframes
     disp(logtxt);
 %%     writeProcessingState(logtxt,evalPath,sessionID);
 
-    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
+    gtPlanes=loadInitialPose_v3(dataSetPath,sessionID,frameID,planesGroup);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if i==12
+    if i==21
         disp("stop mark")
     end
 %% extract target identifiers based on type of plane
@@ -100,31 +102,41 @@ for i=1:Nframes
 
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
-
 ProcessingTime=toc;%stop the timer
-
-% project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-        globalPlanes_t=clonePlaneObject(globalPlanes);
-        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses, ProcessingTime);
 
     end
 
 %     
 end
-% write json file to disk
 
-mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
+% plot gt planes and estimated planes
+globalPlanes_m=clonePlaneObject(globalPlanes);
+globalPlanes_m=myProjectionPlaneObject_v2(globalPlanes_m,...
+            sessionID,dataSetPath);
+Ngtp=size(gtPlanes,2);
+Nep=size(globalPlanes_m,2);
+spatialSampling=10;
+color=[255 255 255];%RGB triplet
 figure,
-    myPlotPlanes_v3(globalPlanes,0);
+    for k=1:Ngtp
+        temporalpc=createPlanePCAtOrigin(gtPlanes(k),spatialSampling);
+        pcshow(temporalpc)
+        hold on
+    end
+    for k=1:Nep
+        temporalpc=createPlanePCAtOrigin(globalPlanes_m(k),spatialSampling);
+        temporalpc=pcPaint(temporalpc,color);
+        pcshow(temporalpc)
+        hold on
+        dibujarsistemaref(globalPlanes_m(k).tform,globalPlanes_m(k).idBox,150,2,10,'w');
+    end
+    dibujarsistemaref(eye(4),'m',150,2,10,'w');
     title(['global planes  in frame ' num2str(frameID)])
 return 
 
-% figure,
-%     myPlotPlanes_v3(localPlanes,0);
-%     title(['local planes in frame ' num2str(frameID)])
+figure,
+    myPlotPlanes_v3(localPlanes,0);
+    title(['local planes in frame ' num2str(frameID)])
 % 
 
 % 

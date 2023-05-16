@@ -8,8 +8,8 @@ th_lenght=tresholdsV(1);
 th_size=tresholdsV(2);
 th_occlusion=tresholdsV(4);
 maxDistance=planeModelParameters(1);
-maxAngularDistance=planeModelParameters(2);
-referenceVector=planeModelParameters(3:end);
+% maxAngularDistance=planeModelParameters(2);
+% referenceVector=planeModelParameters(3:end);
 
 planeA=vectorPlanes(indexA);
 planeB=vectorPlanes(indexB);

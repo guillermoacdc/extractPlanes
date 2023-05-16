@@ -8,6 +8,11 @@ function [initialPoses] = loadInitialPose(rootPath,scene,frame)
 % at begining and a second pose (reposition) after a reference frame.
 % Warning. The poses must be returned in the sequence of pps (physical packing seq)
 
+% Assumption: The returned pose takes as reference a coordinate frame 
+% located at the top plane of each box. Then for planetypes 2 and 3
+% requires additional processing.
+
+
     % tform is available in the file rootPath/corridax/mocap/initialPose1.csv 
 %    fileName=rootPath  + 'corrida' + num2str(scene) + '\mocap\initialPose1.csv';
 %     fileName=rootPath  + 'session' + num2str(scene) + '/filtered/MoCap/sessionDescriptor.csv';

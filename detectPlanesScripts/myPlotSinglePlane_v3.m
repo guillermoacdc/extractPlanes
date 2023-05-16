@@ -60,7 +60,7 @@ set(H,'FontSize',15)
 
 % (5) plot the frame of the plane
 if frameFlag
-    scale=1;
+    scale=150;
     width=1;
     T=planeDescriptor.tform;
     dibujarsistemaref (T,' ',scale,width,10,fc);

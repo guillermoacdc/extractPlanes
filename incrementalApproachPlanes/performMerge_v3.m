@@ -32,8 +32,8 @@ th_lenght=tresholdsV(1);
 th_size=tresholdsV(2);
 th_occlusion=tresholdsV(4);
 maxDistance=planeModelParameters(1);
-maxAngularDistance=planeModelParameters(2);
-referenceVector=planeModelParameters(3:end);
+% maxAngularDistance=planeModelParameters(2);
+% referenceVector=planeModelParameters(3:end);
 
 distance_c_l=localPlane.distanceToCamera;
 distance_c_g=globalPlanes(id_gp).distanceToCamera;
@@ -74,7 +74,8 @@ switch (typeOfTwin)
 %         maxDistance=0.1*1000;%mm
 %         maxAngularDistance=5;%deg
 %         referenceVector=[0 1 0];
-        model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
+%         model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
+        model = pcfitplane(pcnew,maxDistance);
 
         newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be recomputed
  

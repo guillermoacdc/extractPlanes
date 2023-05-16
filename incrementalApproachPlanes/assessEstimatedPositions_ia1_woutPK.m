@@ -1,15 +1,13 @@
-% First version of an incremental approach. In the merge stage performs a
-% selection of planes. This selection is based on criteria of distance
-% between camera and object, area of the candidates and intersection over
-% union metrics. 
-% v3: select between pair of planes with IoU greater than a threshold
+% Assess estimated positions wihout previous knowledge and incremental
+% approach 1
 clc
 close all
 clear
 
-sessionID=2;
+flagPK=false;
+sessionID=3;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia1.json';
+fileName='estimatedPoses_ia1_woutPK.json';
 
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
@@ -60,12 +58,12 @@ for i=1:Nframes
 
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
-        PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if i==12
+        PCpath, tresholdsV, flagPK);%returns a struct with a property frx - h world
+    if i==40
         disp("stop mark")
     end
 %% extract target identifiers based on type of plane
-    estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,planeType);
+    estimatedPlanesID=extractTargetIDs_woutPK(estimatedPlanesfr,frameID,planeType, th_angle);
 %% forget old planes
         if mod(i,windowSize)==0 %& i>=2*windowSize
             if (i-windowSize)>=1
@@ -95,8 +93,8 @@ for i=1:Nframes
             globalPlanesPrevious=clonePlaneObject(globalPlanes);
         end
 %% perform the merge        
-        globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
-        globalPlanes=mergePlanesOfASingleFrame_a1(globalPlanes, th_IoU, th_coplanarDistance);
+        globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg, flagPK);%h-world
+        globalPlanes=mergePlanesOfASingleFrame_woutPK(globalPlanes, th_coplanarDistance);
 
 % associate particles with global planes
 globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
@@ -104,11 +102,11 @@ globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, 
 ProcessingTime=toc;%stop the timer
 
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-        globalPlanes_t=clonePlaneObject(globalPlanes);
-        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses, ProcessingTime);
+%         globalPlanes_t=clonePlaneObject(globalPlanes);
+%         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
+%         estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+%             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
+%             NpointsDiagPpal,estimatedPoses, ProcessingTime);
 
     end
 
@@ -118,8 +116,10 @@ end
 
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
 figure,
-    myPlotPlanes_v3(globalPlanes,0);
+    myPlotPlanes_woutPK(globalPlanes);
+%     myPlotScannedPCs(globalPlanes,dataSetPath,sessionID)
     title(['global planes  in frame ' num2str(frameID)])
+
 return 
 
 % figure,

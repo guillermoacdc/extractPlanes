@@ -7,8 +7,9 @@ clear
 algorithm=1;
 sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-theta_v=0.1:0.1:0.5;
-Ntheta=length(theta_v);
+% theta_v=0.1:0.1:0.5;
+theta=0.5;
+
 tao=50;
 if algorithm==1
     fileName='estimatedPoses_ia1.json';
@@ -24,46 +25,50 @@ estimatedPoses = loadEstimationsFile(fileName,sessionID, evalPath);
 %initialize variables
 % DP_v=zeros(Nkf,Ntheta);
 % DPm_v=zeros(Nkf,Ntheta);
-precision_v=zeros(Nkf,Ntheta);
-recall_v=zeros(Nkf,Ntheta);
+precision_v=zeros(Nkf,1);
+recall_v=zeros(Nkf,1);
 
 for i=1:Nkf
     frameID=keyFrames(i);
     pps=getPPS(dataSetPath,sessionID,frameID);
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
-    for j=1:Ntheta
-        theta=theta_v(j);
+    
+%         theta=theta_v(j);
         if ~isempty(estimatedPose)
             [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
         else
             continue
         end
-%         DP_v(i,j)=DP;
-%         DPm_v(i,j)=DPm;
-        precision_v(i,j)=precision;
-        recall_v(i,j)=recall;
-    end
+        precision_v(i)=precision;
+        recall_v(i)=recall;
+    
 end
 
-%% compute area under recall curve
-
-AUCRecall=max(theta_v)*mean(recall_v,2);%size (Nkf,1)
-AUCPrecision=max(theta_v)*mean(precision_v,2);
-% plot AUC recall
+%% compute mean and std values
+recall_mean=mean(recall_v);
+recall_std=std(recall_v);
+precision_mean=mean(precision_v);
+precision_std=std(precision_v);
+% plot  recall
 figure,
 subplot(211),...
-stem(keyFrames,AUCRecall)
+stem(keyFrames,recall_v)
+hold on
+plot([keyFrames(1) keyFrames(end)],[recall_mean recall_mean],'k--')
     xlabel 'frame'
-    ylabel (['recall with mean/std=' num2str(mean(AUCRecall),'%4.2f') '/' num2str(std(AUCRecall),'%4.2f') ])
+    ylabel (['recall with mean/std=' num2str(recall_mean,'%4.2f') '/' num2str(recall_std,'%4.2f') ])
     grid
     title (['Algorithm ' num2str(algorithm) '. AUC in session ' num2str(sessionID) '. Tao=' num2str(tao) ])
-
-% plot AUC precision
+    axis tight
+% plot  precision
 subplot(212),...
-    stem(keyFrames,AUCPrecision)
+stem(keyFrames,precision_v)
+hold on
+plot([keyFrames(1) keyFrames(end)],[precision_mean precision_mean],'k--')
     xlabel 'frame'
-    ylabel (['precision with mean/std=' num2str(mean(AUCPrecision),'%4.2f') '/' num2str(std(AUCPrecision),'%4.2f') ])
+    ylabel (['precision with mean/std=' num2str(precision_mean,'%4.2f') '/' num2str(precision_std,'%4.2f') ])
     grid
-%     title (['Perfomance in session ' num2str(sessionID) '. Tao=' num2str(tao) ])
+    axis tight
+
     

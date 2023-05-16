@@ -2,16 +2,20 @@
 % selection of planes. This selection is based on criteria of distance
 % between camera and object, area of the candidates and intersection over
 % union metrics. 
-% v3: select between pair of planes with IoU greater than a threshold
+% v4: load initial poses for top and lateral planes, both in form of plane
+% objects
 clc
 close all
 clear
 
-sessionID=2;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-fileName='estimatedPoses_ia1.json';
+fileName='estimatedPoses_ia1_v2.json';
 
 planeType=0;%{0 for xzPlanes, 1 for xyPlanes, 2 for zyPlanes} in qh_c coordinate system
+planesGroup=3;%for generation of synthetic gt objects {0 for top planes, 
+% 1 for front and back planes, 2 for right and left planes, 3 for perpendicular planes
+% (back, front, left, right)}
 %% parameters 2. Plane filtering (based on previous knowledge) and pose/length estimation. 
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
@@ -20,7 +24,7 @@ th_occlusion=1.4;%
 D_Tolerance=0.1*1000;%mm ... 0.1 m
 tresholdsV=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 %% parameters 3.  Assesment Pose with e_ADD
-tao_v=10:10:50;
+tao_v=50:10:50;
 NpointsDiagPpal=20;
 %% parameters 4. Merging planes between frames
 % parameters of merging planes - used in the function computeTypeOfTwin
@@ -58,7 +62,7 @@ for i=1:Nframes
     disp(logtxt);
 %%     writeProcessingState(logtxt,evalPath,sessionID);
 
-    gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
+    gtPlanes=loadInitialPose_v3(dataSetPath,sessionID,frameID,planesGroup);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
     if i==12
@@ -106,7 +110,7 @@ ProcessingTime=toc;%stop the timer
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
         globalPlanes_t=clonePlaneObject(globalPlanes);
         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
+        estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPlanes,...
             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
             NpointsDiagPpal,estimatedPoses, ProcessingTime);
 

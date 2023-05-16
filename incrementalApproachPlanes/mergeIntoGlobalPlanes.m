@@ -1,4 +1,4 @@
-function globalPlanes = mergeIntoGlobalPlanes(localPlanes,globalPlanes, tao, theta)
+function globalPlanes = mergeIntoGlobalPlanes(localPlanes,globalPlanes, tao, theta, flagPK)
 %MERGEINTOGLOBALPLANES performs the seek and merge of planes between the
 %elements in vectors localPlanes and globalPlanes. The merged version is
 %stored in globalPlanes vector
@@ -18,6 +18,10 @@ function globalPlanes = mergeIntoGlobalPlanes(localPlanes,globalPlanes, tao, the
 % 2. the elements in iput vectors has the same value for type property. 
 % 3. the input lengths are in the same units (i.e. millimeters)
 
+if nargin<5
+    flagPK=true;
+end
+
 Nlp=size(localPlanes,2);
 Ngp=size(globalPlanes,2);
 % globalPlane=globalPlanes(1);
@@ -28,7 +32,7 @@ for i=1:Nlp
     j=1;
     while j<=Ngp & ~twinFlag
         globalPlane=globalPlanes(j);
-        typeOfTwin=computeTypeOfTwin(localPlane,globalPlane, tao, theta);
+        typeOfTwin=computeTypeOfTwin(localPlane,globalPlane, tao, theta, flagPK);
         if typeOfTwin~=0
             globalPlanes=performMerge(localPlane,globalPlanes, j, typeOfTwin);
             twinFlag=true;

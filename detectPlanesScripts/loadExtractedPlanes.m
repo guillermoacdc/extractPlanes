@@ -1,4 +1,4 @@
-function localPlanes=loadExtractedPlanes(rootPath,scene,frames, processedScenesPath, tresholdsV)
+function localPlanes=loadExtractedPlanes(rootPath,scene,frames, processedScenesPath, tresholdsV, PKFlag)
 % This function load extracted planes per frame and its properties, classify those 
 % planes comparing properties with thresholds and pack the classified data 
 % into a cell of objects (localPlanes). The function also loads the camera 
@@ -14,6 +14,9 @@ function localPlanes=loadExtractedPlanes(rootPath,scene,frames, processedScenesP
 % 3. load camera poses for keyframes of the session
 % 4. manages the processing of each keyframe in the session
 
+if nargin<6
+	PKFlag=true;%previous knowledge Flag
+end
 
 %% 1 declaring parameters 
 plotFlag=0;
@@ -53,7 +56,7 @@ for i=1:length(frames)
     [localPlanes, localAcceptedPlanesByFrame, ~,...
         groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
         numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
-        lengthBoundsTop, groundNormal, groundD, 1);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
+        lengthBoundsTop, groundNormal, groundD, PKFlag);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
 % add properties related with fitness for acceptedPlanes () 
     if ~isempty(localAcceptedPlanesByFrame)
         mySetFitnessPlane(localPlanes,localAcceptedPlanesByFrame);

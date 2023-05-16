@@ -22,7 +22,7 @@ D=repmat(planeDescriptor.geometricCenter,pc.Count,1);
 pc = pctransform(pc,-D);%ptcloud centered in origin
 
 % compute alfa
-[alpha ia pc_cut] = computeAlpha(pc, planeDescriptor);
+[alpha, ia, ~] = computeAlpha(pc, planeDescriptor);
 % if (planeDescriptor.planeTilt==1)%xyTilt
 %     alpha=computeAngleBtwnVectors([0 0 1], planeDescriptor.unitNormal);
 % else%zyTilt
@@ -31,20 +31,20 @@ pc = pctransform(pc,-D);%ptcloud centered in origin
 % [alphaSign ia]=computeAlphaSign(pc, planeDescriptor);
 % alpha=alphaSign*alpha;
 
-[p_T_ref ref_T_p ]=computeTransformations(alpha, planeDescriptor);
+[p_T_ref, ref_T_p ]=computeTransformations(alpha, planeDescriptor);
 
 %% apply transformation to allign pc with reference frame and measure lengths
 % apply transformation
 % pc_alligned=applyTransformation(pc, p_T_ref);
 pc_alligned=applyTransformation(pc, ref_T_p);
 % convert to 2D data
-if(planeDescriptor.planeTilt==1)%ignore z values
+% if(planeDescriptor.planeTilt==1)%ignore z values
     x1=pc_alligned.Location(:,1);
     y1=pc_alligned.Location(:,2);%keep y in vertical axis of 2d
-else%ignore x values
-    x1=pc_alligned.Location(:,3);
-    y1=pc_alligned.Location(:,2);%keep y in vertical axis of 2d    
-end
+% else%ignore x values
+%     x1=pc_alligned.Location(:,3);
+%     y1=pc_alligned.Location(:,2);%keep y in vertical axis of 2d    
+% end
 
 X=max(x1)-min(x1);
 Y=max(y1)-min(y1);
@@ -94,8 +94,8 @@ if(figureFlag)
 	    pcshow(pc)
         hold on
         pcshow(pc_alligned)
-        dibujarsistemaref (eye(4),0,1,1)%ref
-        dibujarsistemaref (T2,1,0.5,1)%rotated
+        dibujarsistemaref (eye(4),0,150,1)%ref
+        dibujarsistemaref (T2,1,100,1)%rotated
         plot3(pc.Location(ia,1),pc.Location(ia,2),pc.Location(ia,3),'yo')
         view(2)
         camup([0 1 0])

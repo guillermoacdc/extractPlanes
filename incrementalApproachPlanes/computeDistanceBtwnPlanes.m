@@ -6,16 +6,22 @@ function [d1,d2] = computeDistanceBtwnPlanes(planeA,planeB)
 
 % compute d1
 d1=norm(planeA.geometricCenter-planeB.geometricCenter);
+
+if ~isempty(planeA.type)
 % compute d2
-if planeA.type==0
-    d2=abs(planeA.geometricCenter(2)-planeB.geometricCenter(2));
-else
-    if (planeA.planeTilt==0)
-        d2=abs(planeA.geometricCenter(1)-planeB.geometricCenter(1));
+    if planeA.type==0
+        d2=abs(planeA.geometricCenter(2)-planeB.geometricCenter(2));
     else
-        d2=abs(planeA.geometricCenter(3)-planeB.geometricCenter(3));
+        if (planeA.planeTilt==0)
+            d2=abs(planeA.geometricCenter(1)-planeB.geometricCenter(1));
+        else
+            d2=abs(planeA.geometricCenter(3)-planeB.geometricCenter(3));
+        end
     end
+else
+    d2=[];%d2 no puede ser calculado
 end
+
 
 end
 

@@ -58,20 +58,21 @@ if (mode)
     [~,indexes]=unique(rejectedPlanesByFrame,'rows','stable');
     rejectedPlanesByFrame=rejectedPlanesByFrame(indexes,:);
 else
-    for i=1:numberPlanes
-        acceptedPlanesByFrame(i,:)=planesByFrame{i}.getID;
+    for i=1:numberPlanes-1%exclude the ground plane (index 1)
+        acceptedPlanesByFrame(i,:)=planesByFrame{i+1}.getID;
     end
     rejectedPlanesByFrame=[];
 
 end
 
 %% 4. pack planes objects into an struct called mkPlanes. Add properties:  camera pose, accepted planes IDs
-
-myPlanes.(['fr' num2str(frame)]).cameraPose=cameraPose;
 myPlanes.(['fr' num2str(frame)]).values=[];
+myPlanes.(['fr' num2str(frame)]).cameraPose=cameraPose;
 myPlanes.(['fr' num2str(frame)]).acceptedPlanes=acceptedPlanesByFrame;
 myPlanes.(['fr' num2str(frame)]).ground.D=groundD;
 myPlanes.(['fr' num2str(frame)]).ground.n=groundNormal;
+
+
 for i=1:numberPlanes
     myPlanes.(['fr' num2str(frame)]).values=[myPlanes.(['fr' num2str(frame)]).values planesByFrame{i}];
 end
