@@ -3,12 +3,12 @@ close all
 clear
 
 dataSetPath='D:\6DViCuT_p1';
-sessionID=10;
+sessionID=36;
 planeType=0;
-frameHL2=14;
+frameHL2=11;
 % boxID=getPPS(dataSetPath,sessionID,frameHL2);
-boxID=30;
-numberOfSides=3;
+boxID=18;
+numberOfSides=2;
 NpointsDiagTopSide=50;
 
 pc = generateSyntheticPC(boxID,sessionID, ...

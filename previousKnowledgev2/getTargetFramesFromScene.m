@@ -27,6 +27,10 @@ switch(scene)
       frames=[25 26];      
    case 32 
       frames=[24 25];      
+   case 36 
+      frames=[10 11];       
+    case 39 
+      frames=[18 19];        
    case 12 
         frames=[3 4];
    case 21

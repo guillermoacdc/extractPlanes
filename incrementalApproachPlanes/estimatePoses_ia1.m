@@ -6,7 +6,7 @@ function estimatePoses_ia1(sessionID, fileName, planeFilteringParameters, ...
 % merge stage performs a % selection of planes. This selection is based on 
 % criteria of distance % between camera and object, area of the candidates 
 % and intersection over % union metrics. 
-
+disp(['----------computing performance in session ' num2str(sessionID) ' under algorithm 1'])
 %% unzip parameters
 % 2. Parameters used in the stage Assesment Pose 
 NpointsDiagPpal=asessmentPoseParameters(1);

@@ -5,8 +5,8 @@ function [pcBox]=createSingleBoxPC_twoSides(L1,L2,H,spatialSampling)
     xyz=[x(:),y(:),z(:)];
 % 
     % side two of the box
-[x,y,z] = ndgrid(0:spatialSampling:L1,  0,  0:spatialSampling:H);%side 1
-% [x,y,z] = ndgrid(0, 0:spatialSampling:L2,   0:spatialSampling:H);%side 2
+% [x,y,z] = ndgrid(0:spatialSampling:L1,  0,  0:spatialSampling:H);%side 1
+[x,y,z] = ndgrid(0, 0:spatialSampling:L2,   0:spatialSampling:H);%side 2
 % [x,y,z] = ndgrid(L1, 0:spatialSampling:L2,   0:spatialSampling:H);%side 3
 % [x,y,z] = ndgrid(0:spatialSampling:L1,  L2,  0:spatialSampling:H);%side 4
 

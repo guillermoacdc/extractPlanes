@@ -18,6 +18,9 @@ for i=1:N
     H=boxLengths(i,2);
     myPlanes(i)=createPlaneObject_v2(initialPoses(i,:),[L1 L2 H], planeType);
     myPlanes(i).idBox=initialPoses(i,1);
+    if myPlanes(i).idBox==29
+        disp('stop from debugger')
+    end
     myPlanes(i).idFrame=0;
     myPlanes(i).idPlane=i;
     myPlanes(i).idScene=scene;

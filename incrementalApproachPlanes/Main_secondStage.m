@@ -6,9 +6,9 @@ close all
 clear
 
 %% setting sessions to process and sequence of processment
-randomV=[1 2 1 1 2 2 1 2 2 1 2 2 1 1 1 ];% missing 2 1 2
+randomV=[1 2 1 1 2 2 1 2 2 1 2 2 1 1 1 2 ];% missing 2 1 2
 % low occlussion scenes
-sessionsID=[3	10	12	13	17	19	20	25	27	32	33	45	52	53	54];% missing: 35 36 39
+sessionsID=[3	10	12	13	17	19	20	25	32	33	35 36 45	52	53	54];% missing: 39
 Ns=size(sessionsID,2);
 %% setting parameters
 % 1. Plane filtering parameters

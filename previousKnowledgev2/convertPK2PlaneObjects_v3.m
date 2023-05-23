@@ -8,7 +8,13 @@ function planeDescriptor = convertPK2PlaneObjects_v3(rootPath,scene,planeType, f
 
 Nb=length(boxID);
 % load inital poses
-initialPoses=loadInitialPose(rootPath,scene,frameHL2);%sorted in pps
+% initialPoses=loadInitialPose(rootPath,scene,frameHL2);%sorted in pps
+initialPoses_obj=loadInitialPose_v3(rootPath,scene,frameHL2,0);%sorted in pps
+Nobj=size(initialPoses_obj,2);
+initialPoses=zeros(Nobj,13);
+for i=1:Nobj
+    initialPoses(i,1:end)=unassemblyTMatrix(initialPoses_obj(i));
+end
 % filter initial poses by boxID
 pps=getPPS(rootPath,scene,frameHL2);
 indexBoxID=find(pps==boxID);

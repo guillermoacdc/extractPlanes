@@ -1,18 +1,20 @@
+
 clc
 close all
 clear
 
 
 % rootPath="G:\Mi unidad\boxesDatabaseSample\";
-rootPath="D:\6DViCuT_p1";
+scene=39;
+rootPath=computeMainPaths(scene);
 NpointsDiagTopSide=50;
 numberOfSides=3;
 groundFlag=false;
-scene=10;
+
 frameID=1;
 planeType=0;
 
-% boxID=[17];%For plottin a subset of boxes, put the boxID that you want to plot
+% boxID=[18];%For plottin a subset of boxes, put the boxID that you want to plot
 % frames = getTargetFramesFromScene(scene);
 % idxBoxes=getIDxBoxes(rootPath,scene, boxID);
 idxBoxes=getIDxBoxes(rootPath,scene);

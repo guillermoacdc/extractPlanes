@@ -9,7 +9,7 @@ function estimatePoses_ia2(sessionID, fileName, planeFilteringParameters, ...
 % properties, (3) the managmente of a % buffer to keep the record of 
 % components in new pointclouds/planes, (4) the delete of components in 
 % global planes after a time window. First version of temporalPlanesFiltering
-
+disp(['----------computing performance in session ' num2str(sessionID) ' under algorithm 2'])
 %% unzip parameters
 % 2. Parameters used in the stage Assesment Pose 
 NpointsDiagPpal=asessmentPoseParameters(1);
