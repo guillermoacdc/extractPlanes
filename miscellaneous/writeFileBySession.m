@@ -1,7 +1,7 @@
 function writeFileBySession(sessionID,dataPath,fileName,dataToWrite)
 %WRITEFILEBYSESSION Summary of this function goes here
 %   Detailed explanation goes here
-
+% dataToWrite must be a table object
 
 %% create folder
 % save the current path
@@ -24,8 +24,8 @@ existFlag=exist(filePath, 'file');
 
 if ~existFlag
 %     write with header
-%     writetable(dataToWrite,filePath,'WriteRowNames',true)
-    writematrix(dataToWrite,filePath)
+    writetable(dataToWrite,filePath,'WriteRowNames',true)
+%     writematrix(dataToWrite,filePath)
 else
 %     write without header
     writetable(dataToWrite,filePath,'WriteMode','Append',...

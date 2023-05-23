@@ -1,36 +1,48 @@
 clc
 close all
 clear all
+
+scene=39;
+boxIDref=13;
 % path to extracted planes
-processedScenesPath='G:\Mi unidad\semestre 9\HighOcclusionScenes_processed';
+% processedScenesPath='G:\Mi unidad\semestre 9\HighOcclusionScenes_processed';
 % processedScenesPath='G:\Mi unidad\semestre 9\MediumOcclusionScenes_processed';
-% processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 % path to intiail value pose T_initialValue
 T_initialValue=load("G:\Mi unidad\boxesDatabaseSample\corrida20\Th2m.txt");
 % rootPath
-rootPath="G:\Mi unidad\boxesDatabaseSample\";
-
+% rootPath="G:\Mi unidad\boxesDatabaseSample\";
+rootPath=computeMainPaths(scene);
 flagGroundPlane=false;
-scene=21;
-boxIDref=19;
+
 frames = getTargetFramesFromScene(scene);
 idxBoxes=getIDxBoxes(rootPath,scene, boxIDref);
 
-frame=frames(1);
+frame=frames(2);
 % path to point cloud from HL2 sensors
 % pathData=[rootPath + '\scene' + num2str(scene) + '\inputFrames\frame' + num2str(frame) + '.ply'];
-pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
-
-
+% pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
+fileName=['frame'  num2str(frame)  '.ply'];
+pathPoints=fullfile(rootPath, ['session' num2str(scene)], 'filtered', 'HL2', 'PointClouds', fileName );
+% D:\6DViCuT_p1\session36\filtered\HL2\PointClouds
 gridStep=1;
 %% Generate synthetic model points
 spatialSampling=10;
 numberOfSides=2;
+NpointsDiagTopSide=90;
+planeType=0;
 % groundFlag=true;
 % [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
 %     scene,spatialSampling,numberOfSides,flagGroundPlane, idxBoxes);
-[pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
-    scene,spatialSampling,numberOfSides,flagGroundPlane, idxBoxes, 0);
+% [pcmodel, planeDescriptor_gt, Nboxes] = generateSyntheticModelForScene(rootPath, ...
+%     scene,numberOfSides,flagGroundPlane, idxBoxes, frame, 30, 0);
+[pcmodel, planeDescriptor_gt] = generateSyntheticPC(boxIDref,scene, ...
+    numberOfSides, frame, NpointsDiagTopSide, planeType, rootPath);
+Nboxes=size(planeDescriptor_gt.fr0.values,2);
+
+% generateSyntheticModelForScene(rootPath, ...
+%     scene,numberOfSides,groundFlag,idxBoxes,frameHL2, NpointsDiagTopSide, planeType)
+
 figure,
 hold on
 pcshow(pcmodel)
@@ -67,7 +79,7 @@ ylabel 'y'
 zlabel 'z'
 grid on
 title (['pc from HL2 scene/frame ' num2str(scene) '/' num2str(frame)])
-return
+
 %% Running the ICP-algorithm. Least squares criterion
 data=double(data)';
 model=pcmodel.Location';
@@ -103,8 +115,10 @@ return
 % (Ticp) into a single transformation and saving in disk
 Tout=Ticp*Tm_h;
 Toutxt=[Tout(1,[1:4]) Tout(2,[1:4]) Tout(3,[1:4]) res];
-fileName=([rootPath + [ 'corrida' num2str(scene) '\Th2m.txt'] ]);
-fid=fopen(fileName,'w');
+% fileName=([rootPath + [ 'session' num2str(scene) '\Th2m.txt'] ]);
+outputFileName='Th2m.txt';
+filePath=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName)
+fid=fopen(filePath,'w');
     fprintf(fid,'%1.4f ',Toutxt);
 fclose(fid);
 res

@@ -5,16 +5,23 @@ clear all
 % scene=51;%
 % frame=6;
 
-scene=21;%
-frame=32;
+scene=39;%
+frame=19;
+% 1. Plane filtering parameters
+th_angle=15*pi/180;%radians
+th_size=150;%number of points
+th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
+th_occlusion=1.4;%
+D_Tolerance=0.1*1000;%mm ... 0.1 m
+planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 
-% rootPath="C:\lib\boxTrackinPCs\";
-rootPath="G:\Mi unidad\boxesDatabaseSample\";
-processedScenesPath='G:\Mi unidad\semestre 9\HighOcclusionScenes_processed';
-% processedScenesPath='G:\Mi unidad\semestre 9\MediumOcclusionScenes_processed';
-% processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+% 2. paths parameteres
+rootPath=computeMainPaths(scene);
+processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 
-localPlanes=detectPlanes(rootPath,scene,frame,processedScenesPath);
+% localPlanes=detectPlanes(rootPath,scene,frame,processedScenesPath);
+localPlanes=loadExtractedPlanes(rootPath,scene,frame,...
+        processedScenesPath, planeFilteringParameters);%returns a struct with a property frx - h world
 allPlanes=localPlanes.(['fr' num2str(frame)]).acceptedPlanes;
 [xzPlanes, xyPlanes, zyPlanes] = extractTypes(localPlanes, allPlanes);
 idPlane=3;
@@ -29,7 +36,8 @@ hold on
 dibujarsistemaref(Tc,'h',0.5,2,10,'w')
 title (['boxes detected in scene/frame ' num2str(scene) '/' num2str(frame)])
 return
-acceptedPlanes=[frame 3; frame 7];
+
+acceptedPlanes=[frame 3; frame 10];
 flagGroundPlane=false;
 gridStep=1;
 pc_h = fusePointCloudsFromDetectedPlanes_v2(localPlanes,gridStep, flagGroundPlane, acceptedPlanes);
@@ -39,6 +47,9 @@ xlabel 'x'
 ylabel 'y'
 zlabel 'z'
 title ('fused version in a single point cloud')
+
+
+
 % filename=['pcFused_s' num2str(scene) '_b' num2str()]
 % save(filename,pc_h)
 
