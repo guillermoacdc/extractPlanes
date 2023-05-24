@@ -79,6 +79,9 @@ for i=1:Nframes
     gtPlanes=loadInitialPose_v3(dataSetPath,sessionID,frameID,syntheticPlaneType);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, planeFilteringParameters);%returns a struct with a property frx - h world
+%     compute number of non accepted planes by local frame
+    Nnap=size(estimatedPlanesfr.(['fr' num2str(frameID)]).values,2)-size(estimatedPlanesfr.(['fr' num2str(frameID)]).acceptedPlanes,1);
+    estimatedPoses.(['frame' num2str(frameID)]).Nnap=Nnap;    
 %% extract target identifiers based on type of plane
     estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,estimatedPlaneType);
 

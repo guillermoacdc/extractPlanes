@@ -1,4 +1,4 @@
-function localPlanes=loadExtractedPlanes(rootPath,scene,frames, processedScenesPath, tresholdsV, PKFlag)
+function [localPlanes]=loadExtractedPlanes(rootPath,scene,frames, processedScenesPath, tresholdsV, PKFlag)
 % This function load extracted planes per frame and its properties, classify those 
 % planes comparing properties with thresholds and pack the classified data 
 % into a cell of objects (localPlanes). The function also loads the camera 

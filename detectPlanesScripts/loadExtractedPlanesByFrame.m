@@ -65,7 +65,7 @@ else
 
 end
 
-%% 4. pack planes objects into an struct called mkPlanes. Add properties:  camera pose, accepted planes IDs
+%% 4. pack planes objects into an struct called myPlanes. Add properties:  camera pose, accepted planes IDs
 myPlanes.(['fr' num2str(frame)]).values=[];
 myPlanes.(['fr' num2str(frame)]).cameraPose=cameraPose;
 myPlanes.(['fr' num2str(frame)]).acceptedPlanes=acceptedPlanesByFrame;
