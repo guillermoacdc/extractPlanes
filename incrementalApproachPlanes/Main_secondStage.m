@@ -6,9 +6,11 @@ close all
 clear
 
 %% setting sessions to process and sequence of processment
-randomV=[1 2 1 1 2 2 1 2 2 1 2 2 1 1 1 2 ];% missing 2 1 2
+randomV=[1 2 1 1 2 2 1 2 1 2 2 2 1 1 1 2 2 1];% missing 
+
 % low occlussion scenes
-sessionsID=[3	10	12	13	17	19	20	25	32	33	35 36 45	52	53	54];% missing: 39
+sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
+
 Ns=size(sessionsID,2);
 %% setting parameters
 % 1. Plane filtering parameters
@@ -42,12 +44,13 @@ Npt=size(planeTypes,2);
 planeModelParameters(1) =   12;% maxDistance in mm
 
 
-fileName1=['estimatedPoses_ia1_planeType' num2str(planeType) '.json'];
-fileName2=['estimatedPoses_ia2_planeType' num2str(planeType) '.json'];
+
 for i=1:Ns
     sessionID=sessionsID(i);
     for j=1:Npt
         planeType=planeTypes(j);
+        fileName1=['estimatedPoses_ia1_planeType' num2str(planeType) '.json'];
+        fileName2=['estimatedPoses_ia2_planeType' num2str(planeType) '.json'];
         if randomV(i)==1
             estimatePoses_ia1(sessionID, fileName1, planeFilteringParameters, ...
                 asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...

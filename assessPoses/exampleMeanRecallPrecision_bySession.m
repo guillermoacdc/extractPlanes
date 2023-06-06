@@ -4,18 +4,18 @@ clc
 close all
 clear
 %% parameters
-algorithm=1;
-sessionID=10;
-[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-% theta_v=0.1:0.1:0.5;
-theta=0.5;
 
+sessionID=35;
+[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
+
+algorithm=2;
+planeType=0;
+
+theta=0.5;
 tao=50;
-if algorithm==1
-    fileName='estimatedPoses_ia1.json';
-else
-    fileName='estimatedPoses_ia2.json';
-end
+
+fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
+
 %% compute recall by theta for all keyframes
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);

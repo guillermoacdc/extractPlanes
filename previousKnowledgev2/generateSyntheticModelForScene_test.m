@@ -5,7 +5,7 @@ clear
 
 
 % rootPath="G:\Mi unidad\boxesDatabaseSample\";
-scene=39;
+scene=35;
 rootPath=computeMainPaths(scene);
 NpointsDiagTopSide=50;
 numberOfSides=3;

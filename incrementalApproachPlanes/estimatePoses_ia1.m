@@ -126,14 +126,14 @@ end
 % write json file to disk
 
 mySaveStruct2JSONFile(estimatedPoses,fileName,evalPath,sessionID);
-figure,
-    myPlotPlanes_v3(globalPlanes,1);
-    title(['global planes  in frame ' num2str(frameID)])
+% figure,
+%     myPlotPlanes_v3(globalPlanes,1);
+%     title(['global planes  in frame ' num2str(frameID)])
 return 
 
-figure,
-    myPlotPlanes_v3(localPlanes,0);
-    title(['local planes in frame ' num2str(frameID)])
+% figure,
+%     myPlotPlanes_v3(localPlanes,0);
+%     title(['local planes in frame ' num2str(frameID)])
 % 
 
 % 

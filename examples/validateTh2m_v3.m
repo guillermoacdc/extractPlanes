@@ -3,7 +3,7 @@ close all
 clear all
 
 % _v3: consuming data form 6dViCuT path
-scene=39;
+scene=27;
 
 % 1. Plane filtering parameters
 th_angle=15*pi/180;%radians

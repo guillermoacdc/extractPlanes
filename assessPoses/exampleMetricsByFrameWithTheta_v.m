@@ -2,18 +2,21 @@ clc
 close all
 clear
 
-algorithm=1;
-sessionID=10;
+sessionID=13;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-theta_v=0.1:0.1:0.5;
+algorithm=1;
+planeType=0;
+
+% theta_v=0.1:0.1:0.5;
+theta_v=0.5;
 Ntheta=length(theta_v);
 tao=50;
 
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 % keyFrames=keyFrames(8:24);
 
-initKeyFrame=150;
-keyFramesT=initKeyFrame:initKeyFrame+5;
+initKeyFrame=50;
+keyFramesT=initKeyFrame:initKeyFrame+7;
 % keyFramesT=360:1:365;
 Nkft=length(keyFramesT);
 indexkfT=zeros(Nkft,1);
@@ -23,11 +26,7 @@ end
 
 
 % read json file
-if algorithm==1
-    fileName='estimatedPoses_ia1_v2.json';
-else
-    fileName='estimatedPoses_ia2_v2.json';
-end
+fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
 
 
 jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
@@ -37,20 +36,20 @@ jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     fclose(fid); 
     estimatedPoses = jsondecode(str);
 
-% DP_v=zeros(Nkft,Ntheta);
-% DPm_v=zeros(Nkft,Ntheta);
 precision_v=zeros(Nkft,Ntheta);
 recall_v=zeros(Nkft,Ntheta);
 
 for i=1:Nkft
     frameID=keyFrames(indexkfT(i));
+    disp(['processin frame ' num2str(frameID)])
     pps=getPPS(dataSetPath,sessionID,frameID);
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
     for j=1:Ntheta
         theta=theta_v(j);
         if ~isempty(estimatedPose)
-            [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
+%             [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
+            [precision, recall] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps);
         else
             continue
         end

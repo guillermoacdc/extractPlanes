@@ -4,12 +4,13 @@ clear
 
 
 % low occlussion scenes
-sessionsID=[3	10	12	13	17	19	20	25	27	32	33	45	52	53	54];% missing: 35 36 39
+sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=[3 10];
 AlgorithmIDs=[1 2];
+planeType=0;% use 0 for top planes, 1 for planes perpendicular to ground
 % parameters
 [~,pathToWrite,~] = computeMainPaths(1);
-fileName='metricsForLowOccSessions_mean.csv';
+fileName=['metricsForLowOccSessions_planeType' num2str(planeType) '_mean.csv'];
 
 Ns=size(sessionsID,2);
 Na=size(AlgorithmIDs,2);
@@ -20,7 +21,7 @@ for i=1:Ns
         algorithm=AlgorithmIDs(j);
         disp(['computing metrics in algorithm/session ' num2str(algorithm) '/' num2str(sessionID)  ])
         [precision, recall, f1_score, keyFrames] = computeMetricsBySession(sessionID, ...
-            algorithm);        
+            algorithm, planeType);        
 %         write to a csv file with option of add elements
         Nkf=length(keyFrames);
         

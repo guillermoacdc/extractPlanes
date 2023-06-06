@@ -1,15 +1,12 @@
-function [precision_v, recall_v, f1_score_v, keyFrames] = computeMetricsBySession(sessionID,algorithm)
+function [precision_v, recall_v, f1_score_v, keyFrames] = computeMetricsBySession(sessionID,algorithm, planeType)
 %COMPUTEMETRICSBYSESSION Summary of this function goes here
 %   Detailed explanation goes here
 [dataSetPath,evalPath,~] = computeMainPaths(sessionID);
 theta=0.5;
 tao=50;
 
-if algorithm==1
-    fileName='estimatedPoses_ia1.json';
-else
-    fileName='estimatedPoses_ia2.json';
-end
+
+fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
 %% compute recall by theta for all keyframes
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);
@@ -26,7 +23,12 @@ for i=1:Nkf
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
         if ~isempty(estimatedPose)
-            [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
+            if planeType==0
+                [precision, recall] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps);
+            else
+                [precision, recall] = computeMetricsByFrame_lateralPlanes(estimatedPose,theta,tao, pps);
+            end
+            
         else
             continue
         end
