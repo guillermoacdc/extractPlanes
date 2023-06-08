@@ -1,9 +1,14 @@
-function [precision, recall, matchID] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps)
+function [precision, recall, matchID] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps, pkflag)
 %COMPUTEMETRICSBYFRAME Computes precision and recall in a single frame. The
 %frame is described in the input estimatedPose. The computation is
 %parametrized with the thresholds theta and tao
 % Assumption: estimated pose is not empty
 % 
+
+if nargin<5
+    pkflag=0;
+end
+
 Nb=length(pps);%number of boxes in the frame
 % computes relationship between planeID and boxID. Note that planeID has
 % two dimensions, then matchID has three columns
@@ -40,6 +45,11 @@ TPR=DP-length(zeroElements);
 % compute True Positive (TP)
 TP=TPR-redundantRep;
 recall=TP/Nb;
-precision=TPR/DP;
+if pkflag==1
+    precision=TPR/DP;
+else
+    precision=TPR/(DP+estimatedPose.Nnap);%add number of non-acepted planes to denominator
+end
+
 end
 

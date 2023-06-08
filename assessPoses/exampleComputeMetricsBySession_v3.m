@@ -8,9 +8,10 @@ sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];%
 % sessionsID=[3 10];
 AlgorithmIDs=[1 2];
 planeType=0;% use 0 for top planes, 1 for planes perpendicular to ground
+pkflag=0;%previous knowledge flag. Use 1 to enable previous knowledge
 % parameters
 [~,pathToWrite,~] = computeMainPaths(1);
-fileName=['metricsForLowOccSessions_planeType' num2str(planeType) '_mean.csv'];
+fileName=['metricsForLowOccSessions_planeType' num2str(planeType) '_pkFlag' num2str(pkflag) '_mean.csv'];
 
 Ns=size(sessionsID,2);
 Na=size(AlgorithmIDs,2);
@@ -20,11 +21,11 @@ for i=1:Ns
     for j=1:Na
         algorithm=AlgorithmIDs(j);
         disp(['computing metrics in algorithm/session ' num2str(algorithm) '/' num2str(sessionID)  ])
-        [precision, recall, f1_score, keyFrames] = computeMetricsBySession(sessionID, ...
-            algorithm, planeType);        
+        [precision, recall, f1_score, keyFrames, processingTimeByFrame] = computeMetricsBySession(sessionID, ...
+            algorithm, planeType, pkflag);        
 %         write to a csv file with option of add elements
         Nkf=length(keyFrames);
-        
+        processingTimeByFrame_mean=mean(processingTimeByFrame,"omitnan");
         precision_mean=mean(precision);
         precision_std=std(precision);
         recall_mean=mean(recall);
@@ -36,7 +37,7 @@ for i=1:Ns
         frame_max=max(keyFrames);
         dataTable=table(sessionID, algorithm, precision_mean,...
             precision_std, recall_mean, recall_std, f1score_mean,...
-            f1score_std, NumberOfFrames, frame_min, frame_max);
+            f1score_std, NumberOfFrames, frame_min, frame_max, processingTimeByFrame_mean);
         
         writeFileBySession(0,pathToWrite,fileName,dataTable)%sessionID is fixed to save all data in a single file
     end

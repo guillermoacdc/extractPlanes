@@ -7,7 +7,7 @@ clear
 % 1. define parameters: number of marker, number of scene, rootPath
 % rootPath="C:\lib\boxTrackinPCs\";
 rootPath="G:\Mi unidad\boxesDatabaseSample";
-scene=40;
+scene=8;
 append=computeAppend(scene);
 fileName=['corrida' num2str(scene) '-00' num2str(append)];
 markerIDs=[0 3 4 5 6];%markers associated with the HL2

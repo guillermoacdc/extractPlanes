@@ -1,9 +1,15 @@
-function [precision, recall] = computeMetricsByFrame_lateralPlanes(estimatedPose,theta,tao, pps)
+function [precision, recall, matchID] = computeMetricsByFrame_lateralPlanes(estimatedPose,theta,tao, pps, pkflag)
 %COMPUTEMETRICSBYFRAME Computes precision and recall in a single frame. The
 %frame is described in the input estimatedPose. The computation is
 %parametrized with the thresholds theta and tao
 % Assumption: estimated pose is not empty
 % 
+
+if nargin<5
+    pkflag=0;
+end
+
+
 Nb=length(pps)*4;%number of gt planes in scene at frame
 % computes relationship between estimatedPlaneID and gtPlaneID. Note that 
 % estimatedPlaneID has two dimensions, gtPlaneID has two dimensions, then 
@@ -44,6 +50,12 @@ TPR=DP-length(zeroElements);
 % compute True Positive (TP)
 TP=TPR-redundantRep;
 recall=TP/Nb;
-precision=TPR/DP;
+% precision=TPR/DP;
+if pkflag==1
+    precision=TPR/DP;
+else
+    precision=TPR/(DP+estimatedPose.Nnap);%add number of non-acepted planes to denominator
+end
+
 end
 

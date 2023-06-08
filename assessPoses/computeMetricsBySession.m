@@ -1,4 +1,5 @@
-function [precision_v, recall_v, f1_score_v, keyFrames] = computeMetricsBySession(sessionID,algorithm, planeType)
+function [precision_v, recall_v, f1_score_v, keyFrames, processingTimeByFrame] = computeMetricsBySession(sessionID,...
+    algorithm, planeType, pkflag)
 %COMPUTEMETRICSBYSESSION Summary of this function goes here
 %   Detailed explanation goes here
 [dataSetPath,evalPath,~] = computeMainPaths(sessionID);
@@ -16,20 +17,28 @@ estimatedPoses = loadEstimationsFile(fileName,sessionID, evalPath);
 %initialize variables
 precision_v=zeros(Nkf,1);
 recall_v=zeros(Nkf,1);
+processingTimeByFrame=zeros(Nkf,1);
 f1_score_v=zeros(Nkf,1);
 for i=1:Nkf
     frameID=keyFrames(i);
     pps=getPPS(dataSetPath,sessionID,frameID);
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
+%     if i==297
+%         disp('stop')
+%     end
+%     disp(['i= ' num2str(i) '. Processin Time: ' num2str(estimatedPose.ProcessingTime)])
+    
         if ~isempty(estimatedPose)
+            processingTimeByFrame(i)=estimatedPose.ProcessingTime;
             if planeType==0
-                [precision, recall] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps);
+                [precision, recall] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps, pkflag);
             else
-                [precision, recall] = computeMetricsByFrame_lateralPlanes(estimatedPose,theta,tao, pps);
+                [precision, recall] = computeMetricsByFrame_lateralPlanes(estimatedPose,theta,tao, pps, pkflag);
             end
             
         else
+            processingTimeByFrame(i)=NaN;%non defined time. Compute mean with  y = nanmean( X )
             continue
         end
         precision_v(i)=precision;
