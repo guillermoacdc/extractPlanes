@@ -6,6 +6,7 @@ close all
 clear 
 
 sessionsID=[1 2];
+% sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 Ns=size(sessionsID,2);
 speed=zeros(Ns,2);%mean value in column 1, std value in column 2
 dataSetPath=computeMainPaths(1);
@@ -14,17 +15,20 @@ for j=1:Ns
     % load time and position data
     HL2folderPath=fullfile(dataSetPath, ['session' num2str(sessionID)],'raw','HL2');
     [timeStampsHL2_ts_array, poseMatrix]=loadTimeStampsAndPoseHL2(HL2folderPath);% to convert timestamp to seconds multiply by 1e-7
-    [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix);
+    keyframes=loadKeyFrames(dataSetPath,sessionID);
+    [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes);
+    
     speed(j,:)=[speed_mean, speed_std];
 end
 
-    
+    [sessionsID', speed]
     
 return
 
-function [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix)
+function [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes)
     % compute speed
     N=size(timeStampsHL2_ts_array,1);
+    Nkf=size(keyframes,2);
     speed_array=zeros(N-1,1);
     for i=1:N-1
         deltaTime=(timeStampsHL2_ts_array(i+1)-timeStampsHL2_ts_array(i))*1e-7;%seconds
@@ -33,12 +37,15 @@ function [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix
         modPosition=norm(T2(1:3,4)-T1(1:3,4));%mt
         speed_array(i)=modPosition/deltaTime;
     end
-    window=round(N/10);%window to remove samples at init and end of the session
-    speed_mean=mean(speed_array(window: end-window));
-    speed_std=std(speed_array(window: end-window));
+    speed_array=speed_array(keyframes);%
+%     window=round(N/10);%window to remove samples at init and end of the session
+%     speed_mean=mean(speed_array(window: end-window));
+%     speed_std=std(speed_array(window: end-window));
+    speed_mean=mean(speed_array);
+    speed_std=std(speed_array);
 % plot data    
 xmin=0;
-xmax=N-1;
+xmax=Nkf-1;
 
 figure,
     plot(speed_array)
@@ -47,7 +54,7 @@ figure,
     xlabel ('time in seconds')
     ylabel ('speed m/s')
     axis tight
-    title (['operator speed mean/std:'  num2str(speed_mean) '/' num2str(speed_std) '. offsetw = ' num2str(window) ' samples'])
+    title (['operator speed mean/std:'  num2str(speed_mean) '/' num2str(speed_std) ])
     grid    
 end
 
