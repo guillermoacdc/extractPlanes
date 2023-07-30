@@ -2,13 +2,13 @@ clc
 close all
 clear
 
-sessionID=13;
+sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-algorithm=2;
+algorithm=2;%wpk_algorithm
 planeType=0;
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 targetFrames=keyFrames;
-% targetFrames=599:614;
+% targetFrames=keyFrames(246:276);%frames 728 a 758
 % targetFrames=50:57;
 
 theta=0.5;
@@ -40,6 +40,9 @@ k=1;
 for i=1:Ntf
     frameID=keyFrames(indexkfT(i));
     disp(['processing frame ' num2str(frameID)])
+    if frameID==20
+        disp('stop the world')
+    end
     pps=getPPS(dataSetPath,sessionID,frameID);
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
@@ -75,8 +78,8 @@ xticklabels(targetFrames)
 colormap(gray(2))
 % adjust ticklabels away from axes
 axis ij
-axis square
+% axis square
 xlabel 'frames'
-ylabel (['box ID in PPS. ' num2str(Npps) ' boxes'])
-title 'Trends of detected boxes by frame'
+ylabel (['plane segment ID in PPS. ' num2str(Npps) ' boxes'])
+title (['Detected objects in session ' num2str(sessionID) ' with algorithm wpk' num2str(algorithm)])
 
