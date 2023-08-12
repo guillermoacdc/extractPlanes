@@ -3,16 +3,18 @@ close all
 clear all
 
 scene=3;
-boxIDref=14;
-% path to extracted planes
-% processedScenesPath='G:\Mi unidad\semestre 9\HighOcclusionScenes_processed';
-% processedScenesPath='G:\Mi unidad\semestre 9\MediumOcclusionScenes_processed';
-processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+boxIDref=19;
 % path to intiail value pose T_initialValue
-T_initialValue=load("G:\Mi unidad\boxesDatabaseSample\corrida20\Th2m.txt");
+
+% T_initialValue=load("G:\Mi unidad\boxesDatabaseSample\corrida20\Th2m.txt");
+
+T_initialValue=load("D:\6DViCuT_p1\updatedGTPoses\session3\analyzed\Th2m.txt");
 % rootPath
 % rootPath="G:\Mi unidad\boxesDatabaseSample\";
-rootPath=computeMainPaths(scene);
+[rootPath,evalPath,processedScenesPath] =computeMainPaths(scene);
+% fileNameT='Th2m_vc.txt';
+% T_initialValue=fullfile(rootPath,'updatedGTPoses',...
+%     ['session' num2str(scene)],'analyzed', fileNameT);
 flagGroundPlane=false;
 
 frames = getTargetFramesFromScene(scene);
@@ -20,15 +22,13 @@ idxBoxes=getIDxBoxes(rootPath,scene, boxIDref);
 
 frame=frames(2);
 % path to point cloud from HL2 sensors
-% pathData=[rootPath + '\scene' + num2str(scene) + '\inputFrames\frame' + num2str(frame) + '.ply'];
-% pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
 fileName=['frame'  num2str(frame)  '.ply'];
-pathPoints=fullfile(rootPath, ['session' num2str(scene)], 'filtered', 'HL2', 'PointClouds', fileName );
-% D:\6DViCuT_p1\session36\filtered\HL2\PointClouds
+pathPoints=fullfile(rootPath, ['session' num2str(scene)],...
+    'filtered', 'HL2', 'PointClouds', fileName );
 gridStep=1;
 %% Generate synthetic model points
 spatialSampling=10;
-numberOfSides=2;
+numberOfSides=3;
 NpointsDiagTopSide=90;
 planeType=0;
 % groundFlag=true;
@@ -61,7 +61,8 @@ title (['synthetic pc from scene ' num2str(scene)])
 % fusion two consecutive frames in their accepted planes version
 % pc_h = pcmerge(pc_singleFrame{1},pc_singleFrame{2},gridStep);
 % load pc_h from disk
-pcfileName=['pcFused_s' num2str(scene) '_b' num2str(boxIDref)];
+% pcfileName=['pcFused_s' num2str(scene) '_b' num2str(boxIDref)];
+pcfileName=['pcFused_s' num2str(scene) '_b' num2str(boxIDref) '_3s'];
 load (pcfileName)
 Tm_h=assemblyTmatrix(T_initialValue);
 pc_m=myProjection_v3(pc_h,Tm_h);
@@ -117,7 +118,7 @@ Tout=Ticp*Tm_h;
 Toutxt=[Tout(1,[1:4]) Tout(2,[1:4]) Tout(3,[1:4]) res];
 % fileName=([rootPath + [ 'session' num2str(scene) '\Th2m.txt'] ]);
 outputFileName='Th2m.txt';
-filePath=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName)
+filePath=fullfile(rootPath,'updatedGTPoses',[ 'session' num2str(scene)],'analyzed',outputFileName)
 fid=fopen(filePath,'w');
     fprintf(fid,'%1.4f ',Toutxt);
 fclose(fid);

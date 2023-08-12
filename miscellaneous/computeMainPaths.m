@@ -18,16 +18,19 @@ if (f=='/')%linux
             PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/HighOcclusionScenes_processed';
     end
 else %windows
-    evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder';
+%     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder';
+%     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
+    evalPath='D:\doctorado\evalFolder';
     dataSetPath='D:\6DViCuT_p1';
     
     switch (typeOfSession)
         case 1
-            PCpath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+%             PCpath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+            PCpath='D:\6DViCuT_p1\processedPCs\lowOcclusionScenes_processed';
         case 2
-            PCpath='G:\Mi unidad\semestre 9\MediumOcclusionScenes_processed';
+            PCpath='D:\6DViCuT_p1\processedPCs\MediumOcclusionScenes_processed';
         case 3
-            PCpath='G:\Mi unidad\semestre 9\HighOcclusionScenes_processed';
+            PCpath='D:\6DViCuT_p1\processedPCs\HighOcclusionScenes_processed';
     end
     
 end

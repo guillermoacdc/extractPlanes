@@ -5,7 +5,7 @@ clear all
 % scene=51;%
 % frame=6;
 
-scene=39;%
+scene=3;%
 frame=19;
 % 1. Plane filtering parameters
 th_angle=15*pi/180;%radians
@@ -16,8 +16,8 @@ D_Tolerance=0.1*1000;%mm ... 0.1 m
 planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 
 % 2. paths parameteres
-rootPath=computeMainPaths(scene);
-processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+[rootPath,evalPath,processedScenesPath] =computeMainPaths(scene);
+% processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 
 % localPlanes=detectPlanes(rootPath,scene,frame,processedScenesPath);
 localPlanes=loadExtractedPlanes(rootPath,scene,frame,...
@@ -37,7 +37,7 @@ dibujarsistemaref(Tc,'h',0.5,2,10,'w')
 title (['boxes detected in scene/frame ' num2str(scene) '/' num2str(frame)])
 return
 
-acceptedPlanes=[frame 3; frame 10];
+acceptedPlanes=[frame 7; frame 3; frame 11];
 flagGroundPlane=false;
 gridStep=1;
 pc_h = fusePointCloudsFromDetectedPlanes_v2(localPlanes,gridStep, flagGroundPlane, acceptedPlanes);

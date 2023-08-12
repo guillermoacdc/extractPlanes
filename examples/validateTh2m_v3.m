@@ -1,9 +1,9 @@
 clc
 close all
-clear all
+clear 
 
 % _v3: consuming data form 6dViCuT path
-scene=27;
+scene=3;
 
 % 1. Plane filtering parameters
 th_angle=15*pi/180;%radians
@@ -14,12 +14,13 @@ D_Tolerance=0.1*1000;%mm ... 0.1 m
 planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 
 % 2 path parameters
-processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+% processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
+processedScenesPath='D:\6DViCuT_p1\processedPCs\lowOcclusionScenes_processed';
 rootPath=computeMainPaths(scene);
 
 flagGroundPlane=false;
 outputFileName='Th2m.txt';
-pathInitValue=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName)
+pathInitValue=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName);
 % pathInitValue=['G:\Mi unidad\boxesDatabaseSample\corrida' num2str(scene) '\Th2m.txt'];
 T_initialValue=load(pathInitValue);
 

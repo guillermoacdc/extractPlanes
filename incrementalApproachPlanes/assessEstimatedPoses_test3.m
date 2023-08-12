@@ -4,7 +4,7 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=3;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 fileName='estimatedPoses_ia1.json';
 
@@ -44,7 +44,7 @@ for i=1:Nframes
     gtPoses=loadInitialPose(dataSetPath,sessionID,frameID);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
         PCpath, tresholdsV);%returns a struct with a property frx - h world
-    if frameID==27
+    if frameID==5
         disp("stop mark")
     end
     % extract target identifiers based on type of plane
@@ -66,11 +66,11 @@ for i=1:Nframes
 % perform the merge        
         globalPlanes=mergeIntoGlobalPlanes(localPlanes,globalPlanesPrevious,tao_merg,theta_merg);%h-world
 % project estimated poses to qm and compute estimatedPoses struct. The rest of properties is kept
-        globalPlanes_t=clonePlaneObject(globalPlanes);
-        estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
-        estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
-            sessionID,frameID,estimatedGlobalPlanesID,tao_v,evalPath,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses);
+%         globalPlanes_t=clonePlaneObject(globalPlanes);
+%         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
+%         estimatedPoses=computeEstimatedPosesStruct(globalPlanes_t,gtPoses,...
+%             sessionID,frameID,estimatedGlobalPlanesID,tao_v,evalPath,dataSetPath,...
+%             NpointsDiagPpal,estimatedPoses);
 
     end
 
@@ -85,9 +85,10 @@ figure,
     
 
 figure,
-    myPlotPlanes_v3(localPlanes,0);
+    myPlotPlanes_v3(localPlanes,1);
     title(['local planes in frame ' num2str(frameID)])
-
+    hold on
+    dibujarsistemaref(eye(4),'h',200,2,10,'b')
 figure,
     myPlotPlanes_v3(globalPlanesPrevious,0);
     title(['global planes previous in frame ' num2str(frameID)])

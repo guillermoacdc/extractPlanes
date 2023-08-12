@@ -62,6 +62,10 @@ for i=1:Nframes
     radii=computeRaddi(dataSetPath,sessionID,frameID,estimatedPlaneType);%use of pps
     logtxt=['Assessing detections in frame ' num2str(frameID) ' with radii ' num2str(radii) ' mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
+%     disp(i, frameID, size(localPlanes), size(globalPlanes), size(particlesVector))
+    if  i==17
+        disp("stop mark")
+    end
 %%     writeProcessingState(logtxt,evalPath,sessionID);
 
     gtPlanes=loadInitialPose_v3(dataSetPath,sessionID,frameID, syntheticPlaneType);
@@ -71,9 +75,7 @@ for i=1:Nframes
     Nnap=size(estimatedPlanesfr.(['fr' num2str(frameID)]).values,2)-size(estimatedPlanesfr.(['fr' num2str(frameID)]).acceptedPlanes,1);
     estimatedPoses.(['frame' num2str(frameID)]).Nnap=Nnap;
 %     disp(['Nnap in frame ' num2str(frameID) ': ' num2str(Nnap)])
-    if  i==12
-        disp("stop mark")
-    end
+
 %% extract target identifiers based on type of plane
     estimatedPlanesID=extractTargetIDs(estimatedPlanesfr,frameID,estimatedPlaneType);
 %% forget old planes

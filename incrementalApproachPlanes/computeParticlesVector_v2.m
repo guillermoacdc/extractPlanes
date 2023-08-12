@@ -1,21 +1,21 @@
-function [particlesVector, globalPlanes] = computeParticlesVector_v2(globalPlanes,particlesVector, radii, frameID)
-%TEMPORALPLANESFILTERING Identifica planos globales que estén en la
+function [particlesVector, localPlanes] = computeParticlesVector_v2(localPlanes,particlesVector, radii, frameID)
+%TEMPORALPLANESFILTERING Identifica planos locales que estén en la
 %vecindad de una partícula. En caso de identificación nula, crea una nueva
 %partícula con la posisción del plano no identificado. 
-% _v2: corrije el problema de múltiples planos globales apuntando a una
-% misma partícula. Se selecciona el plano global con menor distancia a la
+% _v2: corrije el problema de múltiples planos locales apuntando a una
+% misma partícula. Se selecciona el plano local con menor distancia a la
 % partícula
 %   Detailed explanation goes here
 
 
-Ngp=size(globalPlanes,2);
+Nlp=size(localPlanes,2);
 Npv=size(particlesVector,2);
-matchM=myBoolean(zeros(Ngp,Npv));%how to declare as boolean?
+matchM=myBoolean(zeros(Nlp,Npv));%how to declare as boolean?
 %% initialization
 if Npv>0
-    for i =1:Ngp
+    for i =1:Nlp
         matchFlag=false;
-        globalPlane=globalPlanes(i);
+        globalPlane=localPlanes(i);
         j=1;
         while j<=Npv & matchFlag==false
             particleInst=particlesVector(j);
@@ -30,29 +30,28 @@ if Npv>0
 %             creación de la nueva partícula
             particlesVector(end+1)=particle(Npv_dinamic+1, globalPlane.geometricCenter,...
                 globalPlane.fitness,frameID);
-%             adición de llave foránea en plano global
-            globalPlanes(i).timeParticleID=Npv_dinamic+1;
+%             adición de llave foránea en plano local
+            localPlanes(i).timeParticleID=Npv_dinamic+1;
         end
     end
-% update matchFlag to avoid multiple global planes pointing to a single
+% update matchFlag to avoid multiple local planes pointing to a single
 % particle
 
 for i=1:Npv
-%     validate if there are multiple global planes pointing to a single
+%     validate if there are multiple local planes pointing to a single
 %     particle
     rows=find(matchM(:,i)==true);
     Nr=size(rows,1);
     if Nr>1
         distances=zeros(Nr,1);
         for j=1:Nr
-            distances(j)=norm(globalPlanes(rows(j)).geometricCenter-particlesVector(i).position);
+            distances(j)=norm(localPlanes(rows(j)).geometricCenter-particlesVector(i).position);
         end
         [~,index]=min(distances);
-        matchM(:,i)=myBoolean(zeros(Ngp,1));
+        matchM(:,i)=myBoolean(zeros(Nlp,1));
         matchM(index,i)=true;        
     end
 end
-
 
 % update historicPresence Field and position of the particle
     for i=1:Npv
@@ -60,36 +59,38 @@ end
         particlesVector(i).myPush(frameID,flagInColumn);
         if flagInColumn
             row=find(matchM(:,i)==true);
-            [wg,wp]=computeWeigths(globalPlanes(row).fitness,particlesVector(i).fitness);
-            particlesVector(i).position=wg*globalPlanes(row).geometricCenter+...
+            [wg,wp]=computeWeigths(localPlanes(row).fitness,particlesVector(i).fitness);
+            particlesVector(i).position=wg*localPlanes(row).geometricCenter+...
                 wp*particlesVector(i).position;
+%             actualizar fitness de la partícula en esta línea
+%           fitness=(particle.fitness+localPlane.fitness)/2
         end
     end
-% update foreignKey in globalPlanes
-    for i=1:Ngp
+% update foreignKey in localPlanes -- evaluar si es necesario
+    for i=1:Nlp
         indexpv=find(matchM(i,:)==true);
         if ~isempty(indexpv)
-            globalPlanes(i).timeParticleID=particlesVector(indexpv).id;
+            localPlanes(i).timeParticleID=particlesVector(indexpv).id;
         end
     end
-% create new particle for global planes with null relationship with
+% create new particle for local planes with null relationship with
 % particles
-    nullIDs=extractIDWithNullTimeParticle(globalPlanes);
+    nullIDs=extractIDWithNullTimeParticle(localPlanes);
     if ~isempty(nullIDs)
         Nnid=length(nullIDs);
         for i=1:Nnid
                 Npv_dinamic=size(particlesVector,2);
     %             creación de la nueva partícula
-                particlesVector(end+1)=particle(Npv_dinamic+1, globalPlanes(nullIDs(i)).geometricCenter,...
-                    globalPlanes(nullIDs(i)).fitness,frameID);
-    %             adición de llave foránea en plano global
-                globalPlanes(nullIDs(i)).timeParticleID=Npv_dinamic+1;
+                particlesVector(end+1)=particle(Npv_dinamic+1, localPlanes(nullIDs(i)).geometricCenter,...
+                    localPlanes(nullIDs(i)).fitness,frameID);
+    %             adición de llave foránea en plano local
+                localPlanes(nullIDs(i)).timeParticleID=Npv_dinamic+1;
         end
     end
 else
-    for i=1:Ngp
-        pos_ref=globalPlanes(i).geometricCenter;
-        fitness_ref=globalPlanes(i).fitness;
+    for i=1:Nlp
+        pos_ref=localPlanes(i).geometricCenter;
+        fitness_ref=localPlanes(i).fitness;
         myParticle=particle(i,pos_ref,fitness_ref, frameID);%particle is the constructor of the class with the same name
         particlesVector(i)=myParticle;
     end
