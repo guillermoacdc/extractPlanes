@@ -5,10 +5,10 @@ clear
 
 
 % rootPath="G:\Mi unidad\boxesDatabaseSample\";
-scene=35;
+scene=3;
 rootPath=computeMainPaths(scene);
 NpointsDiagTopSide=50;
-numberOfSides=3;
+numberOfSides=1;
 groundFlag=false;
 
 frameID=1;

@@ -2,6 +2,12 @@ function [planeDescriptor] = computePlaneDescriptorsFromBoxID_v2(boxID,sessionID
 %COMPUTEPLANEDESCRIPTORSFROMBOXID Computes descriptors of one of the set of planes
 %that belong to the box with boxID. Those descriptors are refered to the
 %coordinate frame q_b
+% planeType:
+% 1 top plane
+% 2 front plane
+% 3 right plane
+% 4 back plane
+% 5 left plane
 
 % load lengths of the box
 boxLengths=loadLengths_v2(dataSetPath,boxID);%IdBox,Heigth(mm),Width(mm),Depth(mm)

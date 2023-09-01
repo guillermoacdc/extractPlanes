@@ -2,12 +2,14 @@ clc
 close all
 clear
 
-dataSetPath='D:\6DViCuT_p1';
-sessionID=10;
+% dataSetPath='D:\6DViCuT_p1';
+
+sessionID=3;
+dataSetPath=computeMainPaths(sessionID);
 planeType=0;
 frameHL2=14;
 % boxID=getPPS(dataSetPath,sessionID,frameHL2);
-boxID=30;
+boxID=19;
 numberOfSides=3;
 NpointsDiagTopSide=100;
 rotzValue=180;

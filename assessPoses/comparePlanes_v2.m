@@ -23,4 +23,14 @@ plane_model_estimated=createPlanePCAtOrigin(detectedPlane,spatialSampling);
 % compute the average distance distingushable
 eADD=computeSingle_eADD(plane_model_gt,plane_model_estimated, er, tao);%mm
 
-
+% figure,
+%     pcshow(plane_model_gt)
+%     hold on
+%     dibujarsistemaref(gtPlane.tform,'gt',120,2,10,'w')
+%     hold on
+%     pcshow(plane_model_estimated)
+%     dibujarsistemaref(detectedPlane.tform,'e',120,2,10,'w')
+%     xlabel 'x'
+%     ylabel 'y'
+%     zlabel 'z'
+%     grid

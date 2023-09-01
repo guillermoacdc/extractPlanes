@@ -2,9 +2,9 @@ clc
 close all
 clear
 
-sessionID=10;
+sessionID=13;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-algorithm=2;%wpk_algorithm
+algorithm=1;%wpk_algorithm
 planeType=0;
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 targetFrames=keyFrames;

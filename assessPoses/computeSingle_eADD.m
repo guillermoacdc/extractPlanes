@@ -39,6 +39,7 @@ end
 e=mean(eADD_a);
 
 % e=mean(diff_points)/pc_gt.Count;%normalized wrt the number of points in the point cloud
+
 end
 
 

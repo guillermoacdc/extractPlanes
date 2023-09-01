@@ -1,10 +1,11 @@
 function [pc_mm, T]=loadSLAMoutput(scene,frame,rootPath)
 %LOADSLAMOUTPUT Summary of this function goes here
 %   Detailed explanation goes here
-
+[rootPath, ~, PCpath]=computeMainPaths(scene);
 pathCamera=[rootPath + ['\corrida' num2str(scene) '\HL2\'] ];
 pathPoints=[pathCamera + [ 'PointClouds\frame' num2str(frame) '.ply'] ];
 % Load pc
+
 pc = pcread(pathPoints);%in [mt]; indices begin at 0
 % convert lengths to mm
     xyz=pc.Location*1000;

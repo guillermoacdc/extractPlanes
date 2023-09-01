@@ -16,8 +16,10 @@ IDDetectedObject=matchM(:,3);
 IDzeroValues=find(IDDetectedObject==0);
 IDDetectedObject(IDzeroValues)=[];
 Ndo=size(IDDetectedObject,1);
+% Ndo=size(IDDetectedObject,2);
 
-if Ndo>0
+% if Ndo>0
+if ~isempty(IDDetectedObject)
     for i=1:Ndo
         indexPPS=find(pps==IDDetectedObject(i));
         trendDetections(indexPPS,:)=[1 matchM(i,1:2)];

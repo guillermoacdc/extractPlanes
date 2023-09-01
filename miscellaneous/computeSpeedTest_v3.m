@@ -5,7 +5,7 @@ clc
 close all
 clear 
 
-sessionsID=[1 2];
+sessionsID=[27];
 % sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 Ns=size(sessionsID,2);
 speed=zeros(Ns,2);%mean value in column 1, std value in column 2

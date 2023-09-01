@@ -5,7 +5,7 @@ clear
 algorithm=1;
 sessionID=13;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
-frameID=180; 
+frameID=24; 
 tao=50;
 theta=0.5;
 NpointsDiagTopSide=50;%used in the creation of synthetic point clouds

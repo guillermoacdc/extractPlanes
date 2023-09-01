@@ -20,7 +20,9 @@ if (f=='/')%linux
 else %windows
 %     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder';
 %     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
-    evalPath='D:\doctorado\evalFolder';
+%     evalPath='D:\doctorado\evalFolder';
+%     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
+    evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder';
     dataSetPath='D:\6DViCuT_p1';
     
     switch (typeOfSession)

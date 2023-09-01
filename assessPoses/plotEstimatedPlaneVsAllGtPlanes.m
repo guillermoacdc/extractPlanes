@@ -44,9 +44,16 @@ Nboxes=length(boxesID);
     numberOfSides, frameID, NpointsDiagTopSide, planeType, dataSetPath);
 
 % boxesID=getPPS(dataSetPath,sessionID);
+% load HL2 camera pose
+Tcamera=loadCameraHL2Pose(sessionID, frameID);
+% project camera pose to mocap world
+qc=Th2m*Tcamera;
 figure,
     if ~isempty(pc_e)
         pcshow(pc_e,"MarkerSize",20)
+        hold on
+%         plot camera pose in mocap coordinate frame
+        dibujarsistemaref(qc,'c_h',250,2,10,'w')
     end
 	hold on
     dibujarsistemaref(assemblyTmatrix(estimatedPose),'e',150,2,10,'w');

@@ -1,15 +1,17 @@
-function  mySaveStruct2JSONFile(theStruct,fileName,savePath,sessionID)
-%MYSAVESTRUCT2JSONFILE Summary of this function goes here
-%   Detailed explanation goes here
-%     str = jsonencode(theStruct);
+function  mySaveStruct2JSONFile(theStruct,fileName,savePath,sessionID, folderFlag)
+%MYSAVESTRUCT2JSONFILE Savaes a struct to a JSON file
+
+if nargin<5
+    folderFlag=true;
+end
+%% put the data in a string of json format
     str = mps.json.encode(theStruct);
     % add a return character after all commas:
-    new_string = strrep(str, ',', ',\n');
+    jsonFormat_string = strrep(str, ',', ',\n');
     % add a return character after curly brackets:
-    new_string = strrep(new_string, '{', '{\n');
-    % etc...
-    % Write the string to file
-    % create folder
+    jsonFormat_string = strrep(jsonFormat_string, '{', '{\n');
+    
+    if folderFlag
         % save the current path
         currentcd=pwd;
         % go to savePath
@@ -24,8 +26,11 @@ function  mySaveStruct2JSONFile(theStruct,fileName,savePath,sessionID)
         cd (currentcd);
     % save file in created folder
         cfolderPath=fullfile(savePath,folderName,fileName);
-        fid = fopen(cfolderPath,'w');
-        fprintf(fid, new_string); 
-        fclose(fid);
+    else
+        cfolderPath=fullfile(savePath,fileName);
+    end
+    fid = fopen(cfolderPath,'w');
+    fprintf(fid, jsonFormat_string); 
+    fclose(fid);
 end
 

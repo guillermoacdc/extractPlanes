@@ -1,13 +1,14 @@
 function [precision_v, recall_v, f1_score_v, keyFrames, processingTimeByFrame] = computeMetricsBySession(sessionID,...
-    algorithm, planeType, pkflag)
+    algorithm, planeType, pkflag, evalPath)
 %COMPUTEMETRICSBYSESSION Summary of this function goes here
 %   Detailed explanation goes here
-[dataSetPath,evalPath,~] = computeMainPaths(sessionID);
+[dataSetPath] = computeMainPaths(sessionID);
 theta=0.5;
 tao=50;
 
 
-fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
+% fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
+fileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
 %% compute recall by theta for all keyframes
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);

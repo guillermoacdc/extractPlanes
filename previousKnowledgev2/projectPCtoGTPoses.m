@@ -19,9 +19,9 @@ for i=1:Nboxes
 
 end
 % remove points with z<0
-model_z=model(:,3);
-idx=find(model_z<0);
-model(idx,:)=[];
+% model_z=model(:,3);
+% idx=find(model_z<0);
+% model(idx,:)=[];
 % convert merged vector to a point cloud object
 pcmodel=pointCloud(model);
 end

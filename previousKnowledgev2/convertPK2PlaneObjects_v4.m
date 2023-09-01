@@ -8,8 +8,10 @@ planeDescriptor=computePlaneDescriptorsFromBoxID_v2(boxID,sessionID, dataSetPath
 initPose_m=loadInitialPose(dataSetPath,sessionID,frameHL2);
 indexBox=find(initPose_m(:,1)==boxID);
 initPose=initPose_m(indexBox,2:end);
+% % adjust box height
+% initPose=adjustBoxHeight(initPose,boxID,dataSetPath);
 Tm2b=assemblyTmatrix(initPose);
 planeDescriptor.tform=Tm2b*planeDescriptor.tform;
-
+planeDescriptor.unitNormal=planeDescriptor.tform(1:3,3);
 end
 

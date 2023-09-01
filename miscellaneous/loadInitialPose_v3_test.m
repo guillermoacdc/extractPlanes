@@ -2,10 +2,10 @@ clc
 close all
 clear
 
-sessionID=5;
+sessionID=27;
 dataSetPath=computeMainPaths(sessionID);
-planesGroup=2;
-frame=1;
+planesGroup=0;
+frame=675;
 planeDescriptors = loadInitialPose_v3(dataSetPath,sessionID,frame,planesGroup);
 
 % [initialPoses2] = loadInitialPose(dataSetPath,sessionID,frame)
