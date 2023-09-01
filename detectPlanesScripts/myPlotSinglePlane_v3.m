@@ -11,6 +11,7 @@ end
 
 if nargin==3
     fc='white';
+%     fc='black';
 end
 
 p=[planeDescriptor.geometricCenter]';
@@ -60,11 +61,13 @@ set(H,'FontSize',15)
 
 % (5) plot the frame of the plane
 if frameFlag
-    scale=150;
+    scale=250;
     width=1;
     T=planeDescriptor.tform;
+%     T=rotH2M(T);
     dibujarsistemaref (T,' ',scale,width,10,fc);
 end
- 
+set(gcf,'color','w');
+set(gca,'color','w'); 
 end
 

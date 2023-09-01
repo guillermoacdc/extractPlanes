@@ -3,8 +3,8 @@ close all
 clear 
 
 % _v3: consuming data form 6dViCuT path
-scene=3;
-
+scene=54;
+dataSetPath=computeMainPaths(scene);
 % 1. Plane filtering parameters
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
@@ -14,14 +14,13 @@ D_Tolerance=0.1*1000;%mm ... 0.1 m
 planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
 
 % 2 path parameters
-% processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 processedScenesPath='D:\6DViCuT_p1\processedPCs\lowOcclusionScenes_processed';
 rootPath=computeMainPaths(scene);
 
 flagGroundPlane=false;
 outputFileName='Th2m.txt';
-pathInitValue=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName);
-% pathInitValue=['G:\Mi unidad\boxesDatabaseSample\corrida' num2str(scene) '\Th2m.txt'];
+% pathInitValue=fullfile(rootPath,[ 'session' num2str(scene)],'analyzed',outputFileName);
+pathInitValue=fullfile(rootPath,'updatedGTPoses',[ 'session' num2str(scene)],'analyzed',outputFileName);
 T_initialValue=load(pathInitValue);
 
 % [reposFlag,reposFrame] = isRepositioned(rootPath,scene,2);
@@ -33,7 +32,7 @@ idxBoxes=getIDxBoxes(rootPath,scene);
 frame=frames(2);
 fileName=['frame'  num2str(frame)  '.ply'];
 pathPoints=fullfile(rootPath, ['session' num2str(scene)], 'filtered', 'HL2', 'PointClouds', fileName );
-% pathPoints=[rootPath + 'corrida' + num2str(scene) + '\HL2\PointClouds\frame' + num2str(frame) + '.ply'];
+
 
 gridStep=1;
 %% Generate synthetic model points
@@ -68,6 +67,7 @@ title (['synthetic pc from scene ' num2str(scene)])
 for i=1:length(frames)
     frame=frames(i);
 %     localPlanes=detectPlanes(rootPath,scene,frame, processedScenesPath);
+    disp(['session ' num2str(scene) ', frame ' num2str(frame)])
     localPlanes=loadExtractedPlanes(rootPath,scene,frame,...
         processedScenesPath, planeFilteringParameters);%
     pc_singleFrame{i}=fusePointCloudsFromDetectedPlanes(localPlanes,gridStep,flagGroundPlane);

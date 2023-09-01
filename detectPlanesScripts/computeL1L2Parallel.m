@@ -1,4 +1,4 @@
-function [L1 L2 Tout myOccludedIndex]=computeL1L2Parallel(pc, planeDescriptor, figureFlag)
+function [L1, L2, Tout, myOccludedIndex]=computeL1L2Parallel(pc, planeDescriptor, figureFlag)
 %COMPUTEL1L2PARALLEL Computes the parameters L1, L2 of a point cloud
 %that represents a plane
 % Assumptions: the points in pc have been projected to a plane model
@@ -25,7 +25,7 @@ n=359;
 dists=[];
 pcuts=[];
 % search for the intersection between a virtual line (Px,u) and segments of the
-% shape's perimeter
+% shape's perimeter. -- consider update with method presented at doi:10.3390/s19143136
     for alpha=0:pi/n:pi%ang defines the orientation of the virtual line
 %        for alpha=0:10*pi/n:pi%ang defines the orientation of the virtual line
         if alpha==pi/2
@@ -99,7 +99,9 @@ Tout(1:3,4)=planeDescriptor.geometricCenter';
 % theta2=atan2(Line2(2),Line2(1));
 % myOccludedIndex_v2=abs(theta1-theta2)*180/pi;    
 
-
+if planeDescriptor.idFrame==25
+    disp("stop code")
+end
 
 if(figureFlag==1)
     

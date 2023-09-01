@@ -2,71 +2,49 @@ clc
 close all
 clear 
 
-scene=45;
-boxIDref=17;
-sidesVector=[1 4 5 ];
+sessionID=54;
+boxesID=[13 17];
+sidesBox1=[1 4 5 ];
+sidesBox2=[1  4 ];
 % 1 top plane
 % 2 front plane
 % 3 right plane
 % 4 back plane
 % 5 left plane
-[rootPath,evalPath,processedScenesPath] =computeMainPaths(scene);
+[rootPath,evalPath,processedScenesPath] =computeMainPaths(sessionID);
 fileNameT='Th2m.txt';
 T_initialValuePath=fullfile(rootPath,...
-    ['session' num2str(scene)],'analyzed', fileNameT);
+    ['session' num2str(sessionID)],'analyzed', fileNameT);
 T_initialValue=load(T_initialValuePath);
-flagGroundPlane=false;
 
-frames = getTargetFramesFromScene(scene);
-idxBoxes=getIDxBoxes(rootPath,scene, boxIDref);
 
+frames = getTargetFramesFromScene(sessionID);
 frame=frames(2);
+
 % path to point cloud from HL2 sensors
 fileName=['frame'  num2str(frame)  '.ply'];
-pathPoints=fullfile(rootPath, ['session' num2str(scene)],...
+pathPoints=fullfile(rootPath, ['session' num2str(sessionID)],...
     'filtered', 'HL2', 'PointClouds', fileName );
 gridStep=1;
 %% Generate synthetic model points
-spatialSampling=10;
-numberOfSides=2;
 NpointsDiagTopSide=90;
-planeType=0;
 
-[pcmodel, planeDescriptor_gt] = generateSyntheticPC_v2(boxIDref,scene, ...
-    sidesVector, frame, NpointsDiagTopSide, gridStep, rootPath);
-Nboxes=1;
+[pcmodel1, planeDescriptor_gt1] = generateSyntheticPC_v2(boxesID(1),sessionID, ...
+    sidesBox1, frame, NpointsDiagTopSide, gridStep, rootPath);
+[pcmodel2, planeDescriptor_gt2] = generateSyntheticPC_v2(boxesID(2),sessionID, ...
+    sidesBox2, frame, NpointsDiagTopSide, gridStep, rootPath);
+pcmodel=pcmerge(pcmodel1,pcmodel2,gridStep);
+planeDescriptor_gt=[planeDescriptor_gt1 planeDescriptor_gt2];
 
-% [pc, planeDescriptor] = generateSyntheticPC_v2(boxID,sessionID, ...
-%     sidesVector, frameHL2, NpointsDiagTopSide, gridStep, dataSetPath)
-
-% generateSyntheticModelForScene(rootPath, ...
-%     scene,numberOfSides,groundFlag,idxBoxes,frameHL2, NpointsDiagTopSide, planeType)
-
-figure,
-hold on
-pcshow(pcmodel)
-for i=1:Nboxes
-    boxID=planeDescriptor_gt(i).idBox;
-    Tm=planeDescriptor_gt(i).tform;
-    dibujarsistemaref(Tm,boxID,150,2,10,'w');
-end
-xlabel 'x'
-ylabel 'y'
-zlabel 'z'
-grid on
-title (['synthetic pc from scene ' num2str(scene)])
 
 %% Load data points
 % fusion two consecutive frames in their accepted planes version
-% pc_h = pcmerge(pc_singleFrame{1},pc_singleFrame{2},gridStep);
-% load pc_h from disk
-% pcfileName=['pcFused_s' num2str(scene) '_b' num2str(boxIDref)];
-pcfileName=['pcFused_s' num2str(scene) '_b' num2str(boxIDref) '_3s'];
+
+pcfileName=['pcFused_s' num2str(sessionID) '_b' num2str(boxesID(1)) 'b' num2str(boxesID(2))];
 load (pcfileName)
 Tm_h=assemblyTmatrix(T_initialValue);
 pc_m=myProjection_v3(pc_h,Tm_h);
 data=pc_m.Location;
-
 pc_woutGround=pointCloud(data);
 
 figure,
@@ -79,9 +57,10 @@ xlabel 'x'
 ylabel 'y'
 zlabel 'z'
 grid on
-title (['pc from HL2 scene/frame ' num2str(scene) '/' num2str(frame)])
+title (['pc from HL2 sessionID/frame ' num2str(sessionID) '/' num2str(frame)])
 
 %% Running the ICP-algorithm. Least squares criterion
+pause();
 data=double(data)';
 model=pcmodel.Location';
 maxIter=100;
@@ -116,9 +95,9 @@ return
 % (Ticp) into a single transformation and saving in disk
 Tout=Ticp*Tm_h;
 Toutxt=[Tout(1,[1:4]) Tout(2,[1:4]) Tout(3,[1:4]) res];
-% fileName=([rootPath + [ 'session' num2str(scene) '\Th2m.txt'] ]);
+% fileName=([rootPath + [ 'session' num2str(sessionID) '\Th2m.txt'] ]);
 outputFileName='Th2m.txt';
-filePath=fullfile(rootPath,'updatedGTPoses',[ 'session' num2str(scene)],'analyzed',outputFileName)
+filePath=fullfile(rootPath,'updatedGTPoses',[ 'session' num2str(sessionID)],'analyzed',outputFileName)
 fid=fopen(filePath,'w');
     fprintf(fid,'%1.4f ',Toutxt);
 fclose(fid);

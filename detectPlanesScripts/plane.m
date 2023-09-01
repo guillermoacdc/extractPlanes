@@ -189,6 +189,7 @@ classdef plane < handle
         if dcoinrange
             if obj.angleBtwn_zc_unitNormal<90
                 obj.fitness=1-obj.angleBtwn_zc_unitNormal/90;
+                disp('angle lower than 90 from plane.setfitness()')
             else
                 obj.fitness=obj.angleBtwn_zc_unitNormal/90-1;
             end

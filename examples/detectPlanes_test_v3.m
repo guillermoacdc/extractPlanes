@@ -4,9 +4,11 @@ clear all
 
 
 
-scene=13;%
+scene=12;%
 frames = getTargetFramesFromScene(scene);
 frame=frames(1);
+
+% frame=38;
 % 1. Plane filtering parameters
 th_angle=15*pi/180;%radians
 th_size=150;%number of points
@@ -17,6 +19,7 @@ planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Toleranc
 
 % 2. paths parameteres
 [rootPath,evalPath,processedScenesPath] =computeMainPaths(scene);
+keyframes=loadKeyFrames(rootPath,scene);
 % processedScenesPath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
 
 % localPlanes=detectPlanes(rootPath,scene,frame,processedScenesPath);
@@ -26,20 +29,26 @@ allPlanes=localPlanes.(['fr' num2str(frame)]).acceptedPlanes;
 [xzPlanes, xyPlanes, zyPlanes] = extractTypes(localPlanes, allPlanes);
 idPlane=3;
 % load camera pose
-Tc=localPlanes.(['fr' num2str(frame)]).cameraPose;
+% Tc=localPlanes.(['fr' num2str(frame)]).cameraPose;
 % Tc(1:3,4)=localPlanes.(['fr' num2str(frame)]).values(idPlane).tform(1:3,4);
+
+[~, q_c_mm]=loadSLAMoutput_v2(scene,frame,rootPath); 
+% project q_wH_mm to mocap world -> qh
+% qc=Th2m*q_c_mm;
 figure,
 myPlotPlanes_v2(localPlanes,allPlanes, false)
 % myPlotPlanes_v2(localPlanes,computeAllPlanesIds(localPlanes), false)
 % axis square
-% hold on
-% dibujarsistemaref(Tc,'h',0.5,2,10,'w')
+hold on
+dibujarsistemaref(q_c_mm,'h',150,2,10,'w')
 title (['boxes detected in scene/frame ' num2str(scene) '/' num2str(frame)])
+
+
 
 
 return
 
-acceptedPlanes=[frame 3; frame 9; frame 24];
+acceptedPlanes=[frame 5; frame 10; frame 8];
 flagGroundPlane=false;
 gridStep=1;
 pc_h = fusePointCloudsFromDetectedPlanes_v2(localPlanes,gridStep, flagGroundPlane, acceptedPlanes);
