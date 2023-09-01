@@ -1,8 +1,10 @@
 function [globalPlanes, bufferComposedPlanes] = mergeIntoGlobalPlanes_v3(localPlanes,globalPlanes, tao,...
-    theta, lengthBoundsTop, lengthBoundsP, bufferComposedPlanes, tresholdsV, planeModelParameters)
+    theta, lengthBoundsTop, lengthBoundsP, bufferComposedPlanes, tresholdsV, planeModelParameters, gridStep)
 %MERGEINTOGLOBALPLANES_V3 Summary of this function goes here
 %   Detailed explanation goes here
-
+if nargin<10
+    gridStep=1;
+end
 lpCounter=size(localPlanes,2);
 gpCounter=size(globalPlanes,2);
 
@@ -22,6 +24,10 @@ while lpCounter>=1
             [globalPlanes, localPlanes, bufferComposedPlanes]=performMerge_v3(localPlanes, i,...
                 globalPlanes, j, typeOfTwin, bufferComposedPlanes,...
                 tresholdsV, lengthBoundsTop, lengthBoundsP, planeModelParameters);            
+%               [globalPlanes, localPlanes, bufferComposedPlanes]=performMerge_v4(localPlanes, i,...
+%                 globalPlanes, j, typeOfTwin, bufferComposedPlanes,...
+%                 tresholdsV, lengthBoundsTop, lengthBoundsP,...
+%                 planeModelParameters, gridStep);            
             twinFlag=1;
         else
             j=j+1;

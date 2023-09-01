@@ -1,5 +1,5 @@
 function [vectorPlanes,bufferCP]=mergePlanesOfASingleFrame_v2(vectorPlanes,bufferCP, tresholdsV,...
-    lengthBoundsTop, lengthBoundsP, planeModelParameters)
+    lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep)
 %MERGEPLANESOFASINGLEFRAME Performs the merge of pair of planes with type 4.
 %This type exists when two point clouds must be merge. The new point cloud
 %is used to compute plane parameters, then is destructed. The relationship
@@ -13,6 +13,10 @@ function [vectorPlanes,bufferCP]=mergePlanesOfASingleFrame_v2(vectorPlanes,buffe
 % tresholdV: vector with thresholds to filter extracted planes
 % lengthBoundsX: previous knowledge of max size in Top and Perpendicular
 % planes
+
+if nargin<7
+    gridStep=1;
+end
 
 N=size(vectorPlanes,2);
 if N==1
@@ -36,6 +40,9 @@ while myCounter>=1
     type4=isType4(planeA,planeB, maxTopSize,planeModelParameters(1));
 
     if type4
+%         [vectorPlanes, bufferCP]=performSingleMerge_v2(vectorPlanes,indexA,...
+%             indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop,...
+%             lengthBoundsP, gridStep);
         [vectorPlanes, bufferCP]=performSingleMerge(vectorPlanes,indexA,...
             indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop, lengthBoundsP);
         N=size(vectorPlanes,2);
@@ -43,6 +50,9 @@ while myCounter>=1
 	        nonRPairs=nchoosek(1:N,2);
 	        myCounter=size(nonRPairs,1);
 	        i=1;
+        else
+            disp('vector with a single value')
+            myCounter=0;
         end
 %         nonRPairs=nchoosek(1:N,2);
 %         myCounter=size(nonRPairs,1);

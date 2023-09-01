@@ -52,7 +52,7 @@ else
 ids=extractIDsFromVector(bufferCP);
 zeroElementIndex=find(ids(:,1)==0);
 if ~isempty(zeroElementIndex)
-    disp('stop from myPCreadComposedPlane')
+    disp('stop from myPCreadComposedPlane- a component of bufferCP is composed')
 end
 
 end

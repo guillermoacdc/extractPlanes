@@ -113,6 +113,8 @@ switch (typeOfTwin)
                 composedPlane.setLengthFlag(lengthFlag);
 %       compute the mean fitness                
             composedPlane.fitness=mean([globalPlanes(id_gp).fitness,localPlane.fitness]);
+%             add relationship with particle element
+            composedPlane.timeParticleID=globalPlanes(id_gp).timeParticleID;
 %%   Delete components from its previous container
         globalPlanes(id_gp)=[];
         localPlanes(id_lp)=[];%verify pass by reference

@@ -7,7 +7,7 @@ clear
 
 % low occlussion scenes
 % sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=[12 ];% 
+sessionsID=[3 ];% 
 
 Ns=size(sessionsID,2);
 %% setting parameters
@@ -31,7 +31,7 @@ th_coplanarDistance=20;%mm
 mergingPlaneParameters=[tao_merg theta_merg th_IoU th_coplanarDistance];
 % 4. Parameters used in temporal filtering stage
 radii=15;%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
-windowSize=5;%frames
+windowSize=10;%frames
 th_detections=0.3;%percent - not used in version 1 - update with th_vigency
 tempFilteringParameters=[radii windowSize th_detections];
 % 5. Parameteres used to set the type of planes to process: perpendicular or
@@ -49,10 +49,10 @@ for i=1:Ns
     for j=1:Npt
         planeType=planeTypes(j);
 %         fileName1=['estimatedPoses_ia1_planeType' num2str(planeType) '.json'];
-        fileName2=['estimatedPoses_ia2_planeType' num2str(planeType) '.json'];
-        estimatePoses_ia2(sessionID, fileName2, planeFilteringParameters, ...
-                asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-                planeType, planeModelParameters);
+        fileName2=['estimatedPoses_qh_planeType' num2str(planeType) '.json'];
+        estimatePoses_ia2_v2(sessionID, fileName2, planeFilteringParameters, ...
+            mergingPlaneParameters, tempFilteringParameters, ...
+            planeType, planeModelParameters);
     end
 end
 

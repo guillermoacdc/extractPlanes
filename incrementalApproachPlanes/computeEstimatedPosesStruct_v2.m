@@ -42,12 +42,12 @@ Ntao=length(tao_v);
 %     end
 %% Computes the struct estimatePoses
         estimatedPoses.(['frame' num2str(frameID)]).IDObjects=estimatedPlanesID;
-        [poses, L1e, L2e, dc, Ninliers]=convertToArrays_v2(globalPlanes_m.fr0.values);
+        [poses, L1e, L2e, Ninliers, fitness]=convertToArrays_v2(globalPlanes_m.fr0.values);
         estimatedPoses.(['frame' num2str(frameID)]).poses=poses;
         estimatedPoses.(['frame' num2str(frameID)]).L1=L1e;
         estimatedPoses.(['frame' num2str(frameID)]).L2=L2e;
         estimatedPoses.(['frame' num2str(frameID)]).Ninliers=Ninliers;
-        estimatedPoses.(['frame' num2str(frameID)]).dc=dc;
+        estimatedPoses.(['frame' num2str(frameID)]).fitness=fitness;
         estimatedPoses.(['frame' num2str(frameID)]).ProcessingTime=ProcessingTime;
         for j=1:Ntao
             tao=tao_v(j);

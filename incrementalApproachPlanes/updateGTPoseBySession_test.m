@@ -2,7 +2,7 @@ clc
 close all
 clear
 
-sessionsID=[ 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
+sessionsID=[3 10 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
 
 Ns=size(sessionsID,2);
 dataSetPath=computeMainPaths(sessionsID(1));

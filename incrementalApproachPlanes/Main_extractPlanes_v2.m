@@ -6,8 +6,11 @@ close all
 clear
 
 % low occlussion scenes
+% sessionsID=[ 		53	54];% 
+% 
 % sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=[12 ];% 
+sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
+% sessionsID=13;% 
 
 Ns=size(sessionsID,2);
 %% setting parameters
@@ -31,13 +34,13 @@ th_coplanarDistance=20;%mm
 mergingPlaneParameters=[tao_merg theta_merg th_IoU th_coplanarDistance];
 % 4. Parameters used in temporal filtering stage
 radii=15;%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
-windowSize=5;%frames
+windowSize=10;%frames
 th_detections=0.3;%percent - not used in version 1 - update with th_vigency
 tempFilteringParameters=[radii windowSize th_detections];
 % 5. Parameteres used to set the type of planes to process: perpendicular or
 % parallel to ground. 
 % planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
-planeTypes=[0];
+planeTypes=[1];
 Npt=size(planeTypes,2);
 %6. Parameters to merge pointclouds - used in the approach 2
 planeModelParameters(1) =   12;% maxDistance in mm
@@ -48,11 +51,14 @@ for i=1:Ns
     sessionID=sessionsID(i);
     for j=1:Npt
         planeType=planeTypes(j);
-%         fileName1=['estimatedPoses_ia1_planeType' num2str(planeType) '.json'];
-        fileName2=['estimatedPoses_ia2_planeType' num2str(planeType) '.json'];
-        estimatePoses_ia2(sessionID, fileName2, planeFilteringParameters, ...
-                asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-                planeType, planeModelParameters);
+        fileName1=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
+%         fileName2=['estimatedPoses_qh_planeType' num2str(planeType) '.json'];
+        estimatePoses_ia2_v3(sessionID, fileName1, planeFilteringParameters, ...
+            asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
+            planeType, planeModelParameters);
+%             estimatePoses_ia1_v2(sessionID, fileName1, planeFilteringParameters, ...
+%             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
+%             planeType);
     end
 end
 
