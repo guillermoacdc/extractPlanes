@@ -11,7 +11,7 @@ if (f=='/')%linux
     
     switch (typeOfSession)
         case 1
-            PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/lowOcclusionScenes_processed';
+            PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/lowOcclusionScenes_processed_d5';
         case 2
             PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/MediumOcclusionScenes_processed';
         case 3

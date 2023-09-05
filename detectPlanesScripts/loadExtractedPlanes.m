@@ -45,7 +45,7 @@ for i=1:length(frames)
     cameraPose=from1DtoTform(cameraPoses(frame,:));
 %     in_planesFolderPath=[processedScenesPath '\corrida'  num2str(scene) '\frame'  num2str(frame) '\'];%extracted planes with efficientRANSAC
 %     in_planesFolderPath=[processedScenesPath '/corrida'  num2str(scene) '/frame'  num2str(frame) '/'];%extracted planes with efficientRANSAC
-    in_planesFolderPath=fullfile(processedScenesPath,['corrida' num2str(scene)],...
+    in_planesFolderPath=fullfile(processedScenesPath,['session' num2str(scene)],...
         ['frame' num2str(frame)] );
     cd1=cd;
     cd(in_planesFolderPath);

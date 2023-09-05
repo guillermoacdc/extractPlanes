@@ -6,11 +6,11 @@ clear
 
 % low occlussion scenes
 
-sessionsID=[3 10 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
+% sessionsID=[3 10 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
 % sessionsID=[3 10 19 12 25  27 17 32 20 35 33 36 39 53 45 54 ];
-% sessionsID=36;
+sessionsID=53;
 algorithm=2;
-planeType=0;% use 0 for top planes, 1 for planes perpendicular to ground
+planeType=1;% use 0 for top planes, 1 for planes perpendicular to ground
 pkflag_v=[0 1];%previous knowledge flag. Use 1 to enable previous knowledge
 % parameters
 [dataSetPath,pathToWrite,~] = computeMainPaths(1);

@@ -7,10 +7,10 @@ clear
 
 % low occlussion scenes
 % sessionsID=[ 		53	54];% 
-% 
-% sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
-% sessionsID=13;% 
+% 3 10	12	13	17
+sessionsID=[ 		19	20	25 27	32	33	35 36 39 45	52	53	54];% 
+% sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
+% sessionsID=53;% 
 
 Ns=size(sessionsID,2);
 %% setting parameters
@@ -40,7 +40,7 @@ tempFilteringParameters=[radii windowSize th_detections];
 % 5. Parameteres used to set the type of planes to process: perpendicular or
 % parallel to ground. 
 % planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
-planeTypes=[1];
+planeTypes=[0 1];
 Npt=size(planeTypes,2);
 %6. Parameters to merge pointclouds - used in the approach 2
 planeModelParameters(1) =   12;% maxDistance in mm
