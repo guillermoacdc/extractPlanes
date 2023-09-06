@@ -1,6 +1,6 @@
 function estimatePoses_ia2_v3(sessionID, fileName, planeFilteringParameters, ...
             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters)
+            planeType, planeModelParameters, compensateFactor)
 % ESTIMATEPOSES_IA2_v2() Second version of an incremental approach. In the 
 % merge stage performs a % a hybrid strategy which includes: (1) selection 
 % of planes or (2) creation of new planes. The second strategy includes (1)  
@@ -20,7 +20,7 @@ tao_v=asessmentPoseParameters(2);%mm
 % - used in the function computeTypeOfTwin
 tao_merg=mergingPlaneParameters(1);% mm
 theta_merg=mergingPlaneParameters(2);%in percentage
-
+gridStep=mergingPlaneParameters(5);
 % 4. Parameters used in temporal filtering stage
 % radii=tempFilteringParameters(1);%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
 windowSize=tempFilteringParameters(2);%frames
@@ -63,8 +63,8 @@ localPlanes=[];
 
 % performing the computation for each frame
 for i=1:Nframes
-%     if mod(i,10)==0
-    if i==323
+    if mod(i,10)==0
+%     if i==10
         disp('stop mark')
     end
     tic;
@@ -75,7 +75,7 @@ for i=1:Nframes
 %% load initial pose and extract raw planes from the current frame
     planeDesc_m=loadInitialPose_v3(dataSetPath,sessionID,frameID,syntheticPlaneType);
     estimatedPlanesfr=loadExtractedPlanes(dataSetPath,sessionID,frameID,...
-        PCpath, planeFilteringParameters);%returns a struct with a property frx - h world
+        PCpath, planeFilteringParameters,  1, compensateFactor);%returns a struct with a property frx - h world
 %     compute number of non accepted planes by local frame
     Nnap=size(estimatedPlanesfr.(['fr' num2str(frameID)]).values,2)-size(estimatedPlanesfr.(['fr' num2str(frameID)]).acceptedPlanes,1);
     estimatedPoses.(['frame' num2str(frameID)]).Nnap=Nnap;    %
@@ -120,11 +120,11 @@ for i=1:Nframes
 % merge between local and globalPlanesPrevious. Types 1 to 4
         [globalPlanes, bufferComposedPlanes]=mergeIntoGlobalPlanes_v3(localPlanes,...
             globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
-            lengthBoundsP,bufferComposedPlanes, planeFilteringParameters, planeModelParameters);%h-world
+            lengthBoundsP,bufferComposedPlanes, planeFilteringParameters, planeModelParameters, gridStep, compensateFactor);%h-world
 % merge between planes of globalPlanes - type 4
          [globalPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(globalPlanes, ...
              bufferComposedPlanes,planeFilteringParameters,...
-            lengthBoundsTop, lengthBoundsP, planeModelParameters);%       
+            lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep, compensateFactor);%       
 %% temporal filtering
 
 % associate particles with global planes

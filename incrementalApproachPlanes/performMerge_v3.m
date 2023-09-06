@@ -1,5 +1,5 @@
 function [globalPlanes, localPlanes, bufferCP]=performMerge_v3(localPlanes, id_lp, globalPlanes,...
-    id_gp, typeOfTwin, bufferCP, tresholdsV, lengthBoundsTop, lengthBoundsP, planeModelParameters)
+    id_gp, typeOfTwin, bufferCP, tresholdsV, lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep, compensateFactor)
 %PERFORMMERGE Perfoms merge operation between two planes: localPlane,
 %globalPlanes(id_gp), based on the type of twin informed. The merged version 
 % of the plane is saved in globalPlanes vector
@@ -62,7 +62,7 @@ switch (typeOfTwin)
             globalPlanes(id_gp).idFrame, globalPlanes(id_gp).idPlane, bufferCP);
         pcB=myPCreadComposedPlane(localPlane.pathPoints, ...
             localPlane.idFrame, localPlane.idPlane, bufferCP);
-        pcnew=pcmerge(pcA,pcB,0.1);%mm        
+        pcnew=pcmerge(pcA,pcB,gridStep);%mm        
 %%  Add components to bufferCP vector
 %         Ncomp=size(buffer,2);%calcule el máximo valor en globalPlanes.composed_idPlane
         Ncomp=computeMaxNcomposedIDPlane(bufferCP);%calcule el máximo valor en globalPlanes.composed_idPlane
@@ -103,7 +103,7 @@ switch (typeOfTwin)
                 %     detect antiparallel normals and correct
                 composedPlane.correctAntiparallel(th_size);%
                 % measure pose and length, and updata occlusion flag
-                composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0);
+                composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0, compensateFactor);
                 % set length flag based on type of plane
                 if composedPlane.type==0
                     lengthFlag=lengthFilter(composedPlane,lengthBoundsTop,th_lenght);

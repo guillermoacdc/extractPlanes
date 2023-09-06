@@ -1,5 +1,5 @@
 function [vectorPlanes,bufferCP]=mergePlanesOfASingleFrame_v2(vectorPlanes,bufferCP, tresholdsV,...
-    lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep)
+    lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep, compensateFactor)
 %MERGEPLANESOFASINGLEFRAME Performs the merge of pair of planes with type 4.
 %This type exists when two point clouds must be merge. The new point cloud
 %is used to compute plane parameters, then is destructed. The relationship
@@ -44,7 +44,8 @@ while myCounter>=1
 %             indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop,...
 %             lengthBoundsP, gridStep);
         [vectorPlanes, bufferCP]=performSingleMerge(vectorPlanes,indexA,...
-            indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop, lengthBoundsP);
+            indexB, bufferCP, tresholdsV, planeModelParameters,...
+            lengthBoundsTop, lengthBoundsP, compensateFactor);
         N=size(vectorPlanes,2);
         if N>1
 	        nonRPairs=nchoosek(1:N,2);

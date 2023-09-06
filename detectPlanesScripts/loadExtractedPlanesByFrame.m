@@ -1,7 +1,7 @@
 function [myPlanes, acceptedPlanesByFrame, rejectedPlanesByFrame,...
     groundNormal, groundD ]=loadExtractedPlanesByFrame(myPlanes, in_planesFolderPath,...
     numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
-    lengthBoundsTop, groundNormal, groundD, mode)
+    lengthBoundsTop, groundNormal, groundD, mode, compensateFactor)
 
 % loadExtractedPlanesByFrame function. Load planes that belong to a single 
 % frame, from data in disk. This function accumulates the planes
@@ -50,7 +50,7 @@ if (mode)
     for i=1:numberPlanes
         fillDerivedDescriptors_PK(planesByFrame{i}, th_lenght, th_size, ...
             th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBoundsTop,...
-            lengthBoundsP, 0);
+            lengthBoundsP, 0, compensateFactor);
     end
 %% 3. classify planes in predefined cateogories, based on the value of some of the plane's descriptors
     [acceptedPlanesByFrame, discardedByNormal, discardedByLength, ~]=classifyPlanes(planesByFrame);

@@ -1,6 +1,6 @@
 function fillDerivedDescriptors_PK(planeDescriptor, th_lenght, th_size, ...
         th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBoundsTop,...
-        lengthBoundsP, plotFlag)
+        lengthBoundsP, plotFlag, compensateFactor)
 %fillDerivedDescriptors_PK computes derived descriptors for planes, based on
 %assumptions and previous knowledge (PK) of the scene.
 
@@ -28,7 +28,7 @@ if (planeDescriptor.type~=2)%avoid computation on non-expected planes
     %     detect antiparallel normals and correct
     planeDescriptor.correctAntiparallel(th_size);%
     % measure pose and length, and updata occlusion flag
-    planeDescriptor.measurePoseAndLength(pc, th_occlusion, plotFlag);
+    planeDescriptor.measurePoseAndLength(pc, th_occlusion, plotFlag, compensateFactor);
     % set length flag based on type of plane
     if planeDescriptor.type==0
         lengthFlag=lengthFilter(planeDescriptor,lengthBoundsTop,th_lenght);

@@ -1,5 +1,6 @@
 function [vectorPlanes, bufferCP]=performSingleMerge(vectorPlanes,indexA,...
-    indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop, lengthBoundsP)
+    indexB, bufferCP, tresholdsV, planeModelParameters, lengthBoundsTop,...
+    lengthBoundsP, compensateFactor)
 %PERFORMSINGLEMERGE performs a merge between planes that belong to the same
 %frame. 
 %   Detailed explanation goes here
@@ -50,7 +51,7 @@ planeB=vectorPlanes(indexB);
                 %     detect antiparallel normals and correct
                 composedPlane.correctAntiparallel(th_size);%
                 % measure pose and length, and updata occlusion flag
-                composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0);
+                composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0, compensateFactor);
                 % set length flag based on type of plane
                 if composedPlane.type==0
                     lengthFlag=lengthFilter(composedPlane,lengthBoundsTop,th_lenght);

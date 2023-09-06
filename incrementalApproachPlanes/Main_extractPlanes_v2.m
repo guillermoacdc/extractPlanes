@@ -7,8 +7,8 @@ clear
 
 % low occlussion scenes
 % sessionsID=[ 		53	54];% 
-% 3 10	12	13	17
-sessionsID=[ 		19	20	25 27	32	33	35 36 39 45	52	53	54];% 
+% 3
+sessionsID=[ 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=53;% 
 
@@ -31,7 +31,8 @@ tao_merg=50;% mm
 theta_merg=0.5;%in percentage
 th_IoU=0.2;% percent
 th_coplanarDistance=20;%mm
-mergingPlaneParameters=[tao_merg theta_merg th_IoU th_coplanarDistance];
+gridStep=1;
+mergingPlaneParameters=[tao_merg theta_merg th_IoU th_coplanarDistance gridStep];
 % 4. Parameters used in temporal filtering stage
 radii=15;%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
 windowSize=10;%frames
@@ -40,11 +41,12 @@ tempFilteringParameters=[radii windowSize th_detections];
 % 5. Parameteres used to set the type of planes to process: perpendicular or
 % parallel to ground. 
 % planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
-planeTypes=[0 1];
+planeTypes=[ 1];
 Npt=size(planeTypes,2);
 %6. Parameters to merge pointclouds - used in the approach 2
 planeModelParameters(1) =   12;% maxDistance in mm
-
+% 7. compensate factor for perpendicular planes supported on the floor
+compensateFactor=100;%mm
 
 
 for i=1:Ns
@@ -55,7 +57,7 @@ for i=1:Ns
 %         fileName2=['estimatedPoses_qh_planeType' num2str(planeType) '.json'];
         estimatePoses_ia2_v3(sessionID, fileName1, planeFilteringParameters, ...
             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters);
+            planeType, planeModelParameters, compensateFactor);
 %             estimatePoses_ia1_v2(sessionID, fileName1, planeFilteringParameters, ...
 %             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
 %             planeType);

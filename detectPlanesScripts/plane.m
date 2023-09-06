@@ -125,7 +125,7 @@ classdef plane < handle
             mean(pc_projected.Location(:,2),1) mean(pc_projected.Location(:,3),1)];
         end
         
-        function measurePoseAndLength(obj, pc, occlussionTreshold, plotFlag)
+        function measurePoseAndLength(obj, pc, occlussionTreshold, plotFlag, compensateFactor)
 %This method is not defined for obj.type==2
 %         Project points into model plane
         pc_projected=projectInPlane(pc,[obj.unitNormal obj.D]);
@@ -141,6 +141,15 @@ classdef plane < handle
             if (obj.type==1)%perpendicular planes
                 [obj.L1 obj.L2 obj.tform L2toY]=computeL1L2Perpendicular_v2(pc_projected,obj, plotFlag);
                 obj.L2toY=L2toY;
+%             compensate pose and length - Para sesiones con apilamiento, se debe restringir  la compensación a planos que se soportan en el piso
+%             compensate length
+                if L2toY==1
+                    obj.L2=obj.L2+compensateFactor;
+                else
+                    obj.L1=obj.L1+compensateFactor;
+                end
+%           compensate pose
+            obj.tform(2,4)=obj.tform(2,4)-(compensateFactor/2);%50% 
             end
         end
         
