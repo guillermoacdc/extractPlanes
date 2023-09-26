@@ -17,7 +17,7 @@ function [localPlanes]=loadExtractedPlanes(rootPath,scene,frames, processedScene
 if nargin<7
 	PKFlag=true;%previous knowledge Flag
 end
-
+mode=1;% mode: (0,1), (w/out previous knowledge, with previous knowledge)
 %% 1 declaring parameters 
 plotFlag=0;
 conditionalAssignationFlag=false;
@@ -56,7 +56,7 @@ for i=1:length(frames)
     [localPlanes, localAcceptedPlanesByFrame, ~,...
         groundNormal, groundD ] =loadExtractedPlanesByFrame(localPlanes, in_planesFolderPath,...
         numberPlanes, scene, frame, tresholdsV, cameraPose, lengthBoundsP,...
-        lengthBoundsTop, groundNormal, groundD, PKFlag, compensateFactor);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
+        lengthBoundsTop, groundNormal, groundD, mode, compensateFactor);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
 % add properties related with fitness for acceptedPlanes () 
     if ~isempty(localAcceptedPlanesByFrame)
         mySetFitnessPlane(localPlanes,localAcceptedPlanesByFrame);

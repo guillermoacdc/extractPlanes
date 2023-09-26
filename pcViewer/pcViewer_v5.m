@@ -4,9 +4,10 @@ clc
 close all
 clear 
 
-scene=5;%
-frame=25;
-rootPath="G:\Mi unidad\boxesDatabaseSample";
+scene=10;%
+frame=101;
+% rootPath="G:\Mi unidad\boxesDatabaseSample";
+rootPath=computeMainPaths(scene);
 [pc_mm, Thm]=loadSLAMoutput(scene,frame,rootPath); 
 Thf=eye(4);
 

@@ -12,10 +12,13 @@ p_T_ref(1:3,4)=planeDescriptor.geometricCenter';%translation component of the tr
 % compute ref_T_p; useful to record plane pose and verification figures
 ref_T_p=eye(4);
 ref_T_p(1:3,1:3)=roty(double(-alpha));%angle in degrees
+% ref_T_p(1:3,1:3)=roty(double(-alpha)+180);%angle in degrees
 ref_T_p(1:3,4)=planeDescriptor.geometricCenter';%translation component of the transformation
 
 if planeDescriptor.planeTilt==0
-    Roffset=[0 0 1; 0 1 0;-1 0 0];
+%     Roffset=[0 0 1; 0 1 0;-1 0 0];
+%     Roffset=[0 1 0; 1 0 0; 0 0 -1]*[0 0 1; 0 1 0;-1 0 0]';
+    Roffset=[0 0 -1; 0 1 0;1 0 0];
     ref_T_p(1:3,1:3)=ref_T_p(1:3,1:3)*Roffset;
 end
 

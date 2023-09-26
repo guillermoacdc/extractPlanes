@@ -69,7 +69,7 @@ for i=1:length(frames)
 %     localPlanes=detectPlanes(rootPath,scene,frame, processedScenesPath);
     disp(['session ' num2str(scene) ', frame ' num2str(frame)])
     localPlanes=loadExtractedPlanes(rootPath,scene,frame,...
-        processedScenesPath, planeFilteringParameters);%
+        processedScenesPath, planeFilteringParameters, 1, 0);%
     pc_singleFrame{i}=fusePointCloudsFromDetectedPlanes(localPlanes,gridStep,flagGroundPlane);
 end
 pc_h = pcmerge(pc_singleFrame{1},pc_singleFrame{2},gridStep);
@@ -97,3 +97,9 @@ ylabel 'y'
 zlabel 'z'
 grid on
 title (['pc from HL2 scene/frame ' num2str(scene) '/' num2str(frame)])
+
+
+% removing warnings
+w = warning('query','last');
+id=w.identifier;
+warning('off',id)

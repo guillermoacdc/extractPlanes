@@ -8,7 +8,8 @@ classdef plane < handle
         idPlane;%plane id in the frame 
         idBox;%id of detected box associated with the current plane
         unitNormal;%normal with length 1
-        D;%distance
+        D;%distance to coordinate system qh
+        D_qhmov; %distance to the coordinate system qh_movement
         geometricCenter;
         limits;%[xmin xmax ymin ymax zmin zmax]
 
@@ -94,23 +95,25 @@ classdef plane < handle
         end
         
         function correctAntiparallel(obj,th_size)
-        obj.antiparallelFlag=0;
-        if (obj.type==1)%perpendicular plane
-            if (obj.D<0 && obj.numberInliers>th_size)
-                obj.antiparallelFlag=1;
+            obj.antiparallelFlag=0;
+            if (obj.type==1)%perpendicular plane
+%                 if (obj.D<0 && obj.numberInliers>th_size)%original version
+                if (obj.D_qhmov<0 && obj.numberInliers>th_size)%original version                    
+                    obj.antiparallelFlag=1;
+                end
+            else%parallel plane. 
+%                 if(obj.D<0 && obj.type==0 )
+                if(obj.D_qhmov<0 && obj.type==0 )
+                    obj.antiparallelFlag=1;
+                end
             end
-        else%parallel plane. 
-            if(obj.D<0 && obj.type==0 )
-                obj.antiparallelFlag=1;
+            
+            if(obj.antiparallelFlag==1)
+                %Invert orientation and distance's sign
+                    obj.unitNormal=-obj.unitNormal;
+                    obj.D=-obj.D;
             end
-        end
-        
-        if(obj.antiparallelFlag)
-            %Invert orientation and distance's sign
-                obj.unitNormal=-obj.unitNormal;
-                obj.D=-obj.D;
-        end
-        
+            
         end
         
         function setLimits(obj, pc)
@@ -126,8 +129,8 @@ classdef plane < handle
         end
         
         function measurePoseAndLength(obj, pc, occlussionTreshold, plotFlag, compensateFactor)
-%This method is not defined for obj.type==2
-%         Project points into model plane
+        %This method is not defined for obj.type==2
+        % Project points into model plane
         pc_projected=projectInPlane(pc,[obj.unitNormal obj.D]);
         
 %         compute pose, length and plane tilt; last one just for
@@ -171,6 +174,11 @@ classdef plane < handle
 %             distanceToCamera_ref=norm(obj.tform(1:3,4)-cameraPosition);
             distanceToCamera_ref=norm(obj.geometricCenter-cameraPosition);
             obj.distanceToCamera=distanceToCamera_ref;
+        end
+
+        function setD_qhmov(obj, cameraPosition)
+            cameraPostion_movement=cameraPosition(1:3,4);
+            obj.D_qhmov=dot([obj.unitNormal(1) obj.unitNormal(2) obj.unitNormal(3)],cameraPostion_movement)+obj.D;
         end
 
         function setAngleBtwn_zc_unitNormal(obj, zcVector)

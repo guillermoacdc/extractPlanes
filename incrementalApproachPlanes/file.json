@@ -1,0 +1,142 @@
+{
+  "frame6": [
+    {
+      "boxID": 5,
+      "planesID": 1
+    },
+    {
+      "boxID": 11,
+      "planesID": 5
+    },
+    {
+      "boxID": 13,
+      "planesID": [
+        1,
+        5
+      ]
+    },
+    {
+      "boxID": 17,
+      "planesID": 4
+    },
+    {
+      "boxID": 30,
+      "planesID": 4
+    }
+  ],
+  "frame7": [
+    {
+      "boxID": 5,
+      "planesID": 3
+    },
+    {
+      "boxID": 11,
+      "planesID": [
+        1,
+        5
+      ]
+    },
+    {
+      "boxID": 13,
+      "planesID": 5
+    },
+    {
+      "boxID": 17,
+      "planesID": 4
+    },
+    {
+      "boxID": 30,
+      "planesID": 4
+    }
+  ],
+  "frame8": [
+    {
+      "boxID": 1,
+      "planesID": 4
+    },
+    {
+      "boxID": 5,
+      "planesID": 3
+    },
+    {
+      "boxID": 11,
+      "planesID": [
+        1,
+        5
+      ]
+    },
+    {
+      "boxID": 13,
+      "planesID": [
+        1,
+        5
+      ]
+    },
+    {
+      "boxID": 17,
+      "planesID": 4
+    },
+    {
+      "boxID": 30,
+      "planesID": 4
+    }
+  ],
+  "frame9": [
+    {
+      "boxID": 1,
+      "planesID": [
+        4,
+        5
+      ]
+    },
+    {
+      "boxID": 5,
+      "planesID": [
+        3,
+        4
+      ]
+    },
+    {
+      "boxID": 11,
+      "planesID": 5
+    },
+    {
+      "boxID": 13,
+      "planesID": 5
+    },
+    {
+      "boxID": 17,
+      "planesID": 4
+    },
+    {
+      "boxID": 30,
+      "planesID": 4
+    }
+  ],
+  "frame10": [
+    {
+      "boxID": 1,
+      "planesID": 4
+    },
+    {
+      "boxID": 5,
+      "planesID": 3
+    },
+    {
+      "boxID": 11,
+      "planesID": 5
+    },
+    {
+      "boxID": 13,
+      "planesID": 5
+    },
+    {
+      "boxID": 17,
+      "planesID": 4
+    },
+    {
+      "boxID": 30,
+      "planesID": 4
+    }
+  ]
+}

@@ -99,9 +99,9 @@ Tout(1:3,4)=planeDescriptor.geometricCenter';
 % theta2=atan2(Line2(2),Line2(1));
 % myOccludedIndex_v2=abs(theta1-theta2)*180/pi;    
 
-if planeDescriptor.idFrame==25
-    disp("stop code")
-end
+% if planeDescriptor.idFrame==25
+%     disp("stop code")
+% end
 
 if(figureFlag==1)
     

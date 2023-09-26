@@ -50,7 +50,7 @@ if (mode)
     for i=1:numberPlanes
         fillDerivedDescriptors_PK(planesByFrame{i}, th_lenght, th_size, ...
             th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBoundsTop,...
-            lengthBoundsP, 0, compensateFactor);
+            lengthBoundsP, 0, compensateFactor, cameraPose);
     end
 %% 3. classify planes in predefined cateogories, based on the value of some of the plane's descriptors
     [acceptedPlanesByFrame, discardedByNormal, discardedByLength, ~]=classifyPlanes(planesByFrame);

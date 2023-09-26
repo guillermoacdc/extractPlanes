@@ -1,5 +1,7 @@
 % computes area under the recall curve for all keyframes that belong to a
 % session and for a single tao
+% _v2 use a better aproximation of number of annotated objects by HL2
+% frame. This impacts the recall
 clc
 close all
 clear
@@ -14,6 +16,12 @@ planeType=0;
 
 theta=0.5;
 tao=50;
+th_angle=45;
+epsilon=100;
+minpts=80;
+th_distance=50;%mm
+plotFlag=0;
+th_distance2=2600;%distance btwn qm and limits of the workspac
 
 % fileName=['estimatedPoses_ia' num2str(algorithm) '_planeType' num2str(planeType) '.json'];
 fileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
@@ -33,13 +41,23 @@ recall_v=zeros(Nkf,1);
 for i=1:Nkf
     frameID=keyFrames(i);
     pps=getPPS(dataSetPath,sessionID,frameID);
+%     Nobjects=length(pps);
+    Nobjects_ref=length(pps);
+    Nobjects=countObjectsInPC_v2(sessionID, frameID, planeType+1,...
+        th_angle, th_distance, th_distance2, epsilon, minpts, plotFlag);
+    if Nobjects>Nobjects_ref
+        Nobjects=Nobjects_ref;
+    end
+    display(['processing frame ' num2str(frameID) ' ; ' num2str(i) '/' num2str(Nkf)])
+
     % extract estimations of an specific frame
     estimatedPose=estimatedPoses.(['frame' num2str(frameID)]);
     
 %         theta=theta_v(j);
         if ~isempty(estimatedPose)
 %             [precision, recall] = computeMetricsByFrame_v2(estimatedPose,theta,tao, pps);
-            [precision, recall] = computeMetricsByFrame_topPlanes(estimatedPose,theta,tao, pps, pkflag);
+            [precision, recall] = computeMetricsByFrame_topPlanes_v2(estimatedPose,...
+                theta,tao, pps, pkflag, Nobjects);
         else
             continue
         end

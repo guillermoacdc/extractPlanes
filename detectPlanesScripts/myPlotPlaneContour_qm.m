@@ -1,4 +1,4 @@
-function myPlotPlaneContour_qm(planeDescriptor, fc)
+function myPlotPlaneContour_qm(planeDescriptor, fc, frameFlag)
 %MYPLOTPLANECONTOUR Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -39,6 +39,19 @@ hold on
 dibujarlinea(p3t,p2t,fc,1)
 dibujarlinea(p4t,p3t,fc,1)
 dibujarlinea(p1t,p4t,fc,1)
+%  plot id of the plane
 
+     H=text(planeDescriptor.geometricCenter(1),...
+        planeDescriptor.geometricCenter(2),...
+        planeDescriptor.geometricCenter(3),...
+        [num2str(planeDescriptor.idFrame) '-' num2str(planeDescriptor.idPlane)],'Color',fc);
+
+if frameFlag
+%     display frame
+    scale=250;
+    width=1;
+    T=planeDescriptor.tform;
+    dibujarsistemaref (T,' ',scale,width,10,fc);
+end
 end
 

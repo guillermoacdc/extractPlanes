@@ -17,8 +17,9 @@ zL=pc_temp.Location(ix,3);
 % compute beta
 if (planeDescriptor.planeTilt==1)%xyTilt
     beta=computeAngleBtwnVectors([0 0 1], planeDescriptor.unitNormal);
-else%zyTilt
+else%zyTilt-- error in plane 101-5
     beta=computeAngleBtwnVectors([1 0 0], planeDescriptor.unitNormal);   
+%         beta=computeAngleBtwnVectors([1 0 0], -planeDescriptor.unitNormal);   
 end
 
 % apply alpha's algorithm

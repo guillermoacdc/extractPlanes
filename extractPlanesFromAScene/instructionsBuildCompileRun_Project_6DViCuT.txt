@@ -1,0 +1,78 @@
+Assumptions: 
+	efficient RANSAC and PCL have been installed in the path /usr/local/include/
+	source files are available
+		* requires a path to boxByFrame files: home/gacamacho/Documents/corrida5/pinhole_projection/boxByFrame.txt
+new one: /home/gacamacho/Documents/6DViCuT_v1/session3/analyzed/HL2
+
+		* requires a path to pointclouds with single precision: home/gacamacho/Documents/lowOcclusionScenes/
+nw one: /home/gacamacho/Documents/boxesRGBDDatabase_valfa/corrida5/HL2/PointClouds
+
+		* creates a path to processed pointclouds: home/gacamacho/Documents/lowOcclusionScenes_processed/scene5
+
+1. Get the source files from github
+
+2. Create a folder for the project with name extractPlanesFromScene. Add two sub folders: (1) src, (2) build
+
+3. Copy two files to src folder: CMakeLists.txt, extractPlanesFromScene.cpp
+
+4. Modify the parameter tao in efficient RANSAC implementation with value 50
+//was set by updating the constructor in RansacShapeDetector.cpp lines 25, 32
+//remember to ask edit permission:   sudo -H gedit /usr/local/include/ransac/RansacShapeDetector.cpp
+
+5. Build the project from build folder and using cmake
+cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
+
+6. Compile the project: create the binares from build folder using
+make
+
+7. Run the code from terminal
+
+inputs:
+	scene
+	rootPath
+
+example creating map of planes for scene 5; command executed from build folder
+./extractPlanesFromScene 5 home/gacamacho/Documents/lowOcclusionScenes/
+new one:
+./extractPlanesFromScene 3 /home/gacamacho/Documents/6DViCuT_v1/
+Assumptions: all the data sources are populated
+
+---------------compiling from Eclipse
+
+6. Open the project in eclipse
+
+7. Compile the project in eclipse
+
+8. Create a new run configuration: Eclipse/Run/Run Configurations/C C++ Application/New; adjust the input values
+
+9. Run the project
+We expect the output at Documnents/lowOcclussionScenes_processed/
+
+
+------notes
+update path to point clouds folder
+current path
+
+(/home/gacamacho/Documents/boxesRGBDDatabase_valfa/corrida5/HL2/scene3/PointClouds/frame0.ply) not found!
+Couldn't read PLY file at ... 
+
+line 217
+	std::string readPath = inputpath + "PointClouds/" + "frame" + frame_str.str() + ".ply";
+
+
+updated path
+/home/gacamacho/Documents/6DViCuT_v1/session3/filtered/HL2/PointClouds
+inputPath=/home/gacamacho/Documents/6DViCuT_v1/session3/
+std::string readPath = inputpath + "filtered/HL2/PointClouds/" + "frame" + frame_str.str() + ".ply";
+
+
+notes----MODIFICA LÍNEA 115[
+update path to boxByFrame file
+current path
+fileNameKeyFrames= fileNameKeyFrames_base +"corrida"+scene_s+"/boxByFrame.txt";
+fileNameKeyFrames_base="/home/gacamacho/Documents/boxesDatabaseSample/";
+
+updated path
+/home/gacamacho/Documents/6DViCuT_v1/session3/  analyzed/HL2/boxByFrame.txt
+
+

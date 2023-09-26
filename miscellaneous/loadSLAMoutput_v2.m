@@ -1,4 +1,4 @@
-function [pc_mm, T]=loadSLAMoutput_v2(scene,frame,rootPath)
+function [pc_mm, T]=loadSLAMoutput_v2(scene,frame)
 %LOADSLAMOUTPUT Summary of this function goes here
 %   Detailed explanation goes here
 [rootPath, ~, PCpath]=computeMainPaths(scene);
@@ -6,16 +6,16 @@ function [pc_mm, T]=loadSLAMoutput_v2(scene,frame,rootPath)
 fileNameCamera='Depth Long Throw_rig2world.txt';
 fileNamePoints=['frame' num2str(frame) '.ply'];
 pathCamera=fullfile(rootPath,['session' num2str(scene)],'raw','HL2',fileNameCamera);
-pathPoints=fullfile(PCpath,['corrida' num2str(scene)],fileNamePoints);
+pathPoints=fullfile(rootPath,['session' num2str(scene)],'filtered','HL2','PointClouds',fileNamePoints);
 % pathCamera=[rootPath + ['\corrida' num2str(scene) '\HL2\'] ];
 % pathPoints=[pathCamera + [ 'PointClouds\frame' num2str(frame) '.ply'] ];
 % Load pc
 
-% pc = pcread(pathPoints);%in [mt]; indices begin at 0
-% % convert lengths to mm
-%     xyz=pc.Location*1000;
-%     pc_mm=pointCloud(xyz);
-pc_mm=0;
+pc = pcread(pathPoints);%in [mt]; indices begin at 0
+% convert lengths to mm
+    xyz=pc.Location*1000;
+    pc_mm=pointCloud(xyz);
+% pc_mm=0;
 
 %  load T
 cameraPoses=importdata(pathCamera);

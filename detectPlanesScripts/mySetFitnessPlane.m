@@ -11,6 +11,7 @@ for i=1:N
     localPlanes.(['fr' num2str(frame)]).values(acceptedPlanes(i,2)).setDistanceToCamera(cameraPose);    
     localPlanes.(['fr' num2str(frame)]).values(acceptedPlanes(i,2)).setAngleBtwn_zc_unitNormal(zcVector);
     localPlanes.(['fr' num2str(frame)]).values(acceptedPlanes(i,2)).setfitness(tresholdDistance);
+%     localPlanes.(['fr' num2str(frame)]).values(acceptedPlanes(i,2)).setD_qhmov(cameraPose);
 end
 
 end

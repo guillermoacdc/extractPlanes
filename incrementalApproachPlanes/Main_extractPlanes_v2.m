@@ -46,7 +46,7 @@ Npt=size(planeTypes,2);
 %6. Parameters to merge pointclouds - used in the approach 2
 planeModelParameters(1) =   12;% maxDistance in mm
 % 7. compensate factor for perpendicular planes supported on the floor
-compensateFactor=100;%mm
+compensateFactor=0;%mm--- no funcionó como se esperaba
 
 
 for i=1:Ns

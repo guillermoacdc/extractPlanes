@@ -1,0 +1,155 @@
+function [numberOfObjects, myModel] = countObjectsInPC_v3(sessionID, frameID, typeObject,...
+    th_angle, th_distance, th_distance2, epsilon, minpts, plotFlag)
+%COUNTOBJECTSINPC Counts the number of objects in a point cloud. 
+%   inputs
+% 1. typeObjects, 1 for top, 2 for perpendicular
+myModel=0;
+%% load pc from session and frame IDs
+[pc_raw]=loadSLAMoutput_v2(sessionID,frameID); %loaded in mm
+
+%% project pc to qm coordinate system
+dataSetPath=computeMainPaths(sessionID);
+pathTh2m=fullfile(dataSetPath,['session' num2str(sessionID)],'analyzed');
+fileName='Th2m.txt';
+Th2m_array=load(fullfile(pathTh2m,fileName));
+Th2m=assemblyTmatrix(Th2m_array);
+% project
+pc_m=myProjection_v3(pc_raw,Th2m);
+
+%% delete points that fit with ground plane
+
+[~,inlierIndices]=pcfitplane(pc_m,th_distance,[0 0 1]);
+% delete inliers
+    xyz=pc_m.Location;
+    xyz(inlierIndices,:)=[];
+    pcwoutGround=pointCloud(xyz);
+
+% filter points by type
+    [inliersTopPlane, inliersLateralPlane]=filterPointsByType(pcwoutGround,...
+        th_angle);
+%% cluster by instance
+% form the vector of features X
+if typeObject==1%for top planes we use the whole point cloud
+% for top planes we delete the lateral planes of each cluster
+    xyz(inliersLateralPlane,:)=[];
+    pcSingleType=pointCloud(xyz);
+else
+    % for lateral planes we delete the top side of each cluster
+    xyz(inliersTopPlane,:)=[];
+    pcSingleType=pointCloud(xyz);
+end
+cosAlpha=computeCosAlpha(pcSingleType,[0 0 1]);
+X=[pcSingleType.Location(:,1), pcSingleType.Location(:,2), ...
+pcSingleType.Location(:,3), cosAlpha];
+
+
+% cluster
+idx = dbscan(X,epsilon,minpts);
+
+%% return  number of objects
+numberOfObjects=max(idx);
+
+if typeObject==1
+
+%     compute distance of cluster to origin
+    distance=zeros(numberOfObjects,1);
+
+        for i=1:numberOfObjects
+                rows=find(idx==i);
+                tempPC=pointCloud(pcSingleType.Location(rows,:));
+                xmean=mean(pcSingleType.Location(rows,:));
+                distance(i)=norm(xmean);
+                if plotFlag
+                    pcshow(tempPC);
+                    text(xmean(1),xmean(2),xmean(3),num2str(i),'Color','yellow');
+                    hold on
+                end
+        end
+% filter clusters by distance 
+    badDetections=0;
+    clusters=[];
+        for i=1:numberOfObjects
+            if abs(distance(i))>th_distance2
+                badDetections=badDetections+1;
+            else
+                clusters=[clusters i];
+            end
+        end
+        numberOfObjects=numberOfObjects-badDetections;
+
+else
+    %% fit clusters with plane model
+    k=1;
+    for i=1:numberOfObjects
+        rows=find(idx==i);
+        myrows.(['cluster' num2str(k)])=rows;
+        pc_i=pointCloud([pcSingleType.Location(rows,1),pcSingleType.Location(rows,2),...
+            pcSingleType.Location(rows,3)]);
+        [myModel.(['cluster' num2str(k)]), ~, outlierIndicesCluster] =pcfitplane(pc_i,th_distance);
+        k=k+1;
+        if length(outlierIndicesCluster)>minpts/2
+            rows=rows(outlierIndicesCluster);
+            myrows.(['cluster' num2str(k)])=rows;
+            pc_i=pointCloud([pcSingleType.Location(rows,1),pcSingleType.Location(rows,2),...
+            pcSingleType.Location(rows,3)]);
+            [myModel.(['cluster' num2str(k)]), inlierIndicesCluster, outlierIndicesCluster] =pcfitplane(pc_i,th_distance);
+            k=k+1;
+        end
+    end
+    numberOfObjects=k-1;
+    % compute distance D
+    distanceD=zeros(numberOfObjects,1);
+    for i=1:numberOfObjects
+        distanceD(i)=myModel.(['cluster' num2str(i)]).Parameters(4);
+    end
+    % filter clusters by distance D
+    badDetections=0;
+    clusters=[];
+    for i=1:numberOfObjects
+        if abs(distanceD(i))>th_distance2
+            badDetections=badDetections+1;
+        else
+            clusters=[clusters i];
+        end
+    end
+    numberOfObjects=numberOfObjects-badDetections;
+    if plotFlag
+        figure,
+            myLegends={};
+            for i=1:numberOfObjects+badDetections
+                rows=myrows.(['cluster' num2str(i)]);
+    %             myRows.(['cluster' num2str(i)])=rows;
+                tempPC=pointCloud(pcSingleType.Location(rows,:));
+                charArray=dec2bin(i,3);
+                color=[ str2num(charArray(1)),  str2num(charArray(2)),  str2num(charArray(3))]*255;
+                tempPC=pcPaint(tempPC,color);
+                pcshow(tempPC);
+%                 myLegends(i)={['cluster ' num2str(i)]};
+                xmean=mean(pcSingleType.Location(rows,:));
+                text(xmean(1),xmean(2),xmean(3),num2str(i),'Color','yellow');
+                 hold on
+            end
+                xlabel 'x'
+                ylabel 'y'
+                grid
+            title ([ num2str(numberOfObjects) ' objects in the frameID '...
+                num2str(frameID) ': Clusters ' num2str(clusters)])
+    end
+end
+
+
+% if plotFlag
+%     figure,
+%         pcshow(pcwoutGround)
+%         hold on
+%         dibujarsistemaref(eye(4),'m',250,2,10,'w');
+%         grid on
+%         xlabel 'x'
+%         ylabel 'y'
+%         zlabel 'z'
+%         title (['pc wout ground sessionID/frameID ' num2str(sessionID) '/' num2str(frameID)])
+% 
+% end
+
+end
+

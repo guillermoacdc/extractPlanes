@@ -1,4 +1,4 @@
-function fillDerivedDescriptors_PK(planeDescriptor, th_lenght, th_size, ...
+function fillDerivedDescriptors_Annotation(pc, planeDescriptor, th_lenght, th_size, ...
         th_angle, th_occlusion, D_Tolerance, groundNormal, groundD, lengthBoundsTop,...
         lengthBoundsP, plotFlag, compensateFactor, cameraPose)
 %fillDerivedDescriptors_PK computes derived descriptors for planes, based on
@@ -7,7 +7,7 @@ function fillDerivedDescriptors_PK(planeDescriptor, th_lenght, th_size, ...
 
 % load of point cloud
 % pc = pcread(planeDescriptor.pathPoints);%in [mt]; indices begin at 0
-pc = myPCread(planeDescriptor.pathPoints);% in mm
+% pc = myPCread(planeDescriptor.pathPoints);% in mm
 
 %     classify the plane object in the categories type, xyTilt
 planeDescriptor.classify(pc, th_angle, groundNormal);%
@@ -25,7 +25,7 @@ if (planeDescriptor.type~=2)%avoid computation on non-expected planes
     % set limits and update geometric center. The update is necessary to include the projection of points to
     %     the plane model before compute g.c. 
     planeDescriptor.setLimits(pc);%set limits in each axis.
-%     compute distance D_qhmov
+    %     compute distance D_qhmov
     planeDescriptor.setD_qhmov(cameraPose);
     %     detect antiparallel normals and correct
     planeDescriptor.correctAntiparallel(th_size);%
