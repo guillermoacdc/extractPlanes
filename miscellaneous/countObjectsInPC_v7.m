@@ -51,7 +51,7 @@ clusterLateralPlanesDescriptor=computeClusterLateralPlanes(xyz, inliersTopPlane,
 % mix cluster top and lateral planes in a single cluster, add fields groundNormal, groundD
 clusterDescriptor=mixClusters(clusterTopPlanesDescriptor, clusterLateralPlanesDescriptor, clusterDescriptor);
 
-display('stop')
+% display('stop')
 
 
 end

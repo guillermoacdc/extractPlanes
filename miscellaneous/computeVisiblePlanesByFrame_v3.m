@@ -4,10 +4,11 @@ clear
 
 % load Session ID
 sessionID=10;
-filePath=fullfile(['session' num2str(sessionID)], 'analyzed','HL2');
-fileName=fullfile(filePath,'visiblePlanesByFrame');%suggested folder: analyzed/HL2/visiblePlanes.json
-% load Parameters
 dataSetPath=computeMainPaths(sessionID);
+filePath=fullfile(dataSetPath,['session' num2str(sessionID)], 'analyzed','HL2');
+fileName='visiblePlanesByFrame';%suggested folder: analyzed/HL2/visiblePlanes.json
+% load Parameters
+
 NpointsDiagPpal=60;
 tao=110;
 
@@ -28,22 +29,22 @@ tao=110;
 % load keyframes
 keyframes=loadKeyFrames(dataSetPath, sessionID);
 Nkf=length(keyframes);
-for k=1:5 
+for k=80:80 
     frameID=keyframes(k);
     %% cluster points by using dbscan
-    display(['clustering in frame ' num2str(frameID)])
+    display(['clustering in frame ' num2str(frameID) '- index' num2str(k) ' of ' num2str(Nkf)])
     [clusterDescriptor, pc_h, pc_m, cameraPose]= countObjectsInPC_v7(sessionID, frameID,...
         th_angle_cluster, th_distance, th_distance2, epsilon, minpts, plotFlag);
     Nc=length(clusterDescriptor.ID);
     %% reduce the threshold distance to have a better plane model by cluster
     xyz=pc_h.Location;
-    th_distance=th_distance/2;%mm
+%     th_distance=th_distance/2;%mm
     % figure,
     for i=1:Nc
         indexes=clusterDescriptor.rawIndex{clusterDescriptor.ID(i)};
         pc_temp=pointCloud(xyz(indexes,:));
         pc_geomCenter=mean(pc_temp.Location);
-        planeModelTemp=pcfitplane(pc_temp,th_distance);
+        planeModelTemp=pcfitplane(pc_temp,th_distance/2);
         clusterDescriptor.planeModel{clusterDescriptor.ID(i)}=[planeModelTemp.Parameters, pc_geomCenter];
     end
     %     pcshow(pc_temp);
@@ -79,13 +80,14 @@ for k=1:5
     visiblePlanesByFrame_s = convert2DVtoStructV(visiblePlanes);
     visiblePlanesBySession.(['frame' num2str(frameID)])=visiblePlanesByFrame_s;
 end
-encoded=jsonencode(visiblePlanesBySession,PrettyPrint=true);
-fid = fopen([fileName '.json'],'w');
-fprintf(fid,'%s',encoded);
-fclose(fid);
+% encoded=jsonencode(visiblePlanesBySession,PrettyPrint=true);
+% cd(filePath);
+% fid = fopen([fileName '.json'],'w');
+% fprintf(fid,'%s',encoded);
+% fclose(fid);
 
 
-return
+
 %% plot visible planes ground truth
 % convert to vector of objects planeDescriptorGTV
 Nb=size(visiblePlanesByFrame_s,2);
