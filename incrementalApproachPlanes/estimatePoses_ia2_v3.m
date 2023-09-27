@@ -1,6 +1,6 @@
 function estimatePoses_ia2_v3(sessionID, fileName, planeFilteringParameters, ...
             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters, compensateFactor)
+            planeType, planeModelParameters, compensateFactor, theta)
 % ESTIMATEPOSES_IA2_v2() Second version of an incremental approach. In the 
 % merge stage performs a % a hybrid strategy which includes: (1) selection 
 % of planes or (2) creation of new planes. The second strategy includes (1)  
@@ -137,7 +137,7 @@ ProcessingTime=toc;
         estimatedGlobalPlanesID=extractIDsFromVector(globalPlanes_t);
         estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,planeDesc_m,...
             sessionID,frameID,estimatedGlobalPlanesID,tao_v,dataSetPath,...
-            NpointsDiagPpal,estimatedPoses, ProcessingTime);
+            NpointsDiagPpal,estimatedPoses, ProcessingTime, theta, planeType);
 
     end
 
@@ -171,7 +171,7 @@ figure,
     for k =1:Nb
         T=planeDesc_h(k).tform;
         ind=planeDesc_h(k).idBox;
-        dibujarsistemaref(T,ind,120,2,10,'w')
+        dibujarsistemaref(T,ind,120,2,10,'w');
         hold on
     end
 %     axis square

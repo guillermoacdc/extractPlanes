@@ -29,7 +29,8 @@ tao=110;
 % load keyframes
 keyframes=loadKeyFrames(dataSetPath, sessionID);
 Nkf=length(keyframes);
-for k=80:80 
+% for k=1:Nkf
+for k=15:15
     frameID=keyframes(k);
     %% cluster points by using dbscan
     display(['clustering in frame ' num2str(frameID) '- index' num2str(k) ' of ' num2str(Nkf)])
@@ -46,10 +47,10 @@ for k=80:80
         pc_geomCenter=mean(pc_temp.Location);
         planeModelTemp=pcfitplane(pc_temp,th_distance/2);
         clusterDescriptor.planeModel{clusterDescriptor.ID(i)}=[planeModelTemp.Parameters, pc_geomCenter];
-    end
     %     pcshow(pc_temp);
     %     hold on
-    
+    end
+
     %% convert cluster to plane object...
     
     planeObject=cluster2PlaneObject(pc_h,clusterDescriptor,...
@@ -58,24 +59,29 @@ for k=80:80
 %% compute visible planes in frame comparing with gt planes
     % convert estimated poses to qm
     detectedPlanes_m=myProjectionPlaneObject_v3(detectedPlanes_h,...
-                sessionID,dataSetPath);%-m world
+                sessionID,dataSetPath);%-m world; after this line the variables 
+    % a and b have the same value. consequence of pass by reference
+%     (a) detectedPlanes_h, (b) detectedPlanes_m
+
     % load gt planes
     gtPlanes=loadGTPlanes(sessionID, frameID);
     % compare gt planes vs detectedPlanes_h
     visiblePlanes=[];
-    while(~isempty(detectedPlanes_h) )
-        [detectedID,gtID, visiblePlane]=computeMatchBtwnPlanes(detectedPlanes_h,...
+    while(~isempty(detectedPlanes_m) )
+        [detectedIndex,gtIndex, visiblePlane]=computeMatchBtwnPlanes(detectedPlanes_m,...
             gtPlanes,tao,NpointsDiagPpal);
-        if ~isempty(detectedID)
+        if ~isempty(detectedIndex)
         % update detection
-            detectedPlanes_h(detectedID)=[];
+            detectedPlanes_m(detectedIndex)=[];
         end
-        if ~isempty(gtID)
+        if ~isempty(gtIndex)
         % update gt
-            gtPlanes(gtID)=[];
+            gtPlanes(gtIndex)=[];
             visiblePlanes=[visiblePlanes; visiblePlane];
         end
     end
+    sizeVisiblePlanes=size(visiblePlanes,1);
+    display([num2str(sizeVisiblePlanes) ' planes are visible'])
     % generate struct
     visiblePlanesByFrame_s = convert2DVtoStructV(visiblePlanes);
     visiblePlanesBySession.(['frame' num2str(frameID)])=visiblePlanesByFrame_s;

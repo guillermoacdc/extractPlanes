@@ -41,13 +41,13 @@ recall_v=zeros(Nkf,1);
 for i=1:Nkf
     frameID=keyFrames(i);
     pps=getPPS(dataSetPath,sessionID,frameID);
-%     Nobjects=length(pps);
-    Nobjects_ref=length(pps);
-    Nobjects=countObjectsInPC_v2(sessionID, frameID, planeType+1,...
-        th_angle, th_distance, th_distance2, epsilon, minpts, plotFlag);
-    if Nobjects>Nobjects_ref
-        Nobjects=Nobjects_ref;
-    end
+    Nobjects=length(pps);
+%     Nobjects_ref=length(pps);
+%     Nobjects=countObjectsInPC_v2(sessionID, frameID, planeType+1,...
+%         th_angle, th_distance, th_distance2, epsilon, minpts, plotFlag);
+%     if Nobjects>Nobjects_ref
+%         Nobjects=Nobjects_ref;
+%     end
     display(['processing frame ' num2str(frameID) ' ; ' num2str(i) '/' num2str(Nkf)])
 
     % extract estimations of an specific frame

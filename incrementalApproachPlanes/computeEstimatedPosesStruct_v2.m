@@ -1,11 +1,11 @@
 function estimatedPoses=computeEstimatedPosesStruct_v2(globalPlanes_t,gtPoses,...
             sessionID,frameID,estimatedPlanesID,tao_v,dataSetPath,...
-            NpointsDiagPpal, estimatedPoses, ProcessingTime)
+            NpointsDiagPpal, estimatedPoses, ProcessingTime,theta, planeType)
 %COMPUTEESTIMATEDPOSESSTRUCT project estimated poses to qm and compute 
 % estimatedPoses struct. 
 % 1. Project estimated poses to qm (.tform). The rest of the properties is not
 %   modifed
-% 2. Computes the struct estimatePoses. This has the next fields by frame:
+% 2. Computes the struct estimatedPoses. This has the next fields by frame:
 %     IDObjects: [5×2 double]
 %         poses: [5×16 double]
 %            L1: [3.4679e+05 3.4515e+05 2.4865e+05 2.8931e+05 2.8621e+05]
@@ -57,6 +57,8 @@ Ntao=length(tao_v);
 %              gtPoses,  tao, dataSetPath, NpointsDiagPpal);
             estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)])=compute_eADD_v3(globalPlanes_m.fr0.values,...
              gtPoses,  tao, NpointsDiagPpal);
+            estimatedPoses.(['frame' num2str(frameID)]).FN=computeFN(estimatedPoses.(['frame' num2str(frameID)]).eADD.(['tao' num2str(tao)]),...
+                gtPoses, sessionID, frameID, theta, planeType);
         end
 end
 

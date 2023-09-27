@@ -42,6 +42,7 @@ if N>0
         outputVector(i).angleBtwn_zc_unitNormal=inputVector(i).angleBtwn_zc_unitNormal;
         outputVector(i).fitness=inputVector(i).fitness;
         outputVector(i).timeParticleID=inputVector(i).timeParticleID;
+        outputVector(i).D_qhmov=inputVector(i).D_qhmov;
     end    
 else
     outputVector=[];
