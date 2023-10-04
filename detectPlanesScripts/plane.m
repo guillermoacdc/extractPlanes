@@ -124,8 +124,9 @@ classdef plane < handle
             min(pc_projected.Location(:,2)),  max(pc_projected.Location(:,2)),...
             min(pc_projected.Location(:,3))  max(pc_projected.Location(:,3))];
 %         update geometric center using projected data
-        obj.geometricCenter=[mean(pc_projected.Location(:,1),1),...
-            mean(pc_projected.Location(:,2),1) mean(pc_projected.Location(:,3),1)];
+%         obj.geometricCenter=[mean(pc_projected.Location(:,1),1),...
+%             mean(pc_projected.Location(:,2),1) mean(pc_projected.Location(:,3),1)];
+        obj.geometricCenter=[mean(obj.limits(1:2)) mean(obj.limits(3:4)) mean(obj.limits(5:6))];
         end
         
         function measurePoseAndLength(obj, pc, occlussionTreshold, plotFlag, compensateFactor)

@@ -63,12 +63,12 @@ localPlanes=[];
 
 % performing the computation for each frame
 for i=1:Nframes
+    frameID=keyframes(i);
     if mod(i,10)==0
-%     if i==10
+%     if frameID==30
         disp('stop mark')
     end
     tic;
-    frameID=keyframes(i);
     radii=computeRaddi(dataSetPath,sessionID,frameID,estimatedPlaneType );
     logtxt=['Assessing detections in frame ' num2str(frameID) ', radii=' num2str(radii) 'mm. i=' num2str(i) '/' num2str(length(keyframes))];
     disp(logtxt);
@@ -121,6 +121,9 @@ for i=1:Nframes
         [globalPlanes, bufferComposedPlanes]=mergeIntoGlobalPlanes_v3(localPlanes,...
             globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
             lengthBoundsP,bufferComposedPlanes, planeFilteringParameters, planeModelParameters, gridStep, compensateFactor);%h-world
+% [globalPlanes, bufferComposedPlanes]=mergeIntoGlobalPlanes_v4(localPlanes,...
+%             globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
+%             lengthBoundsP,bufferComposedPlanes, planeFilteringParameters, planeModelParameters, gridStep, compensateFactor);%h-world
 % merge between planes of globalPlanes - type 4
          [globalPlanes,bufferComposedPlanes]=mergePlanesOfASingleFrame_v2(globalPlanes, ...
              bufferComposedPlanes,planeFilteringParameters,...

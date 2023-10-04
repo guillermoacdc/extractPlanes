@@ -12,7 +12,7 @@ sessionID=10;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 
 algorithm=2;
-planeType=0;
+planeType=1;
 
 theta=0.5;
 tao=50;

@@ -41,8 +41,8 @@ th_detections=0.3;%percent - not used in version 1 - update with th_vigency
 tempFilteringParameters=[radii windowSize th_detections];
 % 5. Parameteres used to set the type of planes to process: perpendicular or
 % parallel to ground. 
-% planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
-planeTypes=[ 0];
+planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
+% planeTypes=[ 1];
 Npt=size(planeTypes,2);
 %6. Parameters to merge pointclouds - used in the approach 2
 planeModelParameters(1) =   12;% maxDistance in mm
@@ -55,10 +55,11 @@ for i=1:Ns
     for j=1:Npt
         planeType=planeTypes(j);
         fileName1=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
-%         fileName2=['estimatedPoses_qh_planeType' num2str(planeType) '.json'];
-        estimatePoses_ia2_v3(sessionID, fileName1, planeFilteringParameters, ...
-            asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters, compensateFactor, theta);
+%         fileName1=['estimatedPoses_ia_planeType' num2str(planeType) '_v2f.json'];
+
+        myPlaneTracker(sessionID, fileName1, planeFilteringParameters, ...
+            mergingPlaneParameters, tempFilteringParameters, ...
+            planeType, planeModelParameters, compensateFactor);
 %             estimatePoses_ia1_v2(sessionID, fileName1, planeFilteringParameters, ...
 %             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
 %             planeType);

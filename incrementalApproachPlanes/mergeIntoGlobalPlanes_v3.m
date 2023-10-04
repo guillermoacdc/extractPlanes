@@ -6,15 +6,16 @@ if nargin<10
     gridStep=1;
 end
 lpCounter=size(localPlanes,2);
-gpCounter=size(globalPlanes,2);
+% gpCounter=size(globalPlanes,2);
 
 i=1;%index to read localPlanes
 while lpCounter>=1
     twinFlag=0;
     localPlane=localPlanes(i);
-
+    gpCounter=size(globalPlanes,2);%---addition
     j=1; %index to read globalPlanes
     while gpCounter>=1 & twinFlag==0
+
         globalPlane=globalPlanes(j);
 %         type4 = (globalPlane==localPlane);%isType4
         typeOfTwin=computeTypeOfTwin_v2(localPlane,globalPlane, tao,...
@@ -37,10 +38,11 @@ while lpCounter>=1
 
     if ~twinFlag
         globalPlanes=[globalPlanes localPlane];
-        i=i+1;
-    else
-        i=1;
     end
+    if typeOfTwin==4
+        i=i-1;%to compensate the elimination of an element
+    end
+    i=i+1;
     lpCounter=lpCounter-1;
 end
 

@@ -90,5 +90,9 @@ else
     end
 end
 
+% if type~=0
+%     display('stop mark')
+% end
+
 end
 

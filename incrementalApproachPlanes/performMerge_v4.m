@@ -26,6 +26,15 @@ function [globalPlanes, localPlanes, bufferCP]=performMerge_v4(localPlanes, id_l
 % Assumptions-------------
 % 1. the input planes belong to the same type
 % 2. 
+
+% _v4. Avoid deletion of localPlane from vector,
+% saves composed plane in the same index of one of its components
+
+Nlp=length(localPlanes);
+if id_lp>Nlp
+    return
+end
+
 localPlane=localPlanes(id_lp);
 sessionID=localPlane.idScene;
 th_lenght=tresholdsV(1);
@@ -64,10 +73,10 @@ switch (typeOfTwin)
         bufferCP, maxDistance, th_size, th_occlusion, lengthBoundsTop,...
         lengthBoundsP, th_lenght);
 %%   Delete components from its previous container
-        globalPlanes(id_gp)=[];
+        globalPlanes(id_gp)=composedPlane;
         localPlanes(id_lp)=[];%verify pass by reference
 %%   insert composedPlane into globalPlanes
-        globalPlanes=[globalPlanes composedPlane];        
+%         globalPlanes=[globalPlanes composedPlane];        
 end
 
 end

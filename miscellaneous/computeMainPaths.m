@@ -18,11 +18,11 @@ if (f=='/')%linux
             PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/HighOcclusionScenes_processed';
     end
 else %windows
-%     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder';
+    evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder';
 %     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
 %     evalPath='D:\doctorado\evalFolder';
 %     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
-    evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_v9';
+%     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_v9';
     dataSetPath='D:\6DViCuT_p1';
     
     switch (typeOfSession)

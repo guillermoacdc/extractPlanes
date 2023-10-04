@@ -44,7 +44,9 @@ zeroElements=find(matchID(:,3)==0);
 TPR=DP-length(zeroElements);
 % compute True Positive (TP)
 TP=TPR-redundantRep;
-recall=TP/Nb;
+% recall=TP/Nb;
+FN=size(estimatedPose.FN,1);
+recall=TP/(TP+FN);
 if pkflag==1
     precision=TPR/DP;
 else

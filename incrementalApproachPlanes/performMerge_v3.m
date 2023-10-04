@@ -26,6 +26,11 @@ function [globalPlanes, localPlanes, bufferCP]=performMerge_v3(localPlanes, id_l
 % Assumptions-------------
 % 1. the input planes belong to the same type
 % 2. 
+Nlp=length(localPlanes);
+if id_lp>Nlp
+    return
+end
+
 localPlane=localPlanes(id_lp);
 sessionID=localPlane.idScene;
 th_lenght=tresholdsV(1);
@@ -77,7 +82,7 @@ switch (typeOfTwin)
 %         model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
         model = pcfitplane(pcnew,maxDistance);
 
-        newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be recomputed
+        newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be recomputed in plane/setLimits
  
     %   create a new composed plane, with double value in its IDs
 
@@ -116,10 +121,10 @@ switch (typeOfTwin)
 %             add relationship with particle element
             composedPlane.timeParticleID=globalPlanes(id_gp).timeParticleID;
 %%   Delete components from its previous container
-        globalPlanes(id_gp)=[];
+        globalPlanes(id_gp)=[composedPlane];%---considere adicionar composedPlane en el indice id_gp
         localPlanes(id_lp)=[];%verify pass by reference
 %%   insert composedPlane into globalPlanes
-        globalPlanes=[globalPlanes composedPlane];        
+%         globalPlanes=[globalPlanes composedPlane];   %---evite esta adición     
 end
 
 end
