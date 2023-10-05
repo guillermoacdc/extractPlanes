@@ -8,9 +8,9 @@ clear
 % low occlussion scenes
 % sessionsID=[ 		53	54];% 
 % 3
-% sessionsID=[ 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
+sessionsID=[ 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=10;% 
+% sessionsID=10;% 
 
 Ns=size(sessionsID,2);
 %% setting parameters

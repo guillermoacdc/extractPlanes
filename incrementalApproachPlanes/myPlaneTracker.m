@@ -19,7 +19,7 @@ function  myPlaneTracker(sessionID, outputFileName, planeFilteringParameters, ..
 %   ground
 
 %% begin Text
-disp(['----------Estimating poses in session ' num2str(sessionID) ' under incremental algorithm'])
+disp(['----------Estimating poses in session ' num2str(sessionID) ' with plane type ' num2str(planeType)])
 estimatedPose.sessionID=sessionID;
 %% unzip parameters
 % 1. parameters used to implement the maps-integration strategy

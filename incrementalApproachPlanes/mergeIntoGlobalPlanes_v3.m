@@ -5,6 +5,7 @@ function [globalPlanes, bufferComposedPlanes] = mergeIntoGlobalPlanes_v3(localPl
 if nargin<10
     gridStep=1;
 end
+typeOfTwin=0;%initiate var
 lpCounter=size(localPlanes,2);
 % gpCounter=size(globalPlanes,2);
 
