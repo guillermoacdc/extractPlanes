@@ -8,7 +8,7 @@ clear
 
 pkflag=1;%1 for Awpk, 0 for Awoutpk 
 planeType=0;%0 for top planes, 1 for lateral planes
-sessionID=10;
+sessionID=3;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 inputFileName=['assessment_planeType' num2str(planeType) '.json'];
 keyFrames=loadKeyFrames(dataSetPath,sessionID);

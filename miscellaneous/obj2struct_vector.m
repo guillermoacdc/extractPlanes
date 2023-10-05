@@ -9,12 +9,22 @@ properties = fieldnames(obj); % works on structs & classes (public properties)
 % properties(12)=[];%forget property pathPoints to avoid errors during json decoding
 Ne=size(obj,2);
 Np=length(properties);
+
+windowsFlag=false;
 old=filesep;
-new=[old old];
+if old=='\'
+    windowsFlag=true;
+end
+
+
+if windowsFlag
+    new=[old old];
+end
+
 for k=1:Ne
     for i = 1:Np
         val = obj(k).(properties{i});
-        if i==12
+        if i==12 & windowsFlag %manage of path value
             val = replace(val,old, new);
         end
         output_struct(k).(properties{i}) = val; 

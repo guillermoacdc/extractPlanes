@@ -4,8 +4,19 @@ function  mySaveStruct2JSONFile(theStruct,fileName,savePath,sessionID, folderFla
 if nargin<5
     folderFlag=true;
 end
+windowsFlag=false;
+old=filesep;
+if old=='\'
+    windowsFlag=true;
+end
+
 %% put the data in a string of json format
+if windowsFlag
     str = mps.json.encode(theStruct);
+else
+    str = jsonencode(theStruct);
+end
+    
     % add a return character after all commas:
     jsonFormat_string = strrep(str, ',', ',\n');
     % add a return character after curly brackets:
