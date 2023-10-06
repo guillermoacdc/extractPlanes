@@ -1,4 +1,4 @@
-function [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID)
+function [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app)
 %COMPUTEMAINPATHS Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -18,7 +18,7 @@ if (f=='/')%linux
             PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/HighOcclusionScenes_processed';
     end
 else %windows
-    evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder';
+    evalPath=['D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder' app];
 %     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
 %     evalPath='D:\doctorado\evalFolder';
 %     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';

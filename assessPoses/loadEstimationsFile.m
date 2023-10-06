@@ -15,7 +15,8 @@ jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
     str = char(raw'); 
     fclose(fid); 
     if windowsFlag
-        estimatedPoses = mps.json.decode(str);
+%         estimatedPoses = mps.json.decode(str);
+            estimatedPoses = jsondecode(str);
     else
         estimatedPoses = jsondecode(str);
     end

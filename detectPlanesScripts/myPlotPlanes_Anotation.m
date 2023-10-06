@@ -6,7 +6,8 @@ function  myPlotPlanes_Anotation(myPlaneDescriptor, frameFlag, worldRef)
 % in_SceneFolderPath=['C:/lib/scene' num2str(scene) '/inputScenes/'];
 % _v3: process a vector instead a struct
 % worldRef={'m', 'h'}
-N=size(myPlaneDescriptor,2);
+% N=size(myPlaneDescriptor,2);
+N=length(myPlaneDescriptor);
 for i=1:N
     frame_tp=myPlaneDescriptor(i).idFrame;
     if worldRef=='h'

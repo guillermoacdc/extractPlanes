@@ -11,38 +11,15 @@ planeType=0;%0 for top planes, 1 for lateral planes
 sessionID=13;
 [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
 inputFileName=['assessment_planeType' num2str(planeType) '.json'];
-keyFrames=loadKeyFrames(dataSetPath,sessionID);
-Nkf=length(keyFrames);
-assessment=loadEstimationsFile(inputFileName,sessionID, evalPath);
-precision_v=zeros(Nkf,1);
-recall_v=zeros(Nkf,1);
-f1score_v=zeros(Nkf,1);
-%% iterative computation
-for i=1:Nkf
-    frameID=keyFrames(i);
-    cAssessment=assessment.(['frame' num2str(frameID)]);
-    [NTP, NFP, NFN]=myCounter(cAssessment, pkflag);
-    if NTP==0
-        precision_v(i)=0;
-        recall_v(i)=0;
-        f1score_v(i)=0;
-    else
-        precision_v(i)=NTP/(NTP+NFP);
-        recall_v(i)=NTP/(NTP+NFN);
-        f1score_v(i)=2*precision_v(i)*recall_v(i)/(precision_v(i)+recall_v(i));
-    end
-end
 
+[metrics_v, meanValues,stdValues, keyFrames, tao] = loadAssessment_counts(inputFileName, sessionID,pkflag);
+precision_v=metrics_v(:,1);
+recall_v=metrics_v(:,2);
+precision_mean=meanValues(1);
+recall_mean=meanValues(2);
+precision_std=stdValues(1);
+recall_std=stdValues(2);
 
-%% compute mean and std values
-recall_mean=mean(recall_v);
-recall_std=std(recall_v);
-precision_mean=mean(precision_v);
-precision_std=std(precision_v);
-f1score_mean=mean(f1score_v);
-f1score_std=std(f1score_v);
-
-tao=assessment.Parameters.tao;
 % plot  
 
 figure,

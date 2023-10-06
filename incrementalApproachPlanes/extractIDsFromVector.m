@@ -1,7 +1,7 @@
 function [ids] = extractIDsFromVector(planesVector)
 %EXTRACTIDSFROMVECTOR Summary of this function goes here
 %   Detailed explanation goes here
-N=size(planesVector,2);
+N=length(planesVector);
 ids=zeros(N,2);
 
 for i=1:N

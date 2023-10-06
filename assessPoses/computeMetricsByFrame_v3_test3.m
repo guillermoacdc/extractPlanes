@@ -7,7 +7,7 @@ sessionsID=[ 3 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];%
 [dataSetPath,evalPath]=computeMainPaths(1);
 Ns=length(sessionsID);
 
-sessionID=10;
+% sessionID=10;
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
@@ -28,10 +28,10 @@ for k=1:length(planeTypes)
         Nkf=length(keyFrames);
         %% iterative assessment by frame
         for i=1:Nkf
+            frameID=keyFrames(i);
             if i==14
                 display('stop mark')
             end
-            frameID=keyFrames(i);
             %load estimations in the current frame
             globalPlanes=estimatedPoses.(['frame' num2str(frameID)]);
             %% load gt planes for the current frame
@@ -49,7 +49,7 @@ for k=1:length(planeTypes)
                 gtPlanes(idx)=[];
             end
             %% compute metrics by frame
-            myLegend=['Asessing frame ' num2str(frameID) ' - index ' num2str(i) '/' num2str(Nkf)];
+            myLegend=['Asessing frame s' num2str(sessionID)  '-' num2str(frameID) ' - index ' num2str(i) '/' num2str(Nkf)];
             disp(myLegend)
             [TPhl2, TPm, FPhl2, FNm] = computeMetricsByFrame_v3(globalPlanes, sessionID, ...
                 frameID, gtPlanes, tao, theta, NpointsDiagPpal, planeType);

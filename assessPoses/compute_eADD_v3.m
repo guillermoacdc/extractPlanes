@@ -3,7 +3,7 @@ function [eADD_m] = compute_eADD_v3(estimatedPlanes, ...
 %COMPUTE_EADD Computes e_ADD for point clouds objects. 
 
 %   Detailed explanation goes here
-Nep=size(estimatedPlanes,2);
+Nep=length(estimatedPlanes);
 Ngtp=size(gtPlanes,2);%modified in objects version
 eADD_m=ones(Nep,Ngtp);
 

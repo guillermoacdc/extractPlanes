@@ -3,8 +3,8 @@ close all
 clear
 
 %% set parameters
-sessionID=10;
-frameID=142;
+sessionID=3;
+frameID=409;
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;

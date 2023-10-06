@@ -6,7 +6,8 @@ function  myPlotPlanes_v3(myPlaneDescriptor, frameFlag)
 % in_SceneFolderPath=['C:/lib/scene' num2str(scene) '/inputScenes/'];
 % _v3: process a vector instead a struct
 
-N=size(myPlaneDescriptor,2);
+% N=size(myPlaneDescriptor,2);
+N=length(myPlaneDescriptor);
 for i=1:N
     frame_tp=myPlaneDescriptor(i).idFrame;
     myPlotSinglePlane_v3(myPlaneDescriptor(i),frame_tp, frameFlag);

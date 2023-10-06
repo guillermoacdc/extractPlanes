@@ -6,7 +6,8 @@ function estimatedPlanes_m=projectPoses_qh2qm(estimatedPlanes, sessionID)
 dataSetPath=computeMainPaths(sessionID);
 
 estimatedPlanes_m=estimatedPlanes;
-Nep=size(estimatedPlanes,2);
+% Nep=size(estimatedPlanes,2);
+Nep=length(estimatedPlanes);
 % load Th2m
 pathTh2m=fullfile(dataSetPath,['session' num2str(sessionID)],'analyzed');
 fileName='Th2m.txt';

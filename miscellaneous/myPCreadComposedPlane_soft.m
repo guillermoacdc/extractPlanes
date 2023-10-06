@@ -3,7 +3,19 @@ function pc_mm = myPCreadComposedPlane_soft(pathToPLY)
 %milimmeters
 %   Assumptions: the ply file is saved in meters
 
-N=size(pathToPLY,2);
+windowsFlag=false;
+old=filesep;
+if old=='\'
+    windowsFlag=true;
+end
+
+if windowsFlag
+    N=size(pathToPLY,2);%windows
+else
+    N=size(pathToPLY,1);%linux
+end
+
+
 
 if N>1% merged plane
     path_t=pathToPLY{1};
