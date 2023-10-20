@@ -1,4 +1,5 @@
-function [metrics_v, meanValues,stdValues, keyFrames, tao] = loadAssessment_counts(inputFileName, sessionID,pkflag, app)
+function [metrics_v, meanValues,stdValues, keyFrames, ...
+    tao] = loadAssessment_counts_v2(inputFileName, sessionID,pkflag, app, windowSize)
 %LOADASSESSMENT Loads vector of precision, recall, f1score with values per
 %frame, mean values and std values; also loads tao parameter
 %   Detailed explanation goes here
@@ -8,11 +9,14 @@ function [metrics_v, meanValues,stdValues, keyFrames, tao] = loadAssessment_coun
 
 
 [dataSetPath,evalPath] = computeMainPaths(sessionID, app);
-% inputFileName=['assessment_planeType' num2str(planeType) '.json'];
-keyFrames=loadKeyFrames(dataSetPath,sessionID);
+assessment=loadEstimationsFile(inputFileName,sessionID, evalPath);
+
+frames=loadKeyFrames(dataSetPath,sessionID);
+% keyFrames=frames(windowSize:windowSize:end);
+% keyFrames=frames(1:windowSize:end);
+keyFrames=frames(2:windowSize:end);
 Nkf=length(keyFrames);
 
-assessment=loadEstimationsFile(inputFileName,sessionID, evalPath);
 precision_v=zeros(Nkf,1);
 recall_v=zeros(Nkf,1);
 f1score_v=zeros(Nkf,1);

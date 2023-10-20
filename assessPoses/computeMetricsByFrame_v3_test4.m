@@ -1,10 +1,12 @@
 % assess estimated poses. Generates a json file for each session
+% _test4: perform assessment at each window-size frame
 
 clc
 close all
 clear
 
 %% set parameters
+
 sessionsID=[ 3 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 % [dataSetPath,evalPath]=computeMainPaths(1);
 dataSetPath = computeReadPaths(1);
@@ -21,7 +23,7 @@ planeTypes=[0 1];
 for k=1:length(planeTypes)
 
     planeType=planeTypes(k);
-    outputFileName=['assessment_planeType' num2str(planeType) '.json'];
+    outputFileName=['assessment_planeType_wf' num2str(planeType) '.json'];%wf for version window-frames
     inputFileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
     
     %% iterative assesment by session
@@ -29,14 +31,15 @@ for k=1:length(planeTypes)
         sessionID=sessionsID(j);
         % load estimations for all frames
         estimatedPoses = loadEstimationsFile(inputFileName,sessionID, evalPath);
+        windowSize=estimatedPoses.Parameteres.Particles.windowSize;
         keyFrames=estimatedPoses.keyFrames;
         Nkf=length(keyFrames);
         %% iterative assessment by frame
-        for i=1:Nkf
+        for i=10:windowSize:Nkf
             frameID=keyFrames(i);
-            if i==14
-                display('stop mark')
-            end
+%             if i==14
+%                 display('stop mark')
+%             end
             %load estimations in the current frame
             globalPlanes=estimatedPoses.(['frame' num2str(frameID)]);
             %% load gt planes for the current frame
@@ -89,3 +92,8 @@ return
 % this section
 figure,
     plotEstimationsByFrame_v2(globalPlanes.values, planeType, sessionID, frameID);%script
+
+% removing warnings
+w = warning('query','last');
+id=w.identifier;
+warning('off',id)    

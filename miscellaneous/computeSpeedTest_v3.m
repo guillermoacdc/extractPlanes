@@ -5,27 +5,28 @@ clc
 close all
 clear 
 
-sessionsID=[27];
-% sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
+% sessionsID=[27];
+sessionsID=[ 3	10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 Ns=size(sessionsID,2);
-speed=zeros(Ns,2);%mean value in column 1, std value in column 2
-dataSetPath=computeMainPaths(1);
+speed=zeros(Ns,3);%mean value in column 1, std value in column 2, max value in column 3
+% dataSetPath=computeMainPaths(1);
+dataSetPath=computeReadPaths(1);
 for j=1:Ns
     sessionID=sessionsID(j);
     % load time and position data
     HL2folderPath=fullfile(dataSetPath, ['session' num2str(sessionID)],'raw','HL2');
     [timeStampsHL2_ts_array, poseMatrix]=loadTimeStampsAndPoseHL2(HL2folderPath);% to convert timestamp to seconds multiply by 1e-7
     keyframes=loadKeyFrames(dataSetPath,sessionID);
-    [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes);
+    [speed_mean, speed_std, speedMax]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes);
     
-    speed(j,:)=[speed_mean, speed_std];
+    speed(j,:)=[speed_mean, speed_std, speedMax];
 end
 
     [sessionsID', speed]
     
 return
 
-function [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes)
+function [speed_mean, speed_std, speed_max]=computeSpeed(timeStampsHL2_ts_array, poseMatrix, keyframes)
     % compute speed
     N=size(timeStampsHL2_ts_array,1);
     Nkf=size(keyframes,2);
@@ -43,19 +44,20 @@ function [speed_mean, speed_std]=computeSpeed(timeStampsHL2_ts_array, poseMatrix
 %     speed_std=std(speed_array(window: end-window));
     speed_mean=mean(speed_array);
     speed_std=std(speed_array);
+    speed_max=max(speed_array);
 % plot data    
 xmin=0;
 xmax=Nkf-1;
 
-figure,
-    plot(speed_array)
-    hold on
-    plot([xmin xmax],[speed_mean speed_mean],'--k')
-    xlabel ('time in seconds')
-    ylabel ('speed m/s')
-    axis tight
-    title (['operator speed mean/std:'  num2str(speed_mean) '/' num2str(speed_std) ])
-    grid    
+% figure,
+%     plot(speed_array)
+%     hold on
+%     plot([xmin xmax],[speed_mean speed_mean],'--k')
+%     xlabel ('time in seconds')
+%     ylabel ('speed m/s')
+%     axis tight
+%     title (['operator speed mean/std:'  num2str(speed_mean) '/' num2str(speed_std) ])
+%     grid    
 end
 
 function [timeStampsHL2_ts_array, pose_matrix]=loadTimeStampsAndPoseHL2(HL2folderPath)

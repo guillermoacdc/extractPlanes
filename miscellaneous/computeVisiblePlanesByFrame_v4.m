@@ -1,3 +1,6 @@
+% computes and plot visible planes by frame. The final plot includes the
+% coordinate systems qm, qh, qhmobile
+
 clc
 close all
 clear
@@ -116,7 +119,7 @@ figure,
     title(['Visible gt lateral planes in frame ' num2str(frameID) ', session ' num2str(sessionID) ' qm world'])
     Np=size(planeDescriptorGTV,2);
     display(['there are ' num2str(Np) '  planes - qm world'])
-    
+
 % removing warnings
 w = warning('query','last');
 id=w.identifier;

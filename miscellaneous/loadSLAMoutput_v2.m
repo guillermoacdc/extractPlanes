@@ -1,7 +1,8 @@
 function [pc_mm, T]=loadSLAMoutput_v2(scene,frame)
 %LOADSLAMOUTPUT Summary of this function goes here
 %   Detailed explanation goes here
-[rootPath, ~, PCpath]=computeMainPaths(scene);
+% [rootPath, ~, PCpath]=computeMainPaths(scene);
+rootPath = computeReadPaths(scene);
 
 fileNameCamera='Depth Long Throw_rig2world.txt';
 fileNamePoints=['frame' num2str(frame) '.ply'];

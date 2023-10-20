@@ -1,4 +1,4 @@
-function [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app)
+function [dataSetPath,PCpath] = computeReadPaths(sessionID)
 %COMPUTEMAINPATHS load paths to read and write data
 %   dataSetPath: read path. Points to folder 6D_ViCuT as published in the paper
 %   xxx
@@ -11,13 +11,14 @@ function [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app)
 %   PCpath: read path. path with folder lowOcclusionScenes_processed. This
 %   folder contains one subfolder for each session. Each subfolder contains
 %   one subfolder for each processed frame. Each subfolder contains ply
-%   files of detected planes by frame
+%   files of detected planes by frame and log files with plane parameters,
+%   used parameters
 
 
 typeOfSession=computeTypeOfSession(sessionID);%1 low occ, 2 med occ, 3 high occ
 f=filesep;
 if (f=='/')%linux
-    evalPath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/evalFolder';
+
     dataSetPath="/home/gacamacho/Documents/6DViCuT_v1/";
     
     switch (typeOfSession)
@@ -29,12 +30,7 @@ if (f=='/')%linux
             PCpath='/home/gacamacho/Documents/PCs_extractedPlanes_v1/HighOcclusionScenes_processed';
     end
 else %windows
-    evalPath=['D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder' app];
-%     evalPath=['D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder'];
-%     evalPath='G:\Mi unidad\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
-%     evalPath='D:\doctorado\evalFolder';
-%     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_dmax\evalFolder_dmax3860';
-%     evalPath='D:\OneDriveUnisalle\OneDrive - correounivalle.edu.co\pruebasUbuntu\evalFolder_v9';
+
     dataSetPath='D:\6DViCuT_p1';
     
     switch (typeOfSession)

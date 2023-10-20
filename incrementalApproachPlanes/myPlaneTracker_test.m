@@ -11,7 +11,7 @@ clear
 sessionsID=[ 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=[ 27	32	33	35 36 39 45	52	53	54];% 
 % sessionsID=10;% 
-
+app='v_12';
 Ns=size(sessionsID,2);
 %% setting parameters
 % 1. Plane filtering parameters
@@ -59,7 +59,7 @@ for i=1:Ns
 
         myPlaneTracker(sessionID, fileName1, planeFilteringParameters, ...
             mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters, compensateFactor);
+            planeType, planeModelParameters, compensateFactor, app);
 %             estimatePoses_ia1_v2(sessionID, fileName1, planeFilteringParameters, ...
 %             asessmentPoseParameters, mergingPlaneParameters, tempFilteringParameters, ...
 %             planeType);

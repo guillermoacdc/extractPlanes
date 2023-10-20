@@ -8,8 +8,12 @@ clear
 
 pkflag=1;%1 for Awpk, 0 for Awoutpk 
 planeType=0;%0 for top planes, 1 for lateral planes
-sessionID=13;
-[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
+sessionID=3;
+app='_v12';
+% [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app);
+evalPath = computeReadWritePaths(app);
+[dataSetPath,PCpath] = computeReadPaths(sessionID);
+
 inputFileName=['assessment_planeType' num2str(planeType) '.json'];
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);

@@ -14,7 +14,8 @@ plotFlag=0;
 
 sessionID=clusterDescriptor.sessionID;
 frameID=clusterDescriptor.frameID;
-dataSetPath=computeMainPaths(sessionID);
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 [lengthBoundsTop,  lengthBoundsP]=computeLengthBounds_v2(dataSetPath, sessionID, frameID);
 
 Nc=length(clusterDescriptor.ID);

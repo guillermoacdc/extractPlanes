@@ -1,18 +1,22 @@
+% script to plot estimations and ground truth planes by frame
 clc
 close all
 clear
 
 %% set parameters
-sessionID=3;
-frameID=409;
+sessionID=10;
+frameID=12;
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
-planeType=0;
-outputFileName=['assessment_planeType' num2str(planeType) '.json'];
+planeType=1;
+% outputFileName=['assessment_planeType' num2str(planeType) '.json'];
 %% load estimations for all frames
 inputFileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
-[dataSetPath,evalPath]=computeMainPaths(sessionID);
+app='_v12';
+% [dataSetPath,evalPath]=computeMainPaths(sessionID, app);
+dataSetPath = computeReadPaths(sessionID);
+evalPath = computeReadWritePaths(app);
 estimatedPoses = loadEstimationsFile(inputFileName,sessionID, evalPath);
 
 keyFrames=estimatedPoses.keyFrames;

@@ -18,7 +18,8 @@ clusterDescriptor.groundNormal=modelGroundraw.Parameters(1:3);
 clusterDescriptor.groundD=modelGroundraw.Parameters(4);
 
 %% project pc to qm coordinate system
-dataSetPath=computeMainPaths(sessionID);
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 pathTh2m=fullfile(dataSetPath,['session' num2str(sessionID)],'analyzed');
 fileName='Th2m.txt';
 Th2m_array=load(fullfile(pathTh2m,fileName));

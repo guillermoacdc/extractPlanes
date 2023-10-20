@@ -11,7 +11,8 @@ function [planeDescriptor] = convertPK2PlaneObjects_v5(boxID,sessionID, ...
 % 5 left plane
 Nsides=size(sidesVector,2);
 planeDescriptor=[];
-dataSetPath=computeMainPaths(sessionID);
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 Tm2b = loadInitialPoseByBox(boxID,sessionID,frameHL2);
 for i=1:Nsides
     planeGroup=sidesVector(i);

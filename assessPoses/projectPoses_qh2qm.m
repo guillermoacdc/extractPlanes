@@ -3,8 +3,8 @@ function estimatedPlanes_m=projectPoses_qh2qm(estimatedPlanes, sessionID)
 % 
 % 
 %   Detailed explanation goes here
-dataSetPath=computeMainPaths(sessionID);
-
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 estimatedPlanes_m=estimatedPlanes;
 % Nep=size(estimatedPlanes,2);
 Nep=length(estimatedPlanes);

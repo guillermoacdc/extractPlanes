@@ -1,10 +1,15 @@
+% computes and plot visible planes by frame. The final plot includes the
+% coordinate systems qm, qh, qhmobile
+
 clc
 close all
 clear
 
 % load Session ID
 sessionID=10;
-
+k=25;%frame index
+% frameID=keyframes(k);
+frameID=201;
 % dataSetPath=computeMainPaths(sessionID);
 dataSetPath = computeReadPaths(sessionID);
 filePath=fullfile(dataSetPath,['session' num2str(sessionID)], 'analyzed','HL2');
@@ -32,10 +37,10 @@ tao=110;
 keyframes=loadKeyFrames(dataSetPath, sessionID);
 Nkf=length(keyframes);
 % for k=1:Nkf
-for k=15:15
-    frameID=keyframes(k);
+% for k=15:15
+%     frameID=keyframes(k);
     %% cluster points by using dbscan
-    display(['clustering in frame ' num2str(frameID) '- index' num2str(k) ' of ' num2str(Nkf)])
+    display(['clustering in frame ' num2str(frameID) ])
     [clusterDescriptor, pc_h, pc_m, cameraPose]= countObjectsInPC_v7(sessionID, frameID,...
         th_angle_cluster, th_distance, th_distance2, epsilon, minpts, plotFlag);
     Nc=length(clusterDescriptor.ID);
@@ -87,7 +92,7 @@ for k=15:15
     % generate struct
     visiblePlanesByFrame_s = convert2DVtoStructV(visiblePlanes);
     visiblePlanesBySession.(['frame' num2str(frameID)])=visiblePlanesByFrame_s;
-end
+% end
 % encoded=jsonencode(visiblePlanesBySession,PrettyPrint=true);
 % cd(filePath);
 % fid = fopen([fileName '.json'],'w');
@@ -108,15 +113,30 @@ for i=1:Nb
 end
 
 
+%% project camera Pose and origin to qm
+
+%load th2m
+pathTh2m=fullfile(dataSetPath,['session' num2str(sessionID)],'analyzed');
+fileName='Th2m.txt';
+Th2m_array=load(fullfile(pathTh2m,fileName));
+Th2m=assemblyTmatrix(Th2m_array);
+%project to qm
+cameraPose_m=Th2m*cameraPose;
+qh_m=Th2m*eye(4);
+
+
 
 figure,
-    pcshow(pc_m);
+%     pcshow(pc_m);
+%     hold on
+    dibujarsistemaref(cameraPose_m,'c_h',250,2,10,'w');
     hold on
+    dibujarsistemaref(qh_m,'h',150,2,10,'w');
     myPlotPlanes_Anotation(planeDescriptorGTV,0,'m');
     title(['Visible gt lateral planes in frame ' num2str(frameID) ', session ' num2str(sessionID) ' qm world'])
     Np=size(planeDescriptorGTV,2);
     display(['there are ' num2str(Np) '  planes - qm world'])
-    
+
 % removing warnings
 w = warning('query','last');
 id=w.identifier;

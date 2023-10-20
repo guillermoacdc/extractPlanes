@@ -1,7 +1,8 @@
 function plotEstimationsByFrame_v2(globalPlanes, planeType, sessionID, frameID)
 % plots gt and estimated poses in qh
 
-dataSetPath=computeMainPaths(sessionID);
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 if planeType==0
     % For top planes use
     syntheticPlaneType=0;

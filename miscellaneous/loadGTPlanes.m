@@ -1,7 +1,8 @@
 function [planeDescriptor_gt] = loadGTPlanes(sessionID, frameID)
 %LOADGTPLANES Loads descriptors of gt planes
 %   Detailed explanation goes here
-dataSetPath=computeMainPaths(sessionID);
+% dataSetPath=computeMainPaths(sessionID);
+dataSetPath = computeReadPaths(sessionID);
 pps=getPPS(dataSetPath, sessionID, frameID);
 Nb=length(pps);
 sidesVector=1:5;

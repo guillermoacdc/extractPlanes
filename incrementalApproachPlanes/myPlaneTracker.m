@@ -1,6 +1,6 @@
 function  myPlaneTracker(sessionID, outputFileName, planeFilteringParameters, ...
             mergingPlaneParameters, tempFilteringParameters, ...
-            planeType, planeModelParameters, compensateFactor)
+            planeType, planeModelParameters, compensateFactor, app)
 %MYPLANETRACKER Tracks the pose of planes that belong to boxes
 % The outputs are writed on disk in the file outputFileName.csv
 % The inputs
@@ -44,7 +44,9 @@ particlesVector(1)=[];
 
 %% Begin processing
 % Compute paths to read and write data
-[dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
+% [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
+dataSetPath=computeReadPaths(sessionID);
+evalPath=computeReadWritePaths(app);
 % computing keyframes for the session
 keyframes=loadKeyFrames(dataSetPath,sessionID);
 estimatedPose.keyFrames=keyframes;
