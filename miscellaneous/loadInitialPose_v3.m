@@ -24,6 +24,8 @@ switch planesGroup
         planeTypes=[3 5];%right and left
     case 3
         planeTypes=[2 3 4 5];%front, right, back and left
+    case 4
+        planeTypes=1:5;%all planes
 end
 Npt=size(planeTypes,2);
 initialPoses=zeros(Npt*Nb,13);
