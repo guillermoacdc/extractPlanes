@@ -1,0 +1,6 @@
+
+
+
+bufferCP = performMergeSingleMap(globalPlanes,tao, theta, flagPK,...
+    th_coplanarDistance, thresholdsV, planeModelParameters, ...
+    lengthBoundsTop, gridStep, lengthBoundsP, compensateFactor)

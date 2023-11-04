@@ -22,9 +22,9 @@ view(2)
 camup([0 1 0])
 set(gcf,'color','k');
 set(gca,'color','k');
-xlabel 'x (m)'
-ylabel 'y (m)'
-zlabel 'z (m)'
+% xlabel 'x (m)'
+% ylabel 'y (m)'
+% zlabel 'z (m)'
 
 end
 

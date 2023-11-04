@@ -98,7 +98,8 @@ classdef plane < handle
             obj.antiparallelFlag=0;
             if (obj.type==1)%perpendicular plane
 %                 if (obj.D<0 && obj.numberInliers>th_size)%original version
-                if (obj.D_qhmov<0 & obj.numberInliers>th_size)%original version                    
+%                 if (obj.D_qhmov<0 & obj.numberInliers>th_size)%vs2                   
+                if obj.D_qhmov<0 %vs3                   
                     obj.antiparallelFlag=1;
                 end
             else%parallel plane. 

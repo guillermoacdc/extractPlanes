@@ -57,7 +57,7 @@ else
         [num2str(planeDescriptor.idBox) '-' num2str(planeDescriptor.idPlane)],'Color',fc);
 end
 
-set(H,'FontSize',15)
+set(H,'FontSize',25)
 
 % (5) plot the frame of the plane
 if frameFlag

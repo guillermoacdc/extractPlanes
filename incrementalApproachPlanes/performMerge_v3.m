@@ -1,5 +1,5 @@
 function [globalPlanes, localPlanes, bufferCP]=performMerge_v3(localPlanes, id_lp, globalPlanes,...
-    id_gp, typeOfTwin, bufferCP, tresholdsV, lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep, compensateFactor)
+    id_gp, typeOfTwin, bufferCP, tresholdsV, lengthBoundsTop, lengthBoundsP, planeModelParameters, gridStep, compensateFactor, cameraPosition)
 %PERFORMMERGE Perfoms merge operation between two planes: localPlane,
 %globalPlanes(id_gp), based on the type of twin informed. The merged version 
 % of the plane is saved in globalPlanes vector
@@ -45,7 +45,7 @@ distance_c_g=globalPlanes(id_gp).distanceToCamera;
 
 A_l=localPlane.L1*localPlane.L2;
 A_g=globalPlanes(id_gp).L1*globalPlanes(id_gp).L2;
-
+% disp(['type of twin is ' num2str(typeOfTwin)])
 switch (typeOfTwin)
     case 1
         if (distance_c_l<distance_c_g & distance_c_l>0.5)
@@ -101,10 +101,14 @@ switch (typeOfTwin)
                     composedPlane.L2toY=localPlane.L2toY;
                     composedPlane.planeTilt=localPlane.planeTilt;
                 end
-            
+%               inherit D_qhmov. The composed planes doesnt have a camera pose, then is necessary to inherit this property 
+%                 composedPlane.D_qhmov=localPlane.D_qhmov;
+%                 recompute D_qhmov
+                composedPlane.setD_qhmov(cameraPosition);
                 % set limits and update geometric center. The update is necessary to include the projection of points to
                 %     the plane model before compute g.c. 
                 composedPlane.setLimits(pcnew);%set limits in each axis.
+                
                 %     detect antiparallel normals and correct
                 composedPlane.correctAntiparallel(th_size);%
                 % measure pose and length, and updata occlusion flag

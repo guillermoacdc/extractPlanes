@@ -1,5 +1,8 @@
-function [myPlanes] = loadGlobalPlanesFromFrame(topPlanes,perpendicularPlanes)
+function [myPlanes] = loadGlobalPlanesFromFrame(allTopPlanes,allPerpendicularPlanes, frameID)
 %LOADGLOBALPLANESFROMFRAME load global planes from an specific frame
+
+topPlanes= allTopPlanes.(['frame' num2str(frameID)]);
+perpendicularPlanes=allPerpendicularPlanes.(['frame' num2str(frameID)]);
 
 if ~isempty(topPlanes)
     if ~isempty(perpendicularPlanes)

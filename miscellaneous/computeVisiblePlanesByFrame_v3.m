@@ -32,7 +32,7 @@ tao=110;
 keyframes=loadKeyFrames(dataSetPath, sessionID);
 Nkf=length(keyframes);
 % for k=1:Nkf
-for k=15:15
+for k=1:1
     frameID=keyframes(k);
     %% cluster points by using dbscan
     display(['clustering in frame ' num2str(frameID) '- index' num2str(k) ' of ' num2str(Nkf)])

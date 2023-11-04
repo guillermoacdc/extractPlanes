@@ -23,8 +23,7 @@ inputFileName=['estimatedPoses_ia_planeType' num2str(1) '.json'];
 estimatedPoses1 = loadEstimationsFile(inputFileName,sessionID, evalPath);
 
 %% load estimated planes
-globalPlanes=loadGlobalPlanesFromFrame(estimatedPoses0.(['frame' num2str(frameID)]),...
-estimatedPoses1.(['frame' num2str(frameID)]));
+globalPlanes=loadGlobalPlanesFromFrame(estimatedPoses0,estimatedPoses1,frameID);
 %% load gt planes for the current frame
 gtPlanes=loadGTPlanes(sessionID,frameID);
     

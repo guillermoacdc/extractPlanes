@@ -19,6 +19,7 @@ for i=1:Nsides
     planeDTemp=computePlaneDescriptorsFromBoxID_v2(boxID,sessionID, dataSetPath,planeGroup);
     planeDTemp.tform=Tm2b*planeDTemp.tform;
     planeDTemp.idFrame=planeDTemp.idBox;
+    planeDTemp.idPlane=planeGroup;%----i
     newgc=Tm2b*[planeDTemp.geometricCenter'; 1];
     planeDTemp.geometricCenter=newgc(1:3);
     planeDescriptor=[planeDescriptor planeDTemp];

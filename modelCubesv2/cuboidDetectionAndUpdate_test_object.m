@@ -1,0 +1,198 @@
+clc
+close all 
+clear
+
+%% setting parameters
+% 0. raw parameters
+sessionID=10;
+app='_v12';
+conditionalAssignationFlag=0;
+stopFrameIndex=15;
+% 1. Plane filtering parameters
+th_angle=18*pi/180;%radians -- actualizado a 18 durante las pruebas de agrupar planos. Valor orignal 15
+th_size=150;%number of points
+th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
+th_occlusion=1.4;%
+D_Tolerance=0.1*1000;%mm ... 0.1 m
+planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
+% 2. Parameters used in the stage Assesment Pose 
+NpointsDiagPpal=20;
+tao_v=50;%mm
+theta=0.5;
+asessmentPoseParameters=[NpointsDiagPpal tao_v];
+% 3. Parameteres used in the stage Merging planes between frames
+% - used in the function computeTypeOfTwin
+tao_merg=50;% mm
+theta_merg=0.5;%in percentage
+th_IoU=0.2;% percent
+th_coplanarDistance=20;%mm
+gridStep=1;
+mergingPlaneParameters=[tao_merg theta_merg th_IoU th_coplanarDistance gridStep];
+% 4. Parameters used in temporal filtering stage
+radii=15;%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
+windowSize=10;%frames
+th_detections=0.3;%percent - not used in version 1 - update with th_vigency
+tempFilteringParameters=[radii windowSize th_detections];
+% 5. Parameteres used to set the type of planes to process: perpendicular or
+% parallel to ground. 
+% planeTypes=[0 1];%{0 for parallel to ground, 1 for perpendicular to ground}
+% planeTypes=[ 1];
+% Npt=size(planeTypes,2);
+%6. Parameters to merge pointclouds - used in the approach 2
+planeModelParameters(1) =   12;% maxDistance in mm
+% 7. compensate factor for perpendicular planes supported on the floor
+compensateFactor=0;%mm--- no funcionó como se esperaba. Valor probado: 
+
+% dataSetPath = computeReadPaths(sessionID);
+% evalPath = computeReadWritePaths(app);
+
+
+%% begin Text
+disp(['----------Estimating poses in session ' num2str(sessionID) ])
+estimatedPose.sessionID=sessionID;
+%% unzip parameters
+% 1. parameters used to implement the maps-integration strategy
+% - used in the function computeTypeOfTwin
+tao_merg=mergingPlaneParameters(1);% mm
+theta_merg=mergingPlaneParameters(2);%in percentage
+gridStep=mergingPlaneParameters(5);
+estimatedPose.Parameteres.MergingPlane.tao=tao_merg;
+estimatedPose.Parameteres.MergingPlane.theta=theta_merg;
+estimatedPose.Parameteres.MergingPlane.gridStep=gridStep;
+
+% 2. parameters to implement the global-map-update strategy 
+% radii=tempFilteringParameters(1);%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
+windowSize=tempFilteringParameters(2);%frames
+th_vigency=tempFilteringParameters(3);%percent - not used in version 1
+estimatedPose.Parameteres.Particles.windowSize=windowSize;
+estimatedPose.Parameteres.Particles.th_vigency=th_vigency;
+
+%define an empty vector of type particle
+particlesVector(1)=particle(1,[0 0 0], 1, 5);
+particlesVector(1)=[];
+
+%% Begin processing
+% Compute paths to read and write data
+% [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID);
+dataSetPath=computeReadPaths(sessionID);
+evalPath=computeReadWritePaths(app);
+% computing keyframes for the session
+keyframes=loadKeyFrames(dataSetPath,sessionID);
+estimatedPose.keyFrames=keyframes;
+Nframes=length(keyframes);%number of frames
+% allocating space for variables
+bufferComposedPlanes={};
+globalPlanesPrevious=[];
+globalPlanes=[];
+localPlanes=[];
+% loading length bounds
+[lengthBoundsTop, lengthBoundsP] =computeLengthBounds_v2(dataSetPath, sessionID);%[L1min L1max L2min L2max]
+
+%% iterative processing
+% performing the computation for each frame
+% for i=1:Nframes
+for i=1:stopFrameIndex
+    frameID=keyframes(i);
+    disp(['          processing frame ' num2str(frameID) ' - ' num2str(i) '/' num2str(Nframes)])
+%     debugg pause
+    if mod(i,10)==0
+%     if frameID==15
+        disp('stop mark')
+    end
+% First part of update global map stratey: forget old planes-------------
+    if mod(i,windowSize)==0 %& i>=2*windowSize
+        if (i-windowSize)>=1
+            windowInit=keyframes(i-windowSize);
+        else
+            windowInit=keyframes(1);
+        end
+        [globalPlanes, particlesVector] =updatePresence_v3(globalPlanes,particlesVector,windowInit,...
+            keyframes(1), th_vigency);
+    end
+
+%     compute radii to manage particles-------------
+    radii=computeRaddi_v2(dataSetPath,sessionID,frameID);
+%   detect and filter plane segments
+%     tic;
+    [localPlanes,Nnap] = detectAndFilterPlaneSegments_vcuboid(sessionID,frameID, planeFilteringParameters, compensateFactor);
+%%     save estimations
+    if ~isempty(localPlanes)
+
+%   Second part of the update global map strategy: update particle----
+%         vector
+        particlesVector = updateParticleVector_vcuboid(localPlanes,...
+                    particlesVector, radii, frameID);
+% update globalPlanesPrevious vector--------------        
+        if isempty(globalPlanesPrevious)
+            globalPlanesPrevious=clonePlaneObject(localPlanes);%h-world
+        else
+            globalPlanesPrevious=clonePlaneObject(globalPlanes);
+        end
+% First part of maps integration: integrat local with global planes
+% previous
+% integration btwn top planes
+%     if size top-localPlanes > 1 then integrate
+% integration btwn perpendicular planes
+%     if size perpendicular localPlanes >1 then integrate
+        [globalPlanes, bufferComposedPlanes]=mergeIntoGlobalPlanes_vcuboid(localPlanes,...
+            globalPlanesPrevious,tao_merg,theta_merg, lengthBoundsTop,...
+            lengthBoundsP,bufferComposedPlanes, planeFilteringParameters, planeModelParameters, gridStep, compensateFactor);%h-world
+% Third part of update global map strategy: associat particles with global
+% planes
+        globalPlanes = associateParticlesWithGlobalPlanes(globalPlanes,particlesVector, radii);
+        
+        [localAssignedP, localUnassignedP]=cuboidDetectionAndUPdate(globalPlanes, ...
+        th_angle, conditionalAssignationFlag);
+        % complement estimated pose and save        
+%         estimatedPose.(['frame' num2str(frameID)])=mystruct(globalPlanes);  
+        estimatedPose.(['frame' num2str(frameID)]).values=obj2struct_vector(globalPlanes); 
+        %     additional properties of estimatedPose (Nnap, processingTime)
+        estimatedPose.(['frame' num2str(frameID)]).Nnap=Nnap;
+    else
+        estimatedPose.(['frame' num2str(frameID)])=[];
+    end
+end
+
+% display dual associations
+Na=size(localAssignedP,1);
+for i=1:Na
+    index=myFind2D(localAssignedP(i,:),extractIDsFromVector(globalPlanes));
+    secondPlaneIndex=globalPlanes(index).secondPlaneID;
+    pairs=[localAssignedP(i,:), globalPlanes(secondPlaneIndex).getID];
+    display(['plane ' num2str(pairs(1)) '-' num2str(pairs(2))...
+        ' is associated with plane ' num2str(pairs(3)) '-' num2str(pairs(4))])
+end
+
+
+
+
+
+
+figure,
+    myPlotPlanes_v3(localPlanes,1);
+    title(['local planes  in frame ' num2str(frameID)])
+
+figure,
+    plotEstimationsByFrame_vcuboids;%script
+
+% removing warnings
+w = warning('query','last');
+id=w.identifier;
+warning('off',id)
+
+
+
+
+% %% first version
+% 
+% inputFileName=['estimatedPoses_ia_planeType' num2str(0) '.json'];
+% estimatedPoses0 = loadEstimationsFile(inputFileName,sessionID, evalPath);
+% inputFileName=['estimatedPoses_ia_planeType' num2str(1) '.json'];
+% estimatedPoses1 = loadEstimationsFile(inputFileName,sessionID, evalPath);
+% 
+% 
+% %% load global Planes
+% globalPlanes=loadGlobalPlanesFromFrame(estimatedPoses0,estimatedPoses1,frameID);
+
+
+

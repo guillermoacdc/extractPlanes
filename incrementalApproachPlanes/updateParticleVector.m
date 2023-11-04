@@ -3,6 +3,8 @@ function [particlesVector, localPlanes] = updateParticleVector(localPlanes,parti
 % se evalúa la ecuación (5) entre los segmentos de plano 〖ps〗_i∈〖lp〗_s (k)  
 % y los elementos del vector de partículas PT. Posteriormente, se ejecutan
 % las siguientes actualizaciones:
+% nota: al parecer esta función no debe retornar localPlanes. Revisar y
+% actualizar
 
 % 	Para todo segmento de plano 〖ps〗_i que cumpla la ecuación (5) 
 %   con una partícula 〖pt〗_j∈PT, se inicia el proceso de actualización 
