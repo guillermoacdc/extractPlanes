@@ -5,7 +5,7 @@
 % group_tpp: triads of (top, perpendicular, perpendicular) planes
 % group_tp: couples of (top, perpendicular) planes
 % group_s: single planes that didnt find couple. Those could be top or perpendicular
-
+th_angle=th_angle+2;
 % clear secondPlaneID and thirdPlanID from global planes
 myClearSecondAndThirdPlaneID(globalPlanes.values);
 

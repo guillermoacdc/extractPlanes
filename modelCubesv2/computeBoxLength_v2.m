@@ -1,7 +1,11 @@
-function [width, depth, height]=projectInEdge_vcuboids(globalPlanes,triadIndex)
-%PROJECTINEDGE determine a size of a cuboid by projecting points on a plane
-%into the edge, as described in section 4.3 from [1]
+function [width, depth, height]=computeBoxLength_v2(globalPlanes,triadIndex)
+%COMPUTEBOXLENGTH Computes the length of a box composed by three
+%orthogonal planes. The computation is based on projections of inliers of
+%each plane along the normal of adjacent planes as explained in in section 
+% 4.3 from [1]
 %   [1] file:///G:/Mi%20unidad/semestre%206/1-3%20AlgoritmosSeguimientoPose/detectorCajas/Incremental-3D-cuboid-modeling-with-drift-compensationSensors-Switzerland.pdf
+
+% Assumptions: the first plane in the set triadIndex is a top plane
 
 %% compute p0 - for a single box
 % extract geometric center and normal
@@ -58,33 +62,5 @@ end
 
 
 
-% validation plot: point clouds, plane segments, intersection point and
-% ground truth poses
-sessionID=10;
-dataSetPath=computeReadPaths(sessionID);
-frameID=84;
-syntheticPlaneType=4;
-planeDesc_m=loadInitialPose_v3(dataSetPath,sessionID,frameID,syntheticPlaneType);
-Th2m=loadTh2m(dataSetPath,sessionID);
-Tm2h=inv(Th2m);
-% project poses
-planeDesc_h=projectPose(planeDesc_m,Tm2h);
-Nb=size(planeDesc_h,2);
-% 
-figure,
-    myPlotPlanes_v3(globalPlanes(triadIndex),1)
-    plot3(p0(1),p0(2),p0(3),'yo')
-    for k =1:Nb
-        T=planeDesc_h(k).tform;
-        ind=planeDesc_h(k).idBox;
-        dibujarsistemaref(T,ind,120,2,10,'w');
-        hold on
-    end
-    xlabel 'x'
-    ylabel 'y'
-    zlabel 'z'
 end
 
-% NpointsDiagTopSide=30
-% pc = createSyntheticPC_v2(planeDesc_m,NpointsDiagTopSide,boxID, gridStep, dataSetPath)
-% compute Tm2h

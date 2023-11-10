@@ -1,4 +1,4 @@
-function output_struct = obj2struct(obj)
+function output_struct = obj2struct_v0(obj)
 % Converts obj into a struct by examining the public properties of obj. If
 % a property contains another object, this function recursively calls
 % itself on that object. Else, it copies the property and its value to 

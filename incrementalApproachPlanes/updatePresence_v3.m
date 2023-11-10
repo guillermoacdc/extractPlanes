@@ -39,7 +39,22 @@ outParticles_IDs=unique(outParticles_IDs);
 % find indexes of global Planes related with outliers
 outliersIndex=computeIndexFromParticleID(globalPlanes,outParticles_IDs );
 % delete outliers from global planes
+%   condition the elimination to planes without couple
+
+% % Restrict the elimination of planes to those that do not have idBox
+% NoutIndex=length(outliersIndex);
+% indexToExtract=[];
+% for k=1:NoutIndex
+%     if ~isempty(globalPlanes(outliersIndex(k)).idBox)
+%         indexToExtract=[indexToExtract k];
+% %      break the relation with box - penalization 
+%     globalPlanes(outliersIndex(k)).idBox=[];
+%     end
+% end
+% outliersIndex(indexToExtract)=[];
+
 globalPlanes(outliersIndex)=[];
+
 NgpEnd=size(globalPlanes,2);
 NpvInit=size(particlesVector,2);
 forgotenParticles=NpvInit-length(outParticles_IDs);

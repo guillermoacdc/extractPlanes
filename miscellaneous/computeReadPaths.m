@@ -31,16 +31,16 @@ if (f=='/')%linux
     end
 else %windows
 
-    dataSetPath='D:\6DViCuT_p1';
+    dataSetPath='D:\sixDViCuT_p1';
     
     switch (typeOfSession)
         case 1
 %             PCpath='G:\Mi unidad\semestre 9\lowOcclusionScenes_processed';
-            PCpath='D:\6DViCuT_p1\processedPCs\lowOcclusionScenes_processed';
+            PCpath='D:\sixDViCuT_p1\processedPCs\lowOcclusionScenes_processed';
         case 2
-            PCpath='D:\6DViCuT_p1\processedPCs\MediumOcclusionScenes_processed';
+            PCpath='D:\sixDViCuT_p1\processedPCs\MediumOcclusionScenes_processed';
         case 3
-            PCpath='D:\6DViCuT_p1\processedPCs\HighOcclusionScenes_processed';
+            PCpath='D:\sixDViCuT_p1\processedPCs\HighOcclusionScenes_processed';
     end
     
 end

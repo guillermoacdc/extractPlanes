@@ -12,7 +12,8 @@ end
 
 %% put the data in a string of json format
 if windowsFlag
-    str = mps.json.encode(theStruct);
+%     str = mps.json.encode(theStruct);
+    str = jsonencode(theStruct);
 else
     str = jsonencode(theStruct);
 end

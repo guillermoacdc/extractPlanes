@@ -8,7 +8,9 @@ k=1;
 Nss=length(searchSpace);
 for i=1:Nss
     element_ss=searchSpace(i);
-    gcRelationShipFlag=gcRelationshipCheck(globalPlanes(targetIndex),...
+%     gcRelationShipFlag=gcRelationshipCheck(globalPlanes(targetIndex),...
+%         globalPlanes(element_ss));
+gcRelationShipFlag=gcRelationshipCheck_v2(globalPlanes(targetIndex),...
         globalPlanes(element_ss));
 
     if (gcRelationShipFlag)

@@ -10,10 +10,6 @@ th_angle=18;%update passing this variable as input argument
 [~,er]=computeSinglePoseError(globalPlanes(indextop).tform,...
     globalPlanes(indexperp).tform);
 
-if er<th_angle
-    side=1;
-else
-
 %     logic comparison
 if er<th_angle
     side=1;
@@ -29,5 +25,5 @@ else
     end
 end
 
-end
+end%function
 

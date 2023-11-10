@@ -6,8 +6,12 @@ N=length(planesVector);
 ids=zeros(N,2);
 
 for i=1:N
-    ids(i,1)=planesVector(i).idFrame;
-    ids(i,2)=planesVector(i).idPlane;
+    if ~isstruct(planesVector(i).idFrame)
+        ids(i,1)=planesVector(i).idFrame;
+    else
+        ids(i,1)=planesVector(i).idFrame.mwdata;
+    end
+    ids(i,2)=planesVector(i).idPlane;    
 end
 
 

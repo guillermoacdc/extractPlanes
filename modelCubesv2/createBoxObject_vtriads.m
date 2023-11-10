@@ -1,4 +1,4 @@
-function [myBox] = createBoxObject_vcuboids(globalPlanes,triadIndex, sessionID, frameID)
+function [myBox] = createBoxObject_vtriads(globalPlanes,triadIndex, sessionID, frameID)
 %CREATEBOXOBJECT Summary of this function goes here
 %   Detailed explanation goes here
 compensateHeight=50;%milimeters; associated with the threshold in the stage of floor-remotion; update this variable with input argument 

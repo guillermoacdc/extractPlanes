@@ -106,21 +106,6 @@ locaPlanes.zyIndex=[];
 for i=1:stopFrameIndex
     frameID=keyframes(i);
     disp(['          processing frame ' num2str(frameID) ' - ' num2str(i) '/' num2str(Nframes)])
-%     debugg pause
-    if mod(i,10)==0
-%     if frameID==19
-        disp('stop mark')
-    end
-% First part of update global map stratey: forget old planes-------------
-    if mod(i,windowSize)==0 %& i>=2*windowSize
-        if (i-windowSize)>=1
-            windowInit=keyframes(i-windowSize);
-        else
-            windowInit=keyframes(1);
-        end
-        [globalPlanes, particlesVector] =updatePresence_vcuboids(globalPlanes,particlesVector,windowInit,...
-            keyframes(1), th_vigency);
-    end
 
 %     compute radii to manage particles-------------
     radii=computeRaddi_v2(dataSetPath,sessionID,frameID);
@@ -157,51 +142,37 @@ for i=1:stopFrameIndex
         [globalPlanes, bufferComposedPlanes] = performMergeSingleMap_vcuboid(globalPlanes,tao_merg, theta_merg, ...
             th_coplanarDistance, planeFilteringParameters, planeModelParameters, ...
             lengthBoundsTop, gridStep, lengthBoundsP, compensateFactor, bufferComposedPlanes);
-        
+       
         [group_tpp, group_tp, group_s]=firstGrouping(globalPlanes, ...
         th_angle, conditionalAssignationFlag);
-% compute boxes from groups of triads
-        Ng=length(group_tpp);
-        if Ng>1
-            for i_box=1:Ng
-                splane=globalPlanes.values(group_tpp(i_box));
-                secondIndex=splane.secondPlaneID;
-                thirdIndex=splane.thirdPlaneID;
-                triadID=[splane.getID(), globalPlanes.values(secondIndex).getID, globalPlanes.values(thirdIndex).getID];
-                disp(['          splane ' num2str(triadID(1)) '-' num2str(triadID(2))...
-                    ' is associated with splane ' num2str(triadID(3)) '-' num2str(triadID(4)),...
-                    ' and splane ' num2str(triadID(5)) '-' num2str(triadID(6))])
-%                 boxID=i_box;
-                triadIndex=[group_tpp(i_box), secondIndex thirdIndex];
-%                 globalBoxes(i_box)=createBoxObject_vtriads(globalPlanes.values,triadIndex, sessionID, frameID); 
-                globalBoxes1(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,triadIndex, sessionID, frameID); 
-            end
-        end
 
-% compute boxes from groups of couples
-        Ng=length(group_tp);
-        if Ng>1
-            for i_box=1:Ng
-                splane=globalPlanes.values(group_tp(i_box));
-                secondIndex=splane.secondPlaneID;
-                coupleID=[splane.getID(), globalPlanes.values(secondIndex).getID];
-                disp(['          splane ' num2str(coupleID(1)) '-' num2str(coupleID(2))...
-                    ' is associated with splane ' num2str(coupleID(3)) '-' num2str(coupleID(4)),...
-                ])
-                coupleIndex=[group_tp(i_box), secondIndex ];
-%                 globalBoxes(i_box)=createBoxObject_vtriads(globalPlanes.values,coupleIndex, sessionID, frameID); 
-                globalBoxes2(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,coupleIndex, sessionID, frameID); 
-            end
+%     debugg pause
+    if mod(i,10)==0
+%     if frameID==15
+        disp('stop mark')
+    end 
+
+        globalBoxes=computeBoxesFromGroups(globalPlanes,group_tpp, group_tp, group_s, sessionID, frameID);
+
+
+
+% First part of update global map stratey: forget old planes-------------
+    if mod(i,windowSize)==0 %& i>=2*windowSize
+        if (i-windowSize)>=1
+            windowInit=keyframes(i-windowSize);
+        else
+            windowInit=keyframes(1);
         end
-    globalBoxes=[globalBoxes1 globalBoxes2];
+        [globalPlanes, particlesVector] =updatePresence_vcuboids(globalPlanes,particlesVector,windowInit,...
+            keyframes(1), th_vigency);
+    end
 
         % complement estimated pose and save        
-%         estimatedPose.(['frame' num2str(frameID)])=mystruct(globalPlanes);  
-%         estimatedPose.(['frame' num2str(frameID)]).values=obj2struct_vector(globalPlanes); 
+        estimatedPose.(['frame' num2str(frameID)]).values=obj2struct_vector(globalBoxes); 
         %     additional properties of estimatedPose (Nnap, processingTime)
-%         estimatedPose.(['frame' num2str(frameID)]).Nnap=Nnap;
+        estimatedPose.(['frame' num2str(frameID)]).Nnap=Nnap;
     else
-%         estimatedPose.(['frame' num2str(frameID)])=[];
+        estimatedPose.(['frame' num2str(frameID)])=[];
     end
 end
 

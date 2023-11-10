@@ -4,32 +4,13 @@ function output_struct = obj2struct_vector(obj)
 % output_struct. 
 % Addition: manage vector of objects
 % Source: https://stackoverflow.com/questions/35736917/convert-matlab-objects-to-struct
-
-properties = fieldnames(obj); % works on structs & classes (public properties)
-% properties(12)=[];%forget property pathPoints to avoid errors during json decoding
-Ne=size(obj,2);
-Np=length(properties);
-
-windowsFlag=false;
-old=filesep;
-if old=='\'
-    windowsFlag=true;
+Ne=length(obj.values);
+output_struct=[];%probar vector fila para evitar versiones diferentes a las creadas
+for i=1:Ne
+    output_struct=[output_struct obj2struct(obj.values(i))];
+end
 end
 
-
-if windowsFlag
-    new=[old old];
-end
-
-for k=1:Ne
-    for i = 1:Np
-        val = obj(k).(properties{i});
-        if i==12 & windowsFlag %manage of path value
-            val = replace(val,old, new);
-        end
-        output_struct(k).(properties{i}) = val; 
-    end
-end
 
 
 

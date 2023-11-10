@@ -17,6 +17,7 @@ if N>0
     
         %     copy the rest of properties
         outputVector.values(i).limits=inputVector.values(i).limits;
+        outputVector.values(i).idBox=inputVector.values(i).idBox;
         outputVector.values(i).type=inputVector.values(i).type;
         outputVector.values(i).L1=inputVector.values(i).L1;
         outputVector.values(i).L2=inputVector.values(i).L2;
