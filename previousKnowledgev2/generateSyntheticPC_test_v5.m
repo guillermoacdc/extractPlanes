@@ -10,7 +10,7 @@ sessionID=10;
 dataSetPath=computeReadPaths(sessionID);
 keyframes=loadKeyFrames(dataSetPath,sessionID);
 
-frameHL2=25;
+frameHL2=15;
 boxID=getPPS(dataSetPath,sessionID,frameHL2);
 Nb=length(boxID);
 
@@ -52,7 +52,7 @@ title 'test on generate synthetic point cloud'
 
 
 % load matGlobalBoxesFigures.mat
-load matGlobalBoxesFigures.mat;
+load matGlobalBoxesFigures_v4.mat;
 sessionID=10;
 fc='b';
 myPlotBoxContour(globalBoxes,sessionID,fc)

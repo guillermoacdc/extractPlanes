@@ -1,5 +1,6 @@
 function [pc] = createPlanePCAtOriginOfqh(planeDescriptor,spatialSampling)
-%CREATEPLANEPCATORIGIN Creates a point cloud of a plane, centered at origin
+%CREATEPLANEPCATORIGIN Creates a point cloud of a plane, centered at
+%origin, then projects to the planeDescriptor.tform
     [x,y,z] = ndgrid(0:spatialSampling:planeDescriptor.L2, 0, 0:spatialSampling:planeDescriptor.L1);
     xyz=[x(:),y(:),z(:)];
     %     put the origin of the plane in the geometric center

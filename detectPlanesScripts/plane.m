@@ -138,13 +138,13 @@ classdef plane < handle
 %         compute pose, length and plane tilt; last one just for
 %         perpendicular planes
         if (obj.type==0)%parallel planes
-           [obj.L1 obj.L2 obj.tform myOccludedIndex]=computeL1L2Parallel(pc_projected,obj,plotFlag);
+           [obj.L1, obj.L2, obj.tform, myOccludedIndex]=computeL1L2Parallel(pc_projected,obj,plotFlag);
            if (myOccludedIndex>occlussionTreshold)
                obj.topOccludedPlaneFlag=1;
            end
         else
             if (obj.type==1)%perpendicular planes
-                [obj.L1 obj.L2 obj.tform L2toY]=computeL1L2Perpendicular_v2(pc_projected,obj, plotFlag);
+                [obj.L1, obj.L2, obj.tform, L2toY]=computeL1L2Perpendicular_v2(pc_projected,obj, plotFlag);
                 obj.L2toY=L2toY;
 %             compensate pose and length - Para sesiones con apilamiento, se debe restringir  la compensación a planos que se soportan en el piso
 %             compensate length
