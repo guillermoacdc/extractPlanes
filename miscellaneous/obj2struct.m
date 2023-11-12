@@ -11,7 +11,7 @@ if ~isempty(obj)
     for i = 1:length(properties)
         val = obj.(properties{i});
         if ~isstruct(val) && ~isobject(val)
-            if i==12 & windowsFlag %manage of path value
+            if i==12 & windowsFlag & ~isempty(val) %manage of path value
                 val = replace(val,oldfs, newfs);% to avoid escape character errors in decoding
             end
             output_struct.(properties{i}) = val; 

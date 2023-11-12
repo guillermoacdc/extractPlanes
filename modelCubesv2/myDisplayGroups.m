@@ -14,7 +14,9 @@ Np=length(group_tp);
 for i=1:Np
     plane=globalPlanes(group_tp(i));
     secondIndex=plane.secondPlaneID;
-    pairs=[plane.getID(), globalPlanes(secondIndex).getID];
+%     pairs=[plane.getID(), globalPlanes(secondIndex).getID];
+    pairs=[plane.idFrame, plane.idPlane,...
+        globalPlanes(secondIndex).idFrame, globalPlanes(secondIndex).idPlane];
     disp(['          plane ' num2str(pairs(1)) '-' num2str(pairs(2))...
         ' is associated with plane ' num2str(pairs(3)) '-' num2str(pairs(4))])
 end
@@ -25,7 +27,10 @@ for i=1:Np
     plane=globalPlanes(group_tpp(i));
     secondIndex=plane.secondPlaneID;
     thirdIndex=plane.thirdPlaneID;
-    pairs=[plane.getID(), globalPlanes(secondIndex).getID, globalPlanes(thirdIndex).getID];
+%     pairs=[plane.getID(), globalPlanes(secondIndex).getID, globalPlanes(thirdIndex).getID];
+    pairs=[plane.idFrame(), plane.idPlane(), ...
+        globalPlanes(secondIndex).idFrame, globalPlanes(secondIndex).idPlane ...
+        globalPlanes(thirdIndex).idFrame, globalPlanes(thirdIndex).idPlane];
     disp(['          plane ' num2str(pairs(1)) '-' num2str(pairs(2))...
         ' is associated with plane ' num2str(pairs(3)) '-' num2str(pairs(4)),...
         ' and plane ' num2str(pairs(5)) '-' num2str(pairs(6))])

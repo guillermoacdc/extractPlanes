@@ -5,6 +5,9 @@ function candidates = searchCandidates3_perp_v1(searchSpace, ...
 % v1: implementation with kdtreesearcher. Requires a 3-d tree in the input,
 % instead of exemplarSet
 
+if iscolumn(refSearch)
+    refSearch=refSearch';
+end
 indexmt=rangesearch(modelTree,refSearch,th_angle*180/(100*pi));
 
 % convert index into two dimensional IDs of planes

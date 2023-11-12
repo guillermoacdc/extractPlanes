@@ -1,4 +1,4 @@
-function myBox=couple2Boxes(globalPlanes,coupleIndex, ...
+function myBox=couple2Boxes_isolated(globalPlanes,coupleIndex, ...
             sessionID, frameID, pkFlag,idBox, compensateHeight, th_angle)
 %COUPLE2BOXES Transform a couple of plane segment to a box object
 %   Detailed explanation goes here
@@ -14,11 +14,10 @@ boxPose=computeBoxPose(globalPlanes,coupleIndex,sideVector);
 
 % create triad
 sideVector=[0, sideA, sideSynthetic];
-if isrow(globalPlanes)
-    globalPlanes=[globalPlanes, syntheticPlaneSegment];%warning: modification of global planes vector
-else
-    globalPlanes=[globalPlanes; syntheticPlaneSegment];%warning: modification of global planes vector
-end
+
+tempObj.values=syntheticPlaneSegment;
+syntheticPlaneSegment_struct=myObj2Struct(tempObj);
+globalPlanes=[globalPlanes; syntheticPlaneSegment_struct.values];%warning: modification of global planes vector
 
 syntheticIndex=length(globalPlanes);
 triadIndex=[coupleIndex, syntheticIndex];
