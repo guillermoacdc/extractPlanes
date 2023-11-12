@@ -1,5 +1,5 @@
 function globalBoxes=computeBoxesFromGroups(globalPlanes,group_tpp,...
-    group_tp, group_s, sessionID, frameID)
+    group_tp, group_s, sessionID, frameID, pkFlag)
 %COMPUTEBOXESFROMGROUPS Compute the vector globalBoxes from groups of plane
 %segments that belong to the global map. The groups can be conformed by
 %couples of triads of plane segments
@@ -26,9 +26,10 @@ if Ng>1
             ' is associated with splane ' num2str(triadID(3)) '-' num2str(triadID(4)),...
             ' and splane ' num2str(triadID(5)) '-' num2str(triadID(6))])
 %                 boxID=i_box;
-        triadIndex=[group_tpp(i_box), secondIndex thirdIndex];
+        triadIndex=[group_tpp(i_box), secondIndex, thirdIndex];
 %                 globalBoxes(i_box)=createBoxObject_vtriads(globalPlanes.values,triadIndex, sessionID, frameID); 
-        globalBoxes1(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,triadIndex, sessionID, frameID); 
+%         globalBoxes1(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,triadIndex, sessionID, frameID); 
+        globalBoxes1(i_box)=createBoxObject_vcuboids_v3(globalPlanes.values,triadIndex, sessionID, frameID, pkFlag,i_box); 
     end
 end
 
@@ -43,8 +44,8 @@ if Ng>1
             ' is associated with splane ' num2str(coupleID(3)) '-' num2str(coupleID(4)),...
         ])
         coupleIndex=[group_tp(i_box), secondIndex ];
-%                 globalBoxes(i_box)=createBoxObject_vtriads(globalPlanes.values,coupleIndex, sessionID, frameID); 
-        globalBoxes2(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,coupleIndex, sessionID, frameID); 
+%         globalBoxes2(i_box)=createBoxObject_vcuboids_v2(globalPlanes.values,coupleIndex, sessionID, frameID); 
+        globalBoxes2(i_box)=createBoxObject_vcuboids_v3(globalPlanes.values,coupleIndex, sessionID, frameID, pkFlag, i_box); 
     end
 end
 globalBoxes=[globalBoxes1 globalBoxes2];

@@ -39,16 +39,17 @@ tempFilteringParameters=[radii windowSize th_detections];
 planeModelParameters(1) =   12;% maxDistance in mm
 % 7. compensate factor for perpendicular planes supported on the floor
 compensateFactor=0;%mm--- no funcionó como se esperaba. Valor probado: 
+compensateHeight=50;%mm - value used in RANSAC to eliminate points that fit with plane model of the floor
 evalPath=computeReadWritePaths(app);
-
+pkFlagv=[0 1];
 for i=1:Ns
     sessionID=sessionsID(i);
     fileNameBoxes='estimatedBoxes.json';
     fileNamePlanes='estimatedPlanes.json';
-    [estimatedBoxPose, estimatedPlanePose]=myBoxTracker_v3(sessionID, ...
+    [estimatedBoxPose, estimatedPlanePose]=myBoxTracker_v4(sessionID, ...
          planeFilteringParameters, ...
             mergingPlaneParameters, tempFilteringParameters, ...
-            planeModelParameters, compensateFactor, app);
+            planeModelParameters, compensateFactor, pkFlag, compensateHeight);
     % write json file to disk
 
     mySaveStruct2JSONFile(estimatedBoxPose,fileNameBoxes,evalPath,sessionID);

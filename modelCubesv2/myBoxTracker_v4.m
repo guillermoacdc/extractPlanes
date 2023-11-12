@@ -1,9 +1,9 @@
-function [estimatedPlanePose]=myPlaneTracker_v4(sessionID, ...
+function [estimatedBoxPose, estimatedPlanePose]=myBoxTracker_v4(sessionID, ...
     planeFilteringParameters, ...
             mergingPlaneParameters, tempFilteringParameters, ...
-            planeModelParameters, compensateFactor)
-% MYPLANETRACKER  Tracks the pose of planes in consolidation zone
-% The outputs are returned in the struct estimatedPlanePose 
+            planeModelParameters, compensateFactor, pkFlag, compensateHeight)
+% MYBOXTRACKER  Tracks the pose of planes and boxes in consolidation zone
+% The outputs are returned in the struct estimatedBoxPose, estimatedPlanePose 
 % The inputs
 %   sessionID, 
 %   planeFilteringParameters: parameters used to filter planes
@@ -28,20 +28,25 @@ th_coplanarDistance=mergingPlaneParameters(4);
 estimatedPlanePose.Parameteres.MergingPlane.tao=tao_merg;
 estimatedPlanePose.Parameteres.MergingPlane.theta=theta_merg;
 estimatedPlanePose.Parameteres.MergingPlane.gridStep=gridStep;
+estimatedBoxPose.Parameteres.MergingPlane.tao=tao_merg;
+estimatedBoxPose.Parameteres.MergingPlane.theta=theta_merg;
+estimatedBoxPose.Parameteres.MergingPlane.gridStep=gridStep;
 % 2. parameters to implement the global-map-update strategy 
 % radii=tempFilteringParameters(1);%mm - initial value. The raddi changes every time a box is extracted from consolidation zone
 windowSize=tempFilteringParameters(2);%frames
 th_vigency=tempFilteringParameters(3);%percent - not used in version 1
 estimatedPlanePose.Parameteres.Particles.windowSize=windowSize;
 estimatedPlanePose.Parameteres.Particles.th_vigency=th_vigency;
+estimatedBoxPose.Parameteres.Particles.windowSize=windowSize;
+estimatedBoxPose.Parameteres.Particles.th_vigency=th_vigency;
 % 3 parameters used to filter planes
-th_angle=planeFilteringParameters(1);
+th_angle_deg=planeFilteringParameters(3)*180/pi;
 
 conditionalAssignationFlag=0;
 %% begin Text
 disp(['----------Estimating poses in session ' num2str(sessionID) ])
 estimatedPlanePose.sessionID=sessionID;
-
+estimatedBoxPose.sessionID=sessionID;
 
 %% Initilize vars
 % Compute paths to read and write data
@@ -51,6 +56,7 @@ dataSetPath=computeReadPaths(sessionID);
 keyframes=loadKeyFrames(dataSetPath,sessionID);
 
 estimatedPlanePose.keyFrames=keyframes;
+estimatedBoxPose.keyFrames=keyframes;
 Nframes=length(keyframes);%number of frames
 % allocating space for variables
 bufferComposedPlanes_temp={};
@@ -116,11 +122,7 @@ for i=1:Nframes
                     particlesVector, radii, frameID);
         % associate particles with global planes
         globalPlanes = associateParticlesWithGlobalPlanes_vcuboids(globalPlanes,particlesVector, radii);
-        % ----------debug
-%         if mod(i,10)==0
-        if frameID==6
-            disp('stop mark')
-        end  
+ 
         % elimination of particles and plane segments that loose vigency
         if mod(i,windowSize)==0 %& i>=2*windowSize
             if (i-windowSize)>=1
@@ -133,8 +135,20 @@ for i=1:Nframes
         end
         % update previous global map
         globalPlanesPrevious=clonePlaneObject_vcuboids(globalPlanes);      
+        %% conform boxes
+        %    group planes
+        [group_tpp, group_tp, group_s]=firstGrouping(globalPlanes, ...
+        th_angle_deg, conditionalAssignationFlag);
+        % compute objects
+%         globalBoxes=computeBoxesFromGroups(globalPlanes,group_tpp, group_tp, group_s, sessionID, frameID, pkFlag);
+        globalBoxes=groups2Boxes(globalPlanes,group_tpp, group_tp, sessionID,...
+            frameID, pkFlag, compensateHeight, th_angle_deg);    
 
-
+        % ----------debug
+%         if mod(i,10)==0
+        if frameID==12
+            disp('stop mark')
+        end 
     else
         if ~isempty(globalPlanesPrevious.values)
             Nnap=0;
@@ -147,27 +161,21 @@ for i=1:Nframes
 
     end
         % complement estimated pose and save        
-%     estimatedPlanePose.(['frame' num2str(frameID)]).values=obj2struct_vector(globalPlanes); 
     estimatedPlanePose.(['frame' num2str(frameID)]).values=obj2struct(globalPlanes); 
     estimatedPlanePose.(['frame' num2str(frameID)]).Nnap=Nnap;
+    estimatedBoxPose.(['frame' num2str(frameID)]).values=obj2struct_vector(globalBoxes); 
+    estimatedBoxPose.(['frame' num2str(frameID)]).Nnap=Nnap;
 end
 
 
+myDisplayGroups(globalPlanes.values, group_tpp, group_tp, group_s);
 figure,
 syntheticPlaneType=4;
 plotEstimationsByFrame_vcuboids_2(globalPlanes.values,syntheticPlaneType,...
     dataSetPath,sessionID,frameID)
-
+fc='b';
 figure,
-    myPlotPlanes_v3(localPlanes.values,1);
-    title(['local planes  in frame ' num2str(frameID-1)])
-
-
-% removing warnings
-w = warning('query','last');
-id=w.identifier;
-warning('off',id)
-
+    myPlotBoxContour_v2(globalBoxes,sessionID,frameID,fc)
 end
 
 

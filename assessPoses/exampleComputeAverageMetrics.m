@@ -6,9 +6,9 @@ clear
 %% set parameters
 
 sessionsID=[3 10 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
-planeType=0;% use 0 for top planes, 1 for planes perpendicular to ground
+planeType=1;% use 0 for top planes, 1 for planes perpendicular to ground
 pkflag_v=[0 1];%previous knowledge flag. Use 1 to enable previous knowledge
-app='_v12';
+app='_v16';
 % [dataSetPath,pathToWrite,~] = computeMainPaths(1,app);
 dataSetPath = computeReadPaths(1);
 pathToWrite = computeReadWritePaths(app);

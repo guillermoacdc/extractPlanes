@@ -1,37 +1,36 @@
-function [estimatedSyntheticPlane, sideTriad, syntheticSide] = computeEstimatedSyntheticLateralPlane(globalPlanes,...
-    group_tp, sessionID, frameID)
-%COMPUTEESTIMATEDSYNTHETICLATERALPLANE Computes a plane object from an
+function [syntheticPlaneSegment, sideSynthetic]=computeSyntheticPlaneSegment(globalPlanes,...
+    coupleIndex, sessionID, frameID, sideElement2, boxPose)
+%COMPUTESYNTHETICPLANESEGMENT Computes a plane object from an
 % input composed by a couple of plane objects
-% The couple of plane objects is indexed by the group_tp input
+% The couple of plane objects is indexed by the coupleIndex input
 % The first element of the couple is a top plane, the second element is a
 % perpendicular plane
 % 
 % The output is composed by
-% The object estimatedSyntheticPlane with descriptors of the derived plane.
+% The object syntheticPlaneSegment with descriptors of the derived plane.
 % The sideTriad vector with three elements that indicates the side of each
 % component of the triad. The last element corresponds with the synthetic
 % plane
-% syntheticSide is the side of the synthetic plane in the format
+% sideSynthetic is the side of the synthetic plane in the format
 % 1. for plane located in the positive direction of ztop
 % 2. for plane located in the positive direction of xtop
 % 3. for plane located in the negative direction of ztop
 % 4. for plane located in the negative direction of xtop 
 
-
 % compute side of the perpendicular plane at input
-sideElement2=computeSidesInTriad(globalPlanes,group_tp(1), group_tp(2));
+% sideElement2=computeSidesInTriad(globalPlanes,coupleIndex(1), coupleIndex(2));
 
 %% compute lengths of output plane (L1, L2)
-if globalPlanes(group_tp(2)).L2toY
-    La=globalPlanes(group_tp(2)).L2;
+if globalPlanes(coupleIndex(2)).L2toY
+    La=globalPlanes(coupleIndex(2)).L2;
 else
-    La=globalPlanes(group_tp(2)).L1;
+    La=globalPlanes(coupleIndex(2)).L1;
 end
 
 if sideElement2==1 | sideElement2==3
-    Lb=globalPlanes(group_tp(1)).L1;
+    Lb=globalPlanes(coupleIndex(1)).L1;
 else
-    Lb=globalPlanes(group_tp(1)).L2;
+    Lb=globalPlanes(coupleIndex(1)).L2;
 end
 
 if La>Lb
@@ -45,7 +44,7 @@ else
 end
 
 %% compute tform of output plane
-tform=globalPlanes(group_tp(1)).tform;
+tform=boxPose;
 % compute rotation 
 if sideElement2==1 | sideElement2==3
     tform(1:3,1:3)=roty(90)*tform(1:3,1:3);%
@@ -54,31 +53,31 @@ else
 end 
 % compute normal and position. Warning: coordinate systems in estimated 
 % planes will have 180 deg btwn normal and z vector for cases 3, 4
-position=globalPlanes(group_tp(1)).tform(1:3,4);
-L1top=globalPlanes(group_tp(1)).L1;
-L2top=globalPlanes(group_tp(1)).L2;
+position=globalPlanes(coupleIndex(1)).tform(1:3,4);
+L1top=globalPlanes(coupleIndex(1)).L1;
+L2top=globalPlanes(coupleIndex(1)).L2;
 switch sideElement2
     case 1
-        syntheticSide=2;
-        n=globalPlanes(group_tp(1)).tform(1:3,1);
+        sideSynthetic=2;
+        n=globalPlanes(coupleIndex(1)).tform(1:3,1);
         position=position+L2top/2*n;
     case 2
-        syntheticSide=1;
-        n=globalPlanes(group_tp(1)).tform(1:3,3);
+        sideSynthetic=1;
+        n=globalPlanes(coupleIndex(1)).tform(1:3,3);
 %         displacement in normal direction
         position=position+L1top/2*n;
     case 3
-        syntheticSide=4;
-        n=-globalPlanes(group_tp(1)).tform(1:3,1);
+        sideSynthetic=4;
+        n=-globalPlanes(coupleIndex(1)).tform(1:3,1);
         position=position+L2top/2*n;
     case 4
-        syntheticSide=3;
-        n=-globalPlanes(group_tp(1)).tform(1:3,3);
+        sideSynthetic=3;
+        n=-globalPlanes(coupleIndex(1)).tform(1:3,3);
         position=position+L1top/2*n;
 end
-sideTriad=[0 sideElement2, syntheticSide];
+
 %         displacement in gravity vector direction
-position=position-La/2*globalPlanes(group_tp(1)).tform(1:3,2);
+position=position-La/2*globalPlanes(coupleIndex(1)).tform(1:3,2);
 tform(1:3,4)=position;
 %% compute parameter D of output plane
 D=dot(-n,position);
@@ -87,10 +86,11 @@ modelParameters=[n', D, position'];
 pathInliers=[];
 Nmbinliers=[];
 indexForSyntheticPlane=-1;
-estimatedSyntheticPlane=plane(sessionID,frameID,indexForSyntheticPlane,modelParameters,pathInliers,Nmbinliers);
-estimatedSyntheticPlane.L1=L1;
-estimatedSyntheticPlane.L2=L2;
-estimatedSyntheticPlane.L2toY=L2toY;
-estimatedSyntheticPlane.tform=tform;
+syntheticPlaneSegment=plane(sessionID,frameID,indexForSyntheticPlane,modelParameters,pathInliers,Nmbinliers);
+syntheticPlaneSegment.L1=L1;
+syntheticPlaneSegment.L2=L2;
+syntheticPlaneSegment.L2toY=L2toY;
+syntheticPlaneSegment.tform=tform;
+
 end
 

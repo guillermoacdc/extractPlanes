@@ -4,10 +4,10 @@ function output_struct = obj2struct_vector(obj)
 % output_struct. 
 % Addition: manage vector of objects
 % Source: https://stackoverflow.com/questions/35736917/convert-matlab-objects-to-struct
-Ne=length(obj.values);
+Ne=length(obj);
 output_struct=[];%probar vector fila para evitar versiones diferentes a las creadas
 for i=1:Ne
-    output_struct=[output_struct obj2struct(obj.values(i))];
+    output_struct=[output_struct obj2struct(obj(i))];
 end
 end
 

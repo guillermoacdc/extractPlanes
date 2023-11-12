@@ -19,7 +19,7 @@ clear
 sessionsID=10;
 % [dataSetPath,evalPath]=computeMainPaths(1);
 dataSetPath = computeReadPaths(1);
-app='_v15';
+app='_vdebug';
 evalPath = computeReadWritePaths(app);
 Ns=length(sessionsID);
 
@@ -27,15 +27,15 @@ Ns=length(sessionsID);
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
-% planeTypes=[0 1];
-planeTypes=1;
+planeTypes=[0 1];
+% planeTypes=0;
 
 for k=1:length(planeTypes)
 
     planeType=planeTypes(k);
     outputFileName=['assessment_planeType' num2str(planeType) '.json'];
 %     inputFileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
-    inputFileName='estimatedPlanes_vtest1.json';
+    inputFileName='estimatedPlanes.json';
     
     %% iterative assesment by session
     for j=1:Ns

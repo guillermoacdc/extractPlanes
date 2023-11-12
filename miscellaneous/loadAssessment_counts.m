@@ -7,7 +7,9 @@ function [metrics_v, meanValues,stdValues, keyFrames, tao] = loadAssessment_coun
 % stdValues=[precision_std, recall_std, f1score_std];
 
 
-[dataSetPath,evalPath] = computeMainPaths(sessionID, app);
+% [dataSetPath,evalPath] = computeMainPaths(sessionID, app);
+dataSetPath = computeReadPaths(sessionID);
+evalPath=computeReadWritePaths(app);
 % inputFileName=['assessment_planeType' num2str(planeType) '.json'];
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);
