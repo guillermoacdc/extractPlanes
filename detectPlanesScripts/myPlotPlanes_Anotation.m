@@ -1,4 +1,4 @@
-function  myPlotPlanes_Anotation(myPlaneDescriptor, frameFlag, worldRef)
+function  myPlotPlanes_Anotation(myPlaneDescriptor, frameFlag, worldRef, lineColor)
 %MYPLOTPLANES Summary of this function goes here
 %   Detailed explanation goes here
 % version for two dimensional index [v1 v2]; where v1 is the frame index
@@ -14,7 +14,7 @@ for i=1:N
         myPlotSinglePlane_Anotation(myPlaneDescriptor(i),frame_tp,...
         frameFlag);%to plot in qh world
     else
-        myPlotPlaneContour_qm(myPlaneDescriptor(i),'w', frameFlag);%to plot in qm world
+        myPlotPlaneContour_qm(myPlaneDescriptor(i),lineColor, frameFlag);%to plot in qm world
     end
 end
 

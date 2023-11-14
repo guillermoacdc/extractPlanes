@@ -25,8 +25,8 @@ for i=1:Nframes
             frameID, pkFlag, compensateHeight, th_angle_deg);    
 
         % ----------debug
-%         if mod(i,10)==0
-        if frameID==12
+        if mod(i,10)==0
+%         if frameID==12
             disp('stop mark')
         end 
     
