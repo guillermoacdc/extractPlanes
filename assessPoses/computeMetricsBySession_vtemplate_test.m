@@ -3,7 +3,7 @@ close all
 clear
 
 app='_v16';
-sessionID=10;
+sessionID=3;
 pkflag=1;%assessmentBoxDetection_pk1
 assessmentFileName=['assessmentBoxDetection_pk' num2str(pkflag) '.json'];
 [precision_v, recall_v, f1score_v, tao, keyFrames] = computeMetricsBySession_vtemplate(assessmentFileName,...

@@ -8,7 +8,10 @@ function [metrics_v, meanValues,stdValues, keyFrames, ...
 % stdValues=[precision_std, recall_std, f1score_std];
 
 
-[dataSetPath,evalPath] = computeMainPaths(sessionID, app);
+% [dataSetPath,evalPath] = computeMainPaths(sessionID, app);
+evalPath = computeReadWritePaths(app);
+dataSetPath=computeReadPaths(sessionID);
+
 assessment=loadEstimationsFile(inputFileName,sessionID, evalPath);
 
 frames=loadKeyFrames(dataSetPath,sessionID);

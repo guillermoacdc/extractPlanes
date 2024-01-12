@@ -27,8 +27,8 @@ Ns=length(sessionsID);
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
-planeTypes=[0 1];
-% planeTypes=0;
+% planeTypes=[0 1];
+planeTypes=1;
 
 for k=1:length(planeTypes)
 
@@ -36,6 +36,7 @@ for k=1:length(planeTypes)
     outputFileName=['assessment_planeType' num2str(planeType) '.json'];
 %     inputFileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
     inputFileName='estimatedPlanes.json';
+    
     
     %% iterative assesment by session
     for j=1:Ns
@@ -49,7 +50,7 @@ for k=1:length(planeTypes)
         for i=1:Nkf
 %             frameID=keyFrames.mwdata(i);%the codifyin added the field mwdata
             frameID=keyFrames(i);
-            if i==12
+            if frameID==25
                 display('stop mark')
             end
             %load estimations in the current frame

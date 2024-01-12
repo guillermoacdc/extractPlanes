@@ -22,7 +22,9 @@ while lpCounter>=1
 
         globalPlane=globalPlanes(j);
 %         type4 = (globalPlane==localPlane);%isType4
-        typeOfTwin=computeTypeOfTwin_v2(localPlane,globalPlane, tao,...
+%         typeOfTwin=computeTypeOfTwin_v2(localPlane,globalPlane, tao,...
+%             theta,lengthBoundsTop, lengthBoundsP, planeModelParameters(1));
+        typeOfTwin=computeTypeOfTwin_v3(localPlane,globalPlane, tao,...
             theta,lengthBoundsTop, lengthBoundsP, planeModelParameters(1));
         if typeOfTwin~=0
 %             [globalPlanes, localPlanes]=myPerformMerge(globalPlanes,i,localPlanes,j);

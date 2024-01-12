@@ -3,7 +3,7 @@ close all
 clear
 
 sessionID=10;
-frameID=12;
+frameID=24;
 planeType=1;
 fileName='visiblePlanesByFrame.json';
 

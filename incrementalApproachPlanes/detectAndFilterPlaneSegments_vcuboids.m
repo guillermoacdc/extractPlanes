@@ -1,4 +1,5 @@
-function [localPlanes,Nnap] = detectAndFilterPlaneSegments_vcuboids(sessionID,frameID, planeFilteringParameters, compensateFactor)
+function [localPlanes,Nnap] = detectAndFilterPlaneSegments_vcuboids(sessionID,...
+    frameID, planeFilteringParameters, compensateFactor, th_distance_depthCamera)
 %DETECTANDFILTERPLANESEGMENTS Loads raw plane and perform filtering on the
 %loaded plane, returns a single type of planes. Returns a vector of plane objects
 %   Detailed explanation goes here

@@ -17,12 +17,12 @@ for i=1:Ndb
 end
 
 % % % validation figures
-% figure,
-% myPlotBoxes(gtBoxes , sessionID,'w')
-% hold on
-% myPlotBoxes(myBoxes, sessionID, 'y')
-% hold on
-% dibujarsistemaref(eye(4),'m',150,2,10,'w');
+figure,
+myPlotBoxes(gtBoxes , sessionID,'w')
+hold on
+myPlotBoxes(myBoxes, sessionID, 'y')
+hold on
+dibujarsistemaref(eye(4),'m',150,2,10,'w');
 
 % compute detection error in matrix form
 eD_m=compute_eD_matrix(myBoxes, gtBoxes,tao);

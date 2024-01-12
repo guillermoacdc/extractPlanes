@@ -10,6 +10,7 @@ if old=='\'
 end
 
 jsonpath=fullfile(evalPath,['session' num2str(sessionID)], fileName);
+% jsonpath=fullfile(evalPath,['session' num2str(sessionID) '_prueba9'],fileName);
     fid = fopen(jsonpath); 
     raw = fread(fid,inf); 
     str = char(raw'); 

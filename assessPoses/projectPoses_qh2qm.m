@@ -16,7 +16,8 @@ Th2m=assemblyTmatrix(Th2m_array);
 
 % Projection by using the Th2m matrix
 for i=1:Nep
-    estimatedPlane=estimatedPlanes(i);
+        estimatedPlane=estimatedPlanes(i);
+%     estimatedPlane=estimatedPlanes.values(i);
     switch estimatedPlane.type
         case 0    
             Theight=[0 1 0; 0 0 1; 1 0 0];
@@ -48,6 +49,7 @@ for i=1:Nep
     %Requires an additional transformation to obtain the z-height in projected frame 
     Testimated_m(1:3,1:3)=Testimated_m(1:3,1:3)*Theight;
     estimatedPlanes_m(i).tform=Testimated_m;
+    %     estimatedPlanes_m.values(i).tform=Testimated_m;
 end
 
 

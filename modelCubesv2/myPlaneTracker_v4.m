@@ -36,7 +36,9 @@ estimatedPlanePose.Parameteres.Particles.windowSize=windowSize;
 estimatedPlanePose.Parameteres.Particles.th_vigency=th_vigency;
 % 3 parameters used to filter planes
 th_angle=planeFilteringParameters(1);
-
+%  - used in the function mySetFitnessPlane.m
+th_distance_depthCamera=[planeFilteringParameters(6), planeFilteringParameters(7)];
+estimatedPlanePose.Parameteres.DepthCamera_range=th_distance_depthCamera;
 conditionalAssignationFlag=0;
 %% begin Text
 disp(['----------Estimating poses in session ' num2str(sessionID) ])
@@ -93,7 +95,8 @@ for i=1:Nframes
     %% planeDetector + plane segment detector + filtering
     %   detect and filter plane segments
     %     tic;
-    [localPlanes,Nnap] = detectAndFilterPlaneSegments_vcuboids(sessionID,frameID, planeFilteringParameters, compensateFactor);
+    [localPlanes,Nnap] = detectAndFilterPlaneSegments_vcuboids(sessionID,...
+        frameID, planeFilteringParameters, compensateFactor);
     % init globalPlanesPrevious
     if i==1
         globalPlanesPrevious=clonePlaneObject_vcuboids(localPlanes);%h-world
@@ -118,9 +121,24 @@ for i=1:Nframes
         globalPlanes = associateParticlesWithGlobalPlanes_vcuboids(globalPlanes,particlesVector, radii);
         % ----------debug
 %         if mod(i,10)==0
-        if frameID==6
+        if frameID==25
             disp('stop mark')
-        end  
+        end 
+%         idGP=extractIDsFromVector(globalPlanes.values);
+%         idGP_zero=find(idGP(:,1)==0);
+%         if ~isempty(idGP_zero)
+%              disp('stop mark')
+%         end
+%         fitness=extractFitnessFromVector(localPlanes.values);
+%         indexFitness=find(fitness>0);
+%         if ~isempty(indexFitness)
+%              disp('stop mark')
+%         end
+%         dco_mean(i)=mean(extractDistanceCameraFromVector(localPlanes.values));
+%         dco_std(i)=std(extractDistanceCameraFromVector(localPlanes.values));
+%         dco_min(i)=min(extractDistanceCameraFromVector(localPlanes.values));
+%         dco_maxn(i)=max(extractDistanceCameraFromVector(localPlanes.values));
+        % ------------------
         % elimination of particles and plane segments that loose vigency
         if mod(i,windowSize)==0 %& i>=2*windowSize
             if (i-windowSize)>=1
@@ -151,13 +169,14 @@ for i=1:Nframes
     estimatedPlanePose.(['frame' num2str(frameID)]).values=obj2struct(globalPlanes); 
     estimatedPlanePose.(['frame' num2str(frameID)]).Nnap=Nnap;
 end
-
+evalPath=computeReadWritePaths('_vdebug');
+recordDescriptors(dataSetPath, sessionID, frameID, globalPlanes,localPlanes, evalPath)
 
 figure,
 syntheticPlaneType=4;
 plotEstimationsByFrame_vcuboids_2(globalPlanes.values,syntheticPlaneType,...
     dataSetPath,sessionID,frameID)
-
+% 
 figure,
     myPlotPlanes_v3(localPlanes.values,1);
     title(['local planes  in frame ' num2str(frameID-1)])
@@ -167,6 +186,11 @@ figure,
 w = warning('query','last');
 id=w.identifier;
 warning('off',id)
+
+% % planes that disappear
+% A=extractIDsFromVector(globalPlanesPrevious.values);
+% B=extractIDsFromVector(globalPlanes.values);
+% C=mySetDiff_2D(A,B)
 
 end
 

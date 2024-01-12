@@ -22,7 +22,10 @@ while i<=Ng
         planeB=globalPlanes(j);
         
 %         typeOfTwin=computeTypeOfTwin(planeA, planeB, tao, theta, flagPK, th_coplanarDistance);
-        typeOfTwin=computeTypeOfTwin_v2(planeA, planeB,...
+%         typeOfTwin=computeTypeOfTwin_v2(planeA, planeB,...
+%                 tao, theta, lengthBoundsTop, lengthBoundsP, th_coplanarDistance);
+
+        typeOfTwin=computeTypeOfTwin_v3(planeA, planeB,...
                 tao, theta, lengthBoundsTop, lengthBoundsP, th_coplanarDistance);
         if typeOfTwin==1
             if planeA.distanceToCamera<planeB.distanceToCamera & planeA.distanceToCamera<0.5

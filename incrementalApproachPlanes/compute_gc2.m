@@ -4,6 +4,8 @@ function gc2 = compute_gc2(plane1,plane2)
 % Assumptions
 % the planes are of type 1
 % all properties of planes are available
+% gc_2 parece ser distancia entre los dos centros geometricos a lo largo de
+% un eje?
 
 p1=maxAPlane(plane1,plane2);
 p2=minAPlane(plane1,plane2);

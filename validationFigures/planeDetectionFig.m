@@ -34,23 +34,25 @@ for i=1:numberPlanes
 end
 % -----
 % Plot raw pc and estimated descriptors
+pc_raw=mypc_paint(pc_raw,[211 211 211]);
 figure,
     pcshow(pc_raw)
     hold on
-    dibujarsistemaref(cameraPose,'c_h',150,2,10,'w')
+    dibujarsistemaref(cameraPose,'c_h',250,2,10,'w')
     hold on
-    dibujarsistemaref(eye(4),'h',150,2,10,'w')
+    dibujarsistemaref(eye(4),'h',250,2,10,'w')
     xlabel 'x'
     ylabel 'y'
     zlabel 'z'
 xmin=-4500;
-xmax=0;
+xmax=250;
 ymin=-2500;
-ymax=0;
+ymax=250;
 zmin=-6000;
-zmax=50;
+zmax=250;
 axis([xmin xmax ymin ymax zmin zmax])    
-
+return
+myColorMap=colormap('colorcube')*255;
 figure,
 for i=2:numberPlanes
 % for i=8:8
@@ -60,6 +62,7 @@ for i=2:numberPlanes
     ptxt=p+350*n;
     txt=num2str(planesByFrame{i}.idPlane);
     pc=myPCread(pathToPlY);
+    pc=mypc_paint(pc,myColorMap(i*10,:));
     pcshow(pc)
     hold on
     quiver3(p(1),p(2),p(3),n(1),n(2),n(3),300)

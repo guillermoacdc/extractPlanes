@@ -62,8 +62,9 @@ forgotenParticles=NpvInit-length(outParticles_IDs);
 outParticles_index=getParticlesIndexFromID(particlesVector, outParticles_IDs);
 % delete particles outOfTimeParticleIndex and outOfRelationParticles_IDs
 particlesVector(outParticles_index)=[];
-
-disp([num2str(NgpInit-NgpEnd) ' planes of ' num2str(NgpInit) ' have been forgotten'])
+disp('---------------')
+disp([num2str(NgpInit-NgpEnd) ' planes of ' num2str(NgpInit) ' have been forgotten during window update'])
 disp(['particles forgotten: ' num2str(forgotenParticles) '/' num2str(NpvInit)])
+disp('---------------')
 end
 

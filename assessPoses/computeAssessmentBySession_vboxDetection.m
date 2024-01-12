@@ -1,8 +1,8 @@
 function assessment=computeAssessmentBySession_vboxDetection(estimatedBoxesFileName, sessionID,...
         tao, theta, evalPath, visiblePlanesByFrameFileName)
-%COMPUTEMETRICSBYSESSION_VBOXDETECTION Summary of this function goes here
-%   Detailed explanation goes here
-% consider update the name with computeAssessmentBySession_vboxDetection
+%COMPUTEMETRICSBYSESSION_VBOXDETECTION Computes a struct for each frame.
+%The fields of the struct are TPhl2, TPm, FPhl2, FNm. Each one is a vector
+%with box identifiers
 
 estimatedBoxes=loadEstimationsFile(estimatedBoxesFileName, sessionID, evalPath);
 dataSetPath=computeReadPaths(sessionID);

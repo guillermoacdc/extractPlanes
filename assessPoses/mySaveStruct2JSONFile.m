@@ -30,6 +30,7 @@ end
         cd (savePath);
         % create folder
         folderName=['session' num2str(sessionID)];
+%         folderName=['session' num2str(sessionID) '_prueba9'];
         folderExists=isfolder(folderName);
         if ~folderExists
             mkdir (folderName);

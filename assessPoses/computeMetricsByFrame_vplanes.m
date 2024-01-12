@@ -19,11 +19,10 @@ clear
 sessionsID=10;
 % [dataSetPath,evalPath]=computeMainPaths(1);
 dataSetPath = computeReadPaths(1);
-app='_vdebug';
+app='_v16';
 evalPath = computeReadWritePaths(app);
 Ns=length(sessionsID);
 
-% sessionID=10;
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
@@ -33,20 +32,21 @@ planeTypes=[0 1];
 for k=1:length(planeTypes)
 
     planeType=planeTypes(k);
-    outputFileName=['assessment_planeType' num2str(planeType) '.json'];
+    outputFileName=['assessment_planeType' num2str(planeType) '_vws.json'];
 %     inputFileName=['estimatedPoses_ia_planeType' num2str(planeType) '.json'];
-    inputFileName='estimatedPlanes.json';
+    inputFileName='estimatedPlanes_vtest1.json';
     
     %% iterative assesment by session
     for j=1:Ns
         sessionID=sessionsID(j);
         % load estimations for all frames
         estimatedPoses = loadEstimationsFile(inputFileName,sessionID, evalPath);
+        windowSize=estimatedPoses.Parameteres.Particles.windowSize;
         keyFrames=estimatedPoses.keyFrames;
 %         Nkf=length(keyFrames.mwdata);
         Nkf=length(keyFrames);
         %% iterative assessment by frame
-        for i=1:Nkf
+        for i=1:windowSize:Nkf
 %             frameID=keyFrames.mwdata(i);%the codifyin added the field mwdata
             frameID=keyFrames(i);
             if i==12

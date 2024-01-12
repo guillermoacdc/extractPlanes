@@ -6,7 +6,7 @@ N=size(A,1);
 for i=1:N
     idx=[];
     target=A(i,:);
-    idx=myFind2D(target,B)
+    idx=myFind2D(target,B);
     if isempty(idx)
         C=[C;target];
     end

@@ -46,90 +46,106 @@ distance_c_g=globalPlanes(id_gp).distanceToCamera;
 A_l=localPlane.L1*localPlane.L2;
 A_g=globalPlanes(id_gp).L1*globalPlanes(id_gp).L2;
 % disp(['type of twin is ' num2str(typeOfTwin)])
-switch (typeOfTwin)
-    case 1
-        if (distance_c_l<distance_c_g & distance_c_l>0.5)
-            globalPlanes(id_gp)=localPlane;
-        end
-    case 2
-
-        if A_l<A_g
-            globalPlanes(id_gp)=localPlane;%replace the previous Plane with the new local Plane
-        end
-    case 3
-        if A_l>A_g
-            globalPlanes(id_gp)=localPlane;%replace the previous Plane with the new local Plane
-        end        
-    case 4
-        
-% create the new point cloud
-        pcA=myPCreadComposedPlane(globalPlanes(id_gp).pathPoints, ...
-            globalPlanes(id_gp).idFrame, globalPlanes(id_gp).idPlane, bufferCP);
-        pcB=myPCreadComposedPlane(localPlane.pathPoints, ...
-            localPlane.idFrame, localPlane.idPlane, bufferCP);
-        pcnew=pcmerge(pcA,pcB,gridStep);%mm        
-%%  Add components to bufferCP vector
-%         Ncomp=size(buffer,2);%calcule el máximo valor en globalPlanes.composed_idPlane
-        Ncomp=computeMaxNcomposedIDPlane(bufferCP);%calcule el máximo valor en globalPlanes.composed_idPlane
-        bufferCP = updateBufferCP(globalPlanes(id_gp),localPlane, bufferCP, Ncomp);
-        
-
-%%   Create composed plane, compute new parameters and write them to globalPlanes
-        % Set paramaters to compute the plane model from the new pointcloud
-%         maxDistance=0.1*1000;%mm
-%         maxAngularDistance=5;%deg
-%         referenceVector=[0 1 0];
-%         model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
-        model = pcfitplane(pcnew,maxDistance);
-
-        newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be recomputed in plane/setLimits
- 
-    %   create a new composed plane, with double value in its IDs
-
-%         condicionar almacenamieto de pathPoints. En caso de que planeX
-%         sea compuesto, recuperar los componentes y armar un cell único.
-%         Esto para que la función soft de carga de PCs opere  
-        newPath = computePathMergedPlane(globalPlanes(id_gp).pathPoints,localPlane.pathPoints);
-        composedPlane=plane(sessionID,0,...
-                Ncomp+1,newParameters,...
-                newPath,pcnew.Count);
-        
-        % classify the plane object
-            % inherit basic properties
-                composedPlane.type=localPlane.type;
-                if composedPlane.type==1
-                    composedPlane.L2toY=localPlane.L2toY;
-                    composedPlane.planeTilt=localPlane.planeTilt;
+    switch typeOfTwin        
+        case 1 %selection in function of inliers, fitness
+            if localPlane.fitness==globalPlanes(id_gp).fitness
+                if localPlane.numberInliers>globalPlanes(id_gp).numberInliers
+                    globalPlanes(id_gp)=localPlane;
                 end
-%               inherit D_qhmov. The composed planes doesnt have a camera pose, then is necessary to inherit this property 
-%                 composedPlane.D_qhmov=localPlane.D_qhmov;
-%                 recompute D_qhmov
-                composedPlane.setD_qhmov(cameraPosition);
-                % set limits and update geometric center. The update is necessary to include the projection of points to
-                %     the plane model before compute g.c. 
-                composedPlane.setLimits(pcnew);%set limits in each axis.
-                
-                %     detect antiparallel normals and correct
-                composedPlane.correctAntiparallel(th_size);%
-                % measure pose and length, and updata occlusion flag
-                composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0, compensateFactor);
-                % set length flag based on type of plane
-                if composedPlane.type==0
-                    lengthFlag=lengthFilter(composedPlane,lengthBoundsTop,th_lenght);
-                else
-                    lengthFlag=lengthFilter(composedPlane,lengthBoundsP,th_lenght);
+            else
+                if localPlane.fitness==globalPlanes(id_gp).fitness
+                    globalPlanes(id_gp)=localPlane;
                 end
-                composedPlane.setLengthFlag(lengthFlag);
-%       compute the mean fitness                
-            composedPlane.fitness=mean([globalPlanes(id_gp).fitness,localPlane.fitness]);
-%             add relationship with particle element
-            composedPlane.timeParticleID=globalPlanes(id_gp).timeParticleID;
-%%   Delete components from its previous container
-        globalPlanes(id_gp)=[composedPlane];%---considere adicionar composedPlane en el indice id_gp
-        localPlanes(id_lp)=[];%verify pass by reference
-%%   insert composedPlane into globalPlanes
-%         globalPlanes=[globalPlanes composedPlane];   %---evite esta adición     
-end
+            end
+%     		if localPlane.numberInliers>globalPlanes(id_gp).numberInliers
+%     			globalPlanes(id_gp)=localPlane;
+%     		end
+%     
+%             if localPlane.fitness>globalPlanes(id_gp).fitness
+%                 globalPlanes(id_gp)=localPlane;
+%             end
+%             if (distance_c_l<distance_c_g & distance_c_l>0.5)
+%                 globalPlanes(id_gp)=localPlane;
+%             end
+        case 2
+    
+            if A_l<A_g
+                globalPlanes(id_gp)=localPlane;%replace the previous Plane with the new local Plane
+            end
+        case 3
+            if A_l>A_g
+                globalPlanes(id_gp)=localPlane;%replace the previous Plane with the new local Plane
+            end        
+        case 4
+            
+    % create the new point cloud
+            pcA=myPCreadComposedPlane(globalPlanes(id_gp).pathPoints, ...
+                globalPlanes(id_gp).idFrame, globalPlanes(id_gp).idPlane, bufferCP);
+            pcB=myPCreadComposedPlane(localPlane.pathPoints, ...
+                localPlane.idFrame, localPlane.idPlane, bufferCP);
+            pcnew=pcmerge(pcA,pcB,gridStep);%mm        
+    %%  Add components to bufferCP vector
+    %         Ncomp=size(buffer,2);%calcule el máximo valor en globalPlanes.composed_idPlane
+            Ncomp=computeMaxNcomposedIDPlane(bufferCP);%calcule el máximo valor en globalPlanes.composed_idPlane
+            bufferCP = updateBufferCP(globalPlanes(id_gp),localPlane, bufferCP, Ncomp);
+            
+    
+    %%   Create composed plane, compute new parameters and write them to globalPlanes
+            % Set paramaters to compute the plane model from the new pointcloud
+    %         maxDistance=0.1*1000;%mm
+    %         maxAngularDistance=5;%deg
+    %         referenceVector=[0 1 0];
+    %         model = pcfitplane(pcnew,maxDistance,referenceVector,maxAngularDistance);
+            model = pcfitplane(pcnew,maxDistance);
+    
+            newParameters=[model.Parameters 0, 0, 0]; %is assumed that the geometric center will be recomputed in plane/setLimits
+     
+        %   create a new composed plane, with double value in its IDs
+    
+    %         condicionar almacenamieto de pathPoints. En caso de que planeX
+    %         sea compuesto, recuperar los componentes y armar un cell único.
+    %         Esto para que la función soft de carga de PCs opere  
+            newPath = computePathMergedPlane(globalPlanes(id_gp).pathPoints,localPlane.pathPoints);
+            composedPlane=plane(sessionID,0,...
+                    Ncomp+1,newParameters,...
+                    newPath,pcnew.Count);
+            
+            % classify the plane object
+                % inherit basic properties
+                    composedPlane.type=localPlane.type;
+                    if composedPlane.type==1
+                        composedPlane.L2toY=localPlane.L2toY;
+                        composedPlane.planeTilt=localPlane.planeTilt;
+                    end
+    %               inherit D_qhmov. The composed planes doesnt have a camera pose, then is necessary to inherit this property 
+    %                 composedPlane.D_qhmov=localPlane.D_qhmov;
+    %                 recompute D_qhmov
+                    composedPlane.setD_qhmov(cameraPosition);
+                    % set limits and update geometric center. The update is necessary to include the projection of points to
+                    %     the plane model before compute g.c. 
+                    composedPlane.setLimits(pcnew);%set limits in each axis.
+                    
+                    %     detect antiparallel normals and correct
+                    composedPlane.correctAntiparallel(th_size);%
+                    % measure pose and length, and updata occlusion flag
+                    composedPlane.measurePoseAndLength(pcnew, th_occlusion, 0, compensateFactor);
+                    % set length flag based on type of plane
+                    if composedPlane.type==0
+                        lengthFlag=lengthFilter(composedPlane,lengthBoundsTop,th_lenght);
+                    else
+                        lengthFlag=lengthFilter(composedPlane,lengthBoundsP,th_lenght);
+                    end
+                    composedPlane.setLengthFlag(lengthFlag);
+    %       compute the mean fitness                
+                composedPlane.fitness=mean([globalPlanes(id_gp).fitness,localPlane.fitness]);
+    %             add relationship with particle element
+                composedPlane.timeParticleID=globalPlanes(id_gp).timeParticleID;
+    %%   Delete components from its previous container
+            globalPlanes(id_gp)=[composedPlane];%---considere adicionar composedPlane en el indice id_gp
+            localPlanes(id_lp)=[];%verify pass by reference
+    %%   insert composedPlane into globalPlanes
+    %         globalPlanes=[globalPlanes composedPlane];   %---evite esta adición     
+    end
 
 end
 

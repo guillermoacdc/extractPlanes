@@ -7,15 +7,16 @@ clear
 %% parameters
 
 pkflag=1;%1 for Awpk, 0 for Awoutpk 
-planeType=0;%0 for top planes, 1 for lateral planes
+planeType=1;%0 for top planes, 1 for lateral planes
 sessionID=10;
 app='_vdebug';
 % [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app);
 evalPath = computeReadWritePaths(app);
 [dataSetPath,PCpath] = computeReadPaths(sessionID);
 
-% inputFileName=['assessment_planeType' num2str(planeType) '.json'];
-inputFileName=['assessment_planeType' num2str(planeType) '.json'];
+
+inputFileName=['localAssessment_planeType' num2str(planeType) '.json'];
+% inputFileName=['globalAssessment_planeType' num2str(planeType) '.json'];
 keyFrames=loadKeyFrames(dataSetPath,sessionID);
 Nkf=length(keyFrames);
 assessment=loadEstimationsFile(inputFileName,sessionID, evalPath);

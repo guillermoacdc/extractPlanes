@@ -40,7 +40,7 @@ for i=1:Nb
     hold on
     dibujarsistemaref(planeDescriptor{i}(1).tform,boxID(i),150,2,10,'w');
     hold on
-    myPlotPlanes_Anotation(planeDescriptor{i},0,'m')
+    myPlotPlanes_Anotation(planeDescriptor{i},0,'m','y')
    hold on
 end    
 %     dibujarsistemaref(eye(4),'m',150,2,10,'w')

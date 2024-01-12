@@ -1,6 +1,6 @@
 
 % compute metrics of box detection problem for the dataset
-% problem: compute position (3D) and length (h, w, d) of each box instance in an image. 
+% problem: compute position (3D)  of each box instance in an image. 
 clc
 close all
 clear
@@ -8,7 +8,7 @@ clear
 
 %% set parameters
 % sessionsID=[ 3 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=13;
+sessionsID=3;
 dataSetPath = computeReadPaths(1);
 app='_v16';
 evalPath = computeReadWritePaths(app);

@@ -8,7 +8,7 @@ clear
 % low occlussion scenes
 % sessionsID=[ 3 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
 sessionsID=10;% 
-app='_v15';%appendix of the folder where results are saved
+app='_vdebug';%appendix of the folder where results are saved
 Ns=size(sessionsID,2);
 %% setting parameters
 % 1. Plane filtering parameters
@@ -17,7 +17,10 @@ th_size=150;%number of points
 th_lenght=10*10;%mm 10 cm - Update with tolerance_length; is in a high value (30) to pass most of the planes
 th_occlusion=1.4;%
 D_Tolerance=0.1*1000;%mm ... 0.1 m
-planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion, D_Tolerance];
+thd_max_depthCamera=5460;%source: https://learn.microsoft.com/en-us/azure/kinect-dk/hardware-specification
+thd_min_depthCamera=1500;%
+planeFilteringParameters=[th_lenght, th_size, th_angle, th_occlusion,...
+    D_Tolerance, thd_min_depthCamera, thd_max_depthCamera];
 
 % 3. Parameteres used in the stage Merging planes between frames
 % - used in the function computeTypeOfTwin
@@ -44,7 +47,7 @@ evalPath=computeReadWritePaths(app);
 for i=1:Ns
     sessionID=sessionsID(i);
 %     fileNameBoxes='estimatedBoxes.json';
-    fileNamePlanes='estimatedPlanes_vtest1.json';
+    fileNamePlanes='estimatedPlanes.json';
     [estimatedPlanePose]=myPlaneTracker_v4(sessionID, ...
          planeFilteringParameters, ...
             mergingPlaneParameters, tempFilteringParameters, ...
