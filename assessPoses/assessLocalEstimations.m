@@ -27,8 +27,8 @@ Ns=length(sessionsID);
 tao=50;
 theta=0.5;
 NpointsDiagPpal=30;
-planeTypes=[0 1];
-% planeTypes=1;
+% planeTypes=[0 1];
+planeTypes=1;
 inputFileName='localEstimations.json';
 visiblePlanesFileName='visiblePlanesByFrame.json';
 
@@ -47,7 +47,7 @@ for k=1:length(planeTypes)
         %% iterative assessment by frame
         for i=1:Nkf
             frameID=keyFrames(i);
-            if frameID==83
+            if frameID==25
                 disp('stop mark')
             end
             %load estimations in the current frame

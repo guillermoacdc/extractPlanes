@@ -1,4 +1,4 @@
-function myPlotBoxContour_v2(globalBoxes,sessionID,frameID,fc)
+function myPlotBoxContour_v2(globalBoxes,sessionID,frameID,fc,linecolor)
 %MYPLOTBOXCONTOUR Plots the contour of planes that compose a set of
 %detected boxes
 % _v2 adds to the plot the ground truth boxes in the scene
@@ -36,7 +36,7 @@ for i=1:Nb
     hold on
     dibujarsistemaref(planeDescriptor{i}(1).tform,boxID(i),150,2,10,'w');
     hold on
-    myPlotPlanes_Anotation(planeDescriptor{i},0,'m')
+    myPlotPlanes_Anotation(planeDescriptor{i},0,'m',linecolor)
    hold on
 end    
 %% plot global boxes

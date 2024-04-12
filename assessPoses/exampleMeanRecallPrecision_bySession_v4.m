@@ -7,7 +7,7 @@ clear
 %% parameters
 
 pkflag=1;%1 for Awpk, 0 for Awoutpk 
-planeType=1;%0 for top planes, 1 for lateral planes
+planeType=0;%0 for top planes, 1 for lateral planes
 sessionID=10;
 app='_vdebug';
 % [dataSetPath,evalPath,PCpath] = computeMainPaths(sessionID, app);

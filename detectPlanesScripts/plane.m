@@ -205,12 +205,16 @@ classdef plane < handle
             dcoinrange=true;
         end
         % compute fitness
-        if dcoinrange
+        if dcoinrange%considere actualizar usando ecuacion de línea 123 con valor absoluto
+            th_x=th_dmin+(th_dmax-th_dmin)/2;
+            k=(th_dmax-obj.distanceToCamera)/(th_dmax-th_x);
             if obj.angleBtwn_zc_unitNormal<90
-                obj.fitness=1-obj.angleBtwn_zc_unitNormal/90;
-                disp('angle lower than 90 from plane.setfitness()')
+%                 obj.fitness=1-obj.angleBtwn_zc_unitNormal/90;
+                obj.fitness=k*(1-obj.angleBtwn_zc_unitNormal/90);
+%                 disp('angle lower than 90 from plane.setfitness() -- ')
             else
-                obj.fitness=obj.angleBtwn_zc_unitNormal/90-1;
+%                 obj.fitness=obj.angleBtwn_zc_unitNormal/90-1;
+                obj.fitness=k*(obj.angleBtwn_zc_unitNormal/90-1);
             end
         else
             obj.fitness=0;

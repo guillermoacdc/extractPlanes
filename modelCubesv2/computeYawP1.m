@@ -1,6 +1,7 @@
 function yaw = computeYawP1(globalPlanes,indexSet)
 %COMPUTEYAWP1 Computes yaw in cases of a couple composed by a top and a
 %perpdendicular 1 plane
+%computes angle btwn xtop and xside1_p
 
 xtop=globalPlanes(indexSet(1)).tform(1:3,1);
 ntop=globalPlanes(indexSet(1)).tform(1:3,2);

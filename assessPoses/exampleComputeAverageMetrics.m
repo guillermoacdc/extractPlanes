@@ -6,15 +6,17 @@ clear
 %% set parameters
 
 sessionsID=[3 10 19 12 25 13 27 17 32 20 35 33 36 39 53 45 54 52];
-planeType=1;% use 0 for top planes, 1 for planes perpendicular to ground
+planeType=0;% use 0 for top planes, 1 for planes perpendicular to ground
 pkflag_v=[0 1];%previous knowledge flag. Use 1 to enable previous knowledge
-app='_v16';
+app='_v18';
 % [dataSetPath,pathToWrite,~] = computeMainPaths(1,app);
 dataSetPath = computeReadPaths(1);
 pathToWrite = computeReadWritePaths(app);
 
-outputFileName=['AverageMetricsForLowOccSessions_planeType' num2str(planeType) '.csv'];
-inputFileName=['assessment_planeType' num2str(planeType) '.json'];
+outputFileName=['localMetrics_planeType' num2str(planeType) '.csv'];
+inputFileName=['localAssessment_planeType' num2str(planeType) '.json'];
+% outputFileName=['globalMetrics_planeType' num2str(planeType) '.csv'];
+% inputFileName=['globalAssessment_planeType' num2str(planeType) '.json'];
 Ns=size(sessionsID,2);
 Npk=size(pkflag_v,2);
 %% iterative processing over sessions

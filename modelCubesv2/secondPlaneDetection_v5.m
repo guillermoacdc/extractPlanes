@@ -9,6 +9,10 @@ function [secondPlaneIndex, detectionFlag] = secondPlaneDetection_v5(targetIndex
 % is the plane id
 % _v5 uses the structure globalPlanes with the fields (1) camerapose, (2) values
 
+%Distance treshold to filter couples of planes. Update using an inpunt argument
+% currently we use dx/2 where dx is the hypotenuse of the greater box (box30)
+th_distance=510;
+
 %% initialize vars
 % candidates vectors
 c_perpendicularity=[];
@@ -41,9 +45,15 @@ if ~isempty(c_perpendicularity)
                 v2=globalPlanes(element_ss).geometricCenter;
                 dist_v(i)=norm(gc_target-v2);
             end
-            [~,selectedIndex]=min(dist_v);
-            secondPlaneIndex=c_gcRelations(selectedIndex);
-            detectionFlag=1;
+%             condition this selection to a threshold in the min distance
+            distMin=min(dist_v);
+            if distMin<th_distance
+%                 disp('the distance btwn couples from secondPlaneDetection is ')
+%                 disp(distMin)
+                [~,selectedIndex]=min(dist_v);
+                secondPlaneIndex=c_gcRelations(selectedIndex);
+                detectionFlag=1;
+            end
         end
     end
 end

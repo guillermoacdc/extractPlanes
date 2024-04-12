@@ -5,7 +5,7 @@ function side = computeSideInCouple(globalPlanes,indextop, indexperp, th_angle)
 % 2. for plane located in the positive direction of xtop
 % 3. for plane located in the negative direction of ztop
 % 4. for plane located in the negative direction of xtop 
-%   Detailed explanation goes here
+
 % th_angle=18;%update passing this variable as input argument
 
 [~,er]=computeSinglePoseError(globalPlanes(indextop).tform,...

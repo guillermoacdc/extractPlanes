@@ -121,8 +121,8 @@ for i=1:Nframes
         % associate particles with global planes
         globalPlanes = associateParticlesWithGlobalPlanes_vcuboids(globalPlanes,particlesVector, radii);
         % ----------debug
-%         if mod(i,10)==0
-        if frameID==7
+        if mod(i,2)==0
+%         if frameID==7
             disp('stop mark')
         end 
 %         idGP=extractIDsFromVector(globalPlanes.values);
@@ -183,8 +183,8 @@ plotEstimationsByFrame_vcuboids_2(globalPlanes.values,syntheticPlaneType,...
 figure,
     myPlotPlanes_v3(localPlanes.values,1);
     title(['local planes  in frame ' num2str(frameID-1)])
-
-
+fitnessPath='fitnessRecord.xlsx';
+getFitnessMetrics(localPlanes.values,fitnessPath);
 % removing warnings
 w = warning('query','last');
 id=w.identifier;

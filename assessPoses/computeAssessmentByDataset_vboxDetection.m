@@ -8,7 +8,7 @@ clear
 
 %% set parameters
 % sessionsID=[ 3 10	12	13	17	19	20	25 27	32	33	35 36 39 45	52	53	54];% 
-sessionsID=3;
+sessionsID=10;
 dataSetPath = computeReadPaths(1);
 app='_v16';
 evalPath = computeReadWritePaths(app);

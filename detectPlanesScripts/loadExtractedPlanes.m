@@ -1,4 +1,5 @@
-function [localPlanes, cameraPose]=loadExtractedPlanes(rootPath,scene,frameID, processedScenesPath, tresholdsV, PKFlag, compensateFactor)
+function [localPlanes, cameraPose]=loadExtractedPlanes(rootPath,scene,frameID,...
+    processedScenesPath, tresholdsV, PKFlag, compensateFactor)
 % This function load extracted planes per frame and its properties, classify those 
 % planes comparing properties with thresholds and pack the classified data 
 % into a cell of objects (localPlanes). The function also loads the camera 
@@ -18,6 +19,7 @@ if nargin<7
 	PKFlag=true;%previous knowledge Flag
 end
 mode=1;% mode: (0,1), (w/out previous knowledge, with previous knowledge)
+th_distance_depthCamera=[tresholdsV(6), tresholdsV(7)];
 %% 1 declaring parameters 
 plotFlag=0;
 conditionalAssignationFlag=false;
@@ -59,7 +61,7 @@ cameraPoses = myCameraPosesRead(cameraPosePath);%mm
         lengthBoundsTop, groundNormal, groundD, mode, compensateFactor);%mode: (0,1), (w/out previous knowledge, with previous knowledge)
 % add properties related with fitness for acceptedPlanes () 
     if ~isempty(localAcceptedPlanesByFrame)
-        mySetFitnessPlane(localPlanes,localAcceptedPlanesByFrame);
+        mySetFitnessPlane(localPlanes,localAcceptedPlanesByFrame, th_distance_depthCamera);
     end
 % end
 

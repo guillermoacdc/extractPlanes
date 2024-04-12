@@ -18,8 +18,10 @@ for j=1:Ns
     visiblePlanesFileName='visiblePlanesByFrame.json';
     outputFileName='globalVisiblePlanesByFrame';
     for i=1:N
+        
         frameID=keyframes(i);
-        if frameID==300
+        disp(['processing frame ' num2str(frameID)])
+        if frameID==143
             disp('stop mark')
         end
         visible_lps_vector=loadVisiblePlanesVector(visiblePlanesFileName, sessionID,...

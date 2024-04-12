@@ -7,8 +7,9 @@ function [thirdPlaneIndex, detectionFlag] = thirdPlaneDetection_v5(globalPlanes,
 
 detectionFlag=false;
 thirdPlaneIndex=[];
-
-
+%Distance treshold to filter couples of lanes. Update using an inpunt argument
+% currently we use dx/2 where dx is the hypotenuse of the greater box (box30)
+th_distance=510;
 c_perpendicularityPos = searchCandidates3_perp_v1(searchSpace,...
     modelTree,crossPd_ref,th_angle);
 c_perpendicularityNeg = searchCandidates3_perp_v1(searchSpace,...
@@ -32,10 +33,16 @@ if ~isempty(c_perpendicularity)
 			    v2=globalPlanes(candidateElement).geometricCenter;
 		        dist_v(i)=norm(v1-v2);
             end
-            [~,selectedIndex]=min(dist_v);
-    
-            thirdPlaneIndex=[c_gcRelations(selectedIndex)];
-            detectionFlag=true;
+%             condition this to a distance treshold
+%             [~,selectedIndex]=min(dist_v);
+            distMin=min(dist_v);
+            if distMin<th_distance
+%                 disp('the distance btwn couples from thirdPlaneDetection is ')
+%                 disp(distMin)
+                [~,selectedIndex]=min(dist_v);
+                thirdPlaneIndex=[c_gcRelations(selectedIndex)];
+                detectionFlag=true;
+            end
         end
     end
 end
