@@ -1,5 +1,5 @@
-function [TPhl2, TPm, FPhl2, FNm] = computeDetectedBoxes_TPFPFNByFrame(myBoxes,...
-            currentBoxByFrame, gtBoxes, tao_size, tao_translation, th_d, sessionID)
+function [TPhl2, TPm, FPhl2, FNm] = computeTrackedBoxes_TPFPFNByFrame_veADD(myBoxes,...
+            currentBoxByFrame, gtBoxes, tao, th_ADD, sessionID, Npointsdp)
 %COMPUTEDETECTEDBOXES_TPFPFNBYFRAME Computes metrics by frame
 %   myBoxes is a vector of box objects. Each element represent a detected
 %   box
@@ -29,13 +29,16 @@ end
 gtCurrentBoxes=extractBoxesVector(gtBoxes,currentBoxByFrame);
 
 % eD_m=computeDetectionErrorMatrix(myBoxes, gtBoxes,tao_size, tao_translation);
-eD_m=computeDetectionErrorMatrix(myBoxes, gtCurrentBoxes,tao_size, tao_translation);
+% eRotationMatrix=computeRotationErrorMatrix(myBoxes, gtCurrentBoxes);
+eTracking_m=computeTrackingErrorMatrix_veADD(myBoxes, gtCurrentBoxes,tao,Npointsdp);
+% (myBoxes,...
+%     gtBoxes,tao, Npointsdp)
 myBoxesIDs = extractIDsFromBoxVector(myBoxes);
 % gtBoxesIDs=extractIDsFromBoxVector(gtBoxes);
-gtBoxesIDs=extractIDsFromBoxVector(gtCurrentBoxes);
+gtCurrentBoxesIDs=extractIDsFromBoxVector(gtCurrentBoxes);
 
-[TPhl2, TPm, FPhl2, FNm]=errorMatrix2TPFPFN_vdetection(eD_m,...
-    th_d, gtBoxesIDs, myBoxesIDs);
+[TPhl2, TPm, FPhl2, FNm]=errorMatrix2TPFPFN_vdetection(eTracking_m,...
+    th_ADD, gtCurrentBoxesIDs, myBoxesIDs);
 
 end
 

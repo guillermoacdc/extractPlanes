@@ -6,6 +6,7 @@ close all
 clear
 
 sessionID=10;
+frameID=83;%9, 25, 83, 146,204,366,372
 dataSetPath = computeReadPaths(1);
 app='_vdebug';
 evalPath = computeReadWritePaths(app);
@@ -21,15 +22,15 @@ estimatedBoxes_session=loadEstimationsFile(estimationsFileName, sessionID, evalP
 fc='b';
 linecolor='w';% color for detections
 
-for i=31:31
-    frameID=keyframes(i);
+% for i=31:31
+%     frameID=keyframes(i);
     estimatedBoxes_frame=estimatedBoxes_session.(['frame' num2str(frameID)]).values;
     gtBoxes_frame=loadGTBoxes(sessionID, frameID);
 %     figure,
 %     plotDetectdvsGTBoxes(estimatedBoxes_frame, gtBoxes_frame, sessionID);
     figure,
         myPlotBoxContour_v2(estimatedBoxes_frame,sessionID,frameID,fc,linecolor)
-end
+% end
 % plotDetectdvsGTBoxes(myBoxes,...
 %     gtBoxes, sessionID)
 

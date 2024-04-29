@@ -12,27 +12,24 @@ evalPath = computeReadWritePaths(app);
 Ns=length(sessionsID);
 
 
-tao_size=50;
-tao_translation=50;
-th_d=0.2;%consider using [0.17 , 0.34] 
+tao_rotation=15;
+% th_r=0.2;%does not need two thresholds for rotatin problem
 pkv=[0 1];
 visiblePlanesByFrameFileName="visiblePlanesByFrame.json";
 
 for j=1:length(pkv)
     pk=pkv(j);
     estimatedBoxesFileName=['estimatedBoxes_pk' num2str(pk) '.json'];
-    outputFileName=['assessmentBoxDetection_pk' num2str(pk) '.json'];
+    outputFileName=['assessmentBoxTracking_pk' num2str(pk) '_rotation.json'];
     for i=1:Ns
         sessionID=sessionsID(i);
         evalPath=computeReadWritePaths(app);
-        disp (['Assessing box detection in session ' num2str(sessionID) 'with pk ' num2str(pk)])
-        assessment=computeDetectedBoxesMetricsBySession(estimatedBoxesFileName, sessionID,...
-            tao_size, tao_translation, th_d, evalPath, visiblePlanesByFrameFileName);
-        tao.size=tao_size;
-        tao.translatio=tao_translation;
+        disp (['Assessing box tracking in session ' num2str(sessionID) 'with pk ' num2str(pk)])
+        assessment=computeTrackedBoxesMetricsBySession_vrotation(estimatedBoxesFileName, sessionID,...
+            tao_rotation, evalPath, visiblePlanesByFrameFileName);
+        tao.rotation=tao_rotation;
         assessment.Parameters.tao=tao;
-        assessment.Parameters.th_d=th_d;
-        % save result on disk
+          % save result on disk
         mySaveStruct2JSONFile(assessment,outputFileName,evalPath,sessionID);
     end
 end
