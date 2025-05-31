@@ -1,6 +1,6 @@
 # Box Tracking from Plane Segment Maps in RGBD SLAM Scenarios
 
-This repository provides the implementation of the methods described in the project _"Tesis name"_. The system processes RGBD point clouds from a head-mounted camera, identifies plane segments, and tracks 3D positions and sizes of box-shaped objects over time.
+This repository provides the implementation of the methods described in the project _"Sistema de seguimiento de pose de cajas para asistir operaciones manuales de cubicaje de mercancía: enfoque de integración de SLAM RGBD con conocimiento previo de secuencia de cubicaje, cantidad y tamaño de cajas en la escena"_. The system processes RGBD point clouds from a head-mounted camera, identifies plane segments, and tracks 3D positions and sizes of box-shaped objects over time.
 The associated papers are
 1. Camacho-Muñoz, G. A., Franco, J. C. M., Nope-Rodríguez, S. E.,
 Loaiza-Correa, H., Gil-Parga, S., & Álvarez-Martínez, D. (2023). 6D-
